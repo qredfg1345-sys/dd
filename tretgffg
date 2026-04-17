@@ -1,383 +1,291 @@
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-  import {
-    getFirestore,
-    doc,
-    setDoc,
-    onSnapshot
-  } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Train System | Final Clean UI</title>
+    <style>
+        :root { --admin-bg: #1a252f; --staff-bg: #27ae60; --light-bg: #f4f7f6; --accent: #3498db; }
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; background: var(--light-bg); margin: 0; display: flex; height: 100vh; overflow: hidden; }
+        
+        /* Sidebar */
+        .sidebar { width: 280px; background: var(--admin-bg); color: white; display: flex; flex-direction: column; justify-content: space-between; }
+        .sidebar h2 { padding: 20px; font-size: 18px; border-bottom: 1px solid rgba(255,255,255,0.1); margin: 0; text-align: center; }
+        .menu-group { padding: 15px; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .menu-title { font-size: 11px; color: #888; text-transform: uppercase; margin-bottom: 10px; display: block; }
+        .nav-link { padding: 12px; cursor: pointer; border-radius: 5px; margin-bottom: 5px; transition: 0.2s; font-size: 14px; }
+        .nav-link:hover { background: rgba(255,255,255,0.1); }
+        .nav-link.active { background: var(--accent); }
 
-  const firebaseConfig = {
-    apiKey: "YOUR_API_KEY",
-    authDomain: "YOUR_PROJECT.firebaseapp.com",
-    projectId: "YOUR_PROJECT_ID",
-    storageBucket: "YOUR_PROJECT.appspot.com",
-    messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-    appId: "YOUR_APP_ID"
-  };
+        /* Logout in Sidebar */
+        .sidebar-bottom { padding: 20px; border-top: 1px solid rgba(255,255,255,0.1); }
+        .logout-btn { background: #e74c3c; color: white; padding: 12px; border-radius: 5px; cursor: pointer; border: none; font-weight: bold; width: 100%; text-align: center; }
+        .logout-btn:hover { background: #c0392b; }
 
-  const app = initializeApp(firebaseConfig);
-  const firestore = getFirestore(app);
-  const systemDocRef = doc(firestore, "trainSystem", "mainData");
+        /* Content Area */
+        .main-content { flex-grow: 1; padding: 30px; overflow-y: auto; }
+        .container { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); display: none; }
+        .container.active { display: block; }
+        
+        input, select, button { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; }
+        button { background: #34495e; color: white; border: none; font-weight: bold; cursor: pointer; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid #eee; padding: 12px; text-align: left; }
+        th { background: #f8f9fa; }
+        .action-btn { width: auto; padding: 5px 10px; font-size: 11px; margin: 2px; border-radius: 4px; border: none; color: white; cursor: pointer; }
+        .upd-btn { background: #3498db; }
+        .del-btn { background: #e74c3c; }
+        
+        #login-overlay { position: fixed; inset: 0; background: #2c3e50; display: flex; justify-content: center; align-items: center; z-index: 1000; }
+        .login-box { background: white; padding: 40px; border-radius: 15px; width: 350px; text-align: center; }
+    </style>
+</head>
+<body>
 
-  let db = {
-    trains: [],
-    routes: [],
-    schedules: [],
-    passengers: [],
-    tickets: []
-  };
+<div id="login-overlay">
+    <div class="login-box">
+        <h2>Train System Login</h2>
+        <select id="role-select">
+            <option value="admin">Administrator</option>
+            <option value="staff">Staff Member</option>
+        </select>
+        <input type="text" id="user" placeholder="Username">
+        <input type="password" id="pass" placeholder="Password">
+        <button onclick="handleLogin()">Access Portal</button>
+    </div>
+</div>
 
-  onSnapshot(systemDocRef, (snapshot) => {
-    if (snapshot.exists()) {
-      const data = snapshot.data();
-      db = {
-        trains: data.trains || [],
-        routes: data.routes || [],
-        schedules: data.schedules || [],
-        passengers: data.passengers || [],
-        tickets: data.tickets || []
-      };
-    } else {
-      db = {
-        trains: [],
-        routes: [],
-        schedules: [],
-        passengers: [],
-        tickets: []
-      };
-    }
+<div class="sidebar" id="sidebar" style="display:none;">
+    <div>
+        <h2 id="portal-name">Portal</h2>
+        <div id="admin-menu">
+            <div class="menu-group"><span class="menu-title">Fleet Mgt</span>
+                <div class="nav-link active" onclick="show('sec-trains')">Manage Trains</div>
+                <div class="nav-link" onclick="show('sec-routes')">Define Routes</div>
+            </div>
+            <div class="menu-group"><span class="menu-title">Operations</span>
+                <div class="nav-link" onclick="show('sec-schedules')">Schedules</div>
+                <div class="nav-link" onclick="show('sec-admin-reports')">Operational Reports</div>
+            </div>
+        </div>
+        <div id="staff-menu" style="display:none;">
+            <div class="menu-group"><span class="menu-title">Staff Operations</span>
+                <div class="nav-link" onclick="show('sec-passengers')">Passengers</div>
+                <div class="nav-link" onclick="show('sec-tickets')">Ticketing</div>
+                <div class="nav-link" onclick="show('sec-daily')">Daily Schedule</div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="sidebar-bottom">
+        <button class="logout-btn" onclick="location.reload()">Logout</button>
+    </div>
+</div>
 
-    updateUI();
-  }, (error) => {
-    console.error("Realtime listener error:", error);
-    alert("Failed to load realtime data from Firebase.");
-  });
+<div class="main-content" id="main" style="display:none;">
+    <section id="sec-trains" class="container active">
+        <h3>Train Management</h3>
+        <input type="text" id="train_id" placeholder="Train ID">
+        <input type="text" id="train_type" placeholder="Train Type">
+        <button onclick="addUpdateTrain()">Save Train Asset</button>
+        <table id="trainList"><thead><tr><th>ID</th><th>Type</th><th>Actions</th></tr></thead><tbody></tbody></table>
+    </section>
 
-  async function save() {
-    try {
-      await setDoc(systemDocRef, db);
-      updateUI();
-    } catch (error) {
-      console.error("Save error:", error);
-      alert("Failed to save data to Firebase.");
-    }
-  }
+    <section id="sec-routes" class="container">
+        <h3>Route Configuration</h3>
+        <input type="hidden" id="edit_route_idx" value="-1">
+        <input type="text" id="route_path" placeholder="Route Path">
+        <button onclick="addUpdateRoute()">Save Route</button>
+        <table id="routeList"><thead><tr><th>Path</th><th>Actions</th></tr></thead><tbody></tbody></table>
+    </section>
 
-  window.handleLogin = function () {
-    const u = document.getElementById('user').value;
-    const p = document.getElementById('pass').value;
-    const role = document.getElementById('role-select').value;
+    <section id="sec-schedules" class="container">
+        <h3>Schedule Operations</h3>
+        <input type="hidden" id="edit_sch_id" value="-1">
+        <select id="sch_train"></select>
+        <select id="sch_route"></select>
+        <input type="datetime-local" id="sch_time">
+        <input type="number" id="sch_seats" placeholder="Max Seats">
+        <button onclick="addUpdateSchedule()">Commit Schedule</button>
+        <table id="schList"><thead><tr><th>Train</th><th>Route</th><th>Time</th><th>Seats</th><th>Actions</th></tr></thead><tbody></tbody></table>
+    </section>
 
-    if ((u === 'admin' && p === 'admin') || (u === 'staff' && p === 'staff')) {
-      document.getElementById('login-overlay').style.display = 'none';
-      document.getElementById('sidebar').style.display = 'flex';
-      document.getElementById('main').style.display = 'block';
-      document.getElementById('portal-name').innerText = role === 'admin' ? 'Admin Portal' : 'Staff Portal';
-      document.getElementById('admin-menu').style.display = role === 'admin' ? 'block' : 'none';
-      document.getElementById('staff-menu').style.display = role === 'staff' ? 'block' : 'none';
-      show(role === 'admin' ? 'sec-trains' : 'sec-passengers');
-      updateUI();
-    } else {
-      alert("Invalid Login");
-    }
-  };
+    <section id="sec-admin-reports" class="container">
+        <h3>System Reports</h3>
+        <div style="margin-bottom:20px;">
+            <button onclick="processDetailedReport('Fleet')" style="width:auto; padding:8px 20px; background:#2c3e50; margin-right:10px;">Fleet Detail</button>
+            <button onclick="processDetailedReport('Schedule')" style="width:auto; padding:8px 20px; background:#2c3e50;">Schedule Detail</button>
+        </div>
+        <div id="report-display-area" style="min-height:200px; border:1px solid #eee; padding:20px; border-radius:10px;"></div>
+    </section>
 
-  window.show = function (id) {
-    document.querySelectorAll('.container').forEach(c => c.classList.remove('active'));
-    document.getElementById(id).classList.add('active');
-    document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
-  };
+    <section id="sec-passengers" class="container">
+        <h3>Passenger Registry</h3>
+        <input type="text" id="ps_name" placeholder="Name">
+        <input type="text" id="ps_id" placeholder="National ID">
+        <button onclick="savePassenger()" style="background:var(--staff-bg)">Create Profile</button>
+        <hr>
+        <input type="text" id="ps_search" onkeyup="searchPS()" placeholder="Search by Name or ID...">
+        <table id="psList"><thead><tr><th>Name</th><th>ID</th></tr></thead><tbody></tbody></table>
+    </section>
 
-  window.addUpdateTrain = async function () {
-    const id = document.getElementById('train_id').value.trim();
-    const ty = document.getElementById('train_type').value.trim();
+    <section id="sec-tickets" class="container">
+        <h3>Ticketing</h3>
+        <div style="border: 1px solid #eee; padding: 15px; border-radius: 8px; background: #fdfdfd;">
+            <label>Select Trip:</label>
+            <select id="tk_trip"></select>
+            <button onclick="checkAvail()" style="background:var(--accent); margin-top:10px;">Check Availability</button>
+            <div id="avail_info" style="margin-top:10px; font-weight:bold;"></div>
+        </div>
+        <div id="issue-ticket-area" style="display:none; margin-top:20px;">
+            <label>Select Passenger:</label>
+            <select id="tk_passenger"></select>
+            <button onclick="issueTicket()" style="background:var(--staff-bg); margin-top:10px;">Issue Ticket</button>
+        </div>
+        <table id="tkTable"><thead><tr><th>Passenger</th><th>Trip</th><th>Actions</th></tr></thead><tbody></tbody></table>
+    </section>
 
-    if (!id || !ty) return alert("Fill all fields");
+    <section id="sec-daily" class="container">
+        <h3>Daily Schedule</h3>
+        <table id="dailyView"><thead><tr><th>Trip</th><th>Time</th><th>Available Seats</th></tr></thead><tbody></tbody></table>
+    </section>
+</div>
 
-    const idx = db.trains.findIndex(t => t.id === id);
-
-    if (idx > -1) {
-      db.trains[idx].type = ty;
-    } else {
-      db.trains.push({ id, type: ty });
-    }
-
-    document.getElementById('train_id').value = '';
-    document.getElementById('train_type').value = '';
-    await save();
-  };
-
-  window.editTrain = function (id, type) {
-    document.getElementById('train_id').value = id;
-    document.getElementById('train_type').value = type;
-  };
-
-  window.addUpdateRoute = async function () {
-    const p = document.getElementById('route_path').value.trim();
-    const idx = document.getElementById('edit_route_idx').value;
-
-    if (!p) return;
-
-    if (idx == -1) {
-      db.routes.push(p);
-    } else {
-      db.routes[idx] = p;
-    }
-
-    document.getElementById('edit_route_idx').value = -1;
-    document.getElementById('route_path').value = '';
-    await save();
-  };
-
-  window.editRoute = function (i) {
-    document.getElementById('route_path').value = db.routes[i];
-    document.getElementById('edit_route_idx').value = i;
-  };
-
-  window.addUpdateSchedule = async function () {
-    const sid = document.getElementById('edit_sch_id').value;
-
-    const s = {
-      id: sid == -1 ? Date.now() : parseInt(sid),
-      train: document.getElementById('sch_train').value,
-      route: document.getElementById('sch_route').value,
-      time: document.getElementById('sch_time').value,
-      seats: parseInt(document.getElementById('sch_seats').value)
+<script>
+    let db = JSON.parse(localStorage.getItem('train_final_v6')) || {
+        trains: [], routes: [], schedules: [], passengers: [], tickets: []
     };
 
-    if (!s.train || !s.route || !s.time || isNaN(s.seats)) {
-      return alert("Fill all schedule fields");
+    function handleLogin() {
+        const u = document.getElementById('user').value;
+        const p = document.getElementById('pass').value;
+        const role = document.getElementById('role-select').value;
+        if((u === 'admin' && p === 'admin') || (u === 'staff' && p === 'staff')) {
+            document.getElementById('login-overlay').style.display = 'none';
+            document.getElementById('sidebar').style.display = 'flex';
+            document.getElementById('main').style.display = 'block';
+            document.getElementById('portal-name').innerText = role === 'admin' ? 'Admin Portal' : 'Staff Portal';
+            document.getElementById('admin-menu').style.display = role === 'admin' ? 'block' : 'none';
+            document.getElementById('staff-menu').style.display = role === 'staff' ? 'block' : 'none';
+            show(role === 'admin' ? 'sec-trains' : 'sec-passengers');
+            updateUI();
+        } else alert("Invalid Login");
     }
 
-    if (sid == -1) {
-      db.schedules.push(s);
-    } else {
-      const index = db.schedules.findIndex(x => x.id == sid);
-      if (index > -1) db.schedules[index] = s;
+    function show(id) {
+        document.querySelectorAll('.container').forEach(c => c.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+        document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
     }
 
-    document.getElementById('edit_sch_id').value = -1;
-    document.getElementById('sch_time').value = '';
-    document.getElementById('sch_seats').value = '';
-    await save();
-  };
-
-  window.editSch = function (id) {
-    const s = db.schedules.find(x => x.id == id);
-    if (!s) return;
-
-    document.getElementById('sch_train').value = s.train;
-    document.getElementById('sch_route').value = s.route;
-    document.getElementById('sch_time').value = s.time;
-    document.getElementById('sch_seats').value = s.seats;
-    document.getElementById('edit_sch_id').value = s.id;
-  };
-
-  window.savePassenger = async function () {
-    const name = document.getElementById('ps_name').value.trim();
-    const id = document.getElementById('ps_id').value.trim();
-
-    if (!name || !id) return alert("Fill all fields");
-    if (id.length < 5) return alert("ID must be 5+ digits");
-    if (db.passengers.some(p => p.id === id)) return alert("ID already exists!");
-
-    db.passengers.push({ name, id });
-
-    document.getElementById('ps_name').value = '';
-    document.getElementById('ps_id').value = '';
-    await save();
-  };
-
-  window.checkAvail = function () {
-    const s = db.schedules.find(x => x.id == document.getElementById('tk_trip').value);
-
-    if (s) {
-      document.getElementById('avail_info').innerText = `Seats: ${s.seats}`;
-      document.getElementById('avail_info').style.color = s.seats > 0 ? "green" : "red";
-      document.getElementById('issue-ticket-area').style.display = s.seats > 0 ? 'block' : 'none';
+    // Admin Functions
+    function addUpdateTrain() {
+        const id = document.getElementById('train_id').value.trim();
+        const ty = document.getElementById('train_type').value.trim();
+        if(!id || !ty) return alert("Fill all fields");
+        const idx = db.trains.findIndex(t => t.id === id);
+        if(idx > -1) db.trains[idx].type = ty; else db.trains.push({id, type: ty});
+        document.getElementById('train_id').value = ''; document.getElementById('train_type').value = '';
+        save();
     }
-  };
-
-  window.issueTicket = async function () {
-    const s = db.schedules.find(x => x.id == document.getElementById('tk_trip').value);
-    const passenger = document.getElementById('tk_passenger').value;
-
-    if (s && s.seats > 0) {
-      s.seats--;
-      db.tickets.push({
-        p: passenger,
-        trip: s.route,
-        sid: s.id,
-        id: Date.now()
-      });
-
-      document.getElementById('issue-ticket-area').style.display = 'none';
-      await save();
-    } else {
-      alert("No seats available");
+    function editTrain(id, type) { document.getElementById('train_id').value = id; document.getElementById('train_type').value = type; }
+    
+    function addUpdateRoute() {
+        const p = document.getElementById('route_path').value.trim();
+        const idx = document.getElementById('edit_route_idx').value;
+        if(!p) return;
+        if(idx == -1) db.routes.push(p); else db.routes[idx] = p;
+        document.getElementById('edit_route_idx').value = -1;
+        document.getElementById('route_path').value = '';
+        save();
     }
-  };
+    function editRoute(i) { document.getElementById('route_path').value = db.routes[i]; document.getElementById('edit_route_idx').value = i; }
 
-  window.searchPS = function () {
-    const q = document.getElementById('ps_search').value.toLowerCase();
-    const res = db.passengers.filter(
-      p => p.name.toLowerCase().includes(q) || p.id.includes(q)
-    );
-
-    renderTable('psList', res.map(r => `<tr><td>${r.name}</td><td>${r.id}</td></tr>`), 2);
-  };
-
-  window.processDetailedReport = function (type) {
-    const display = document.getElementById('report-display-area');
-
-    if (type === 'Fleet') {
-      display.innerHTML = `
-        <h4>Fleet Assets</h4>
-        <table>
-          <thead><tr><th>ID</th><th>Type</th></tr></thead>
-          <tbody>${db.trains.map(t => `<tr><td>${t.id}</td><td>${t.type}</td></tr>`).join('')}</tbody>
-        </table>
-      `;
-    } else {
-      display.innerHTML = `
-        <h4>Active Schedules</h4>
-        <table>
-          <thead><tr><th>Route</th><th>Seats</th></tr></thead>
-          <tbody>${db.schedules.map(s => `<tr><td>${s.route}</td><td>${s.seats}</td></tr>`).join('')}</tbody>
-        </table>
-      `;
+    function addUpdateSchedule() {
+        const sid = document.getElementById('edit_sch_id').value;
+        const s = {
+            id: sid == -1 ? Date.now() : parseInt(sid),
+            train: document.getElementById('sch_train').value,
+            route: document.getElementById('sch_route').value,
+            time: document.getElementById('sch_time').value,
+            seats: parseInt(document.getElementById('sch_seats').value)
+        };
+        if(sid == -1) db.schedules.push(s); else db.schedules[db.schedules.findIndex(x => x.id == sid)] = s;
+        document.getElementById('edit_sch_id').value = -1;
+        save();
     }
-  };
-
-  window.delTrain = async function (id) {
-    db.trains = db.trains.filter(t => t.id !== id);
-    await save();
-  };
-
-  window.delRoute = async function (i) {
-    db.routes.splice(i, 1);
-    await save();
-  };
-
-  window.delSch = async function (id) {
-    db.schedules = db.schedules.filter(s => s.id !== id);
-    await save();
-  };
-
-  window.cancelTicket = async function (id, sid) {
-    db.tickets = db.tickets.filter(t => t.id !== id);
-    const s = db.schedules.find(x => x.id == sid);
-    if (s) s.seats++;
-    await save();
-  };
-
-  function renderTable(id, html, colspan = 4) {
-    const tbody = document.querySelector(`#${id} tbody`);
-    if (!tbody) return;
-    tbody.innerHTML = html.join('') || `<tr><td colspan="${colspan}">No Data Available</td></tr>`;
-  }
-
-  function updateUI() {
-    renderTable(
-      'trainList',
-      db.trains.map(t => `
-        <tr>
-          <td>${t.id}</td>
-          <td>${t.type}</td>
-          <td>
-            <button class="action-btn upd-btn" onclick="editTrain('${t.id}','${t.type}')">Update</button>
-            <button class="action-btn del-btn" onclick="delTrain('${t.id}')">Delete</button>
-          </td>
-        </tr>
-      `),
-      3
-    );
-
-    renderTable(
-      'routeList',
-      db.routes.map((r, i) => `
-        <tr>
-          <td>${r}</td>
-          <td>
-            <button class="action-btn upd-btn" onclick="editRoute(${i})">Update</button>
-            <button class="action-btn del-btn" onclick="delRoute(${i})">Delete</button>
-          </td>
-        </tr>
-      `),
-      2
-    );
-
-    renderTable(
-      'schList',
-      db.schedules.map(s => `
-        <tr>
-          <td>${s.train}</td>
-          <td>${s.route}</td>
-          <td>${s.time}</td>
-          <td>${s.seats}</td>
-          <td>
-            <button class="action-btn upd-btn" onclick="editSch(${s.id})">Update</button>
-            <button class="action-btn del-btn" onclick="delSch(${s.id})">Delete</button>
-          </td>
-        </tr>
-      `),
-      5
-    );
-
-    renderTable(
-      'psList',
-      db.passengers.map(p => `<tr><td>${p.name}</td><td>${p.id}</td></tr>`),
-      2
-    );
-
-    renderTable(
-      'tkTable',
-      db.tickets.map(t => `
-        <tr>
-          <td>${t.p}</td>
-          <td>${t.trip}</td>
-          <td><button class="action-btn del-btn" onclick="cancelTicket(${t.id}, ${t.sid})">Cancel</button></td>
-        </tr>
-      `),
-      3
-    );
-
-    renderTable(
-      'dailyView',
-      db.schedules.map(s => `
-        <tr>
-          <td>${s.route}</td>
-          <td>${s.time}</td>
-          <td>${s.seats}</td>
-        </tr>
-      `),
-      3
-    );
-
-    const schTrain = document.getElementById('sch_train');
-    const schRoute = document.getElementById('sch_route');
-    const tkPassenger = document.getElementById('tk_passenger');
-    const tkTrip = document.getElementById('tk_trip');
-
-    if (schTrain) {
-      schTrain.innerHTML = db.trains.map(t => `<option>${t.id}</option>`).join('');
+    function editSch(id) {
+        const s = db.schedules.find(x => x.id == id);
+        document.getElementById('sch_train').value = s.train;
+        document.getElementById('sch_route').value = s.route;
+        document.getElementById('sch_time').value = s.time;
+        document.getElementById('sch_seats').value = s.seats;
+        document.getElementById('edit_sch_id').value = s.id;
     }
 
-    if (schRoute) {
-      schRoute.innerHTML = db.routes.map(r => `<option>${r}</option>`).join('');
+    // Staff Functions
+    function savePassenger() {
+        const name = document.getElementById('ps_name').value.trim();
+        const id = document.getElementById('ps_id').value.trim();
+        if(id.length < 5) return alert("ID must be 5+ digits");
+        if(db.passengers.some(p => p.id === id)) return alert("ID already exists!");
+        if(name && id) { db.passengers.push({name, id}); save(); }
+    }
+    function checkAvail() {
+        const s = db.schedules.find(x => x.id == document.getElementById('tk_trip').value);
+        if(s) {
+            document.getElementById('avail_info').innerText = `Seats: ${s.seats}`;
+            document.getElementById('avail_info').style.color = s.seats > 0 ? "green" : "red";
+            if(s.seats > 0) document.getElementById('issue-ticket-area').style.display = 'block';
+        }
+    }
+    function issueTicket() {
+        const s = db.schedules.find(x => x.id == document.getElementById('tk_trip').value);
+        if(s && s.seats > 0) {
+            s.seats--;
+            db.tickets.push({p: document.getElementById('tk_passenger').value, trip: s.route, sid: s.id, id: Date.now()});
+            save();
+            document.getElementById('issue-ticket-area').style.display = 'none';
+        }
+    }
+    function searchPS() {
+        const q = document.getElementById('ps_search').value.toLowerCase();
+        const res = db.passengers.filter(p => p.name.toLowerCase().includes(q) || p.id.includes(q));
+        renderTable('psList', res.map(r => `<tr><td>${r.name}</td><td>${r.id}</td></tr>`));
     }
 
-    if (tkPassenger) {
-      tkPassenger.innerHTML = db.passengers.map(
-        p => `<option value="${p.name} (ID: ${p.id})">${p.name} (ID: ${p.id})</option>`
-      ).join('');
+    // Reports
+    function processDetailedReport(type) {
+        const display = document.getElementById('report-display-area');
+        if(type === 'Fleet') {
+            display.innerHTML = `<h4>Fleet Assets</h4><table><thead><tr><th>ID</th><th>Type</th></tr></thead>
+            <tbody>${db.trains.map(t=>`<tr><td>${t.id}</td><td>${t.type}</td></tr>`).join('')}</tbody></table>`;
+        } else {
+            display.innerHTML = `<h4>Active Schedules</h4><table><thead><tr><th>Route</th><th>Seats</th></tr></thead>
+            <tbody>${db.schedules.map(s=>`<tr><td>${s.route}</td><td>${s.seats}</td></tr>`).join('')}</tbody></table>`;
+        }
     }
 
-    if (tkTrip) {
-      tkTrip.innerHTML = db.schedules.map(
-        s => `<option value="${s.id}">${s.route} (${s.time})</option>`
-      ).join('');
+    function delTrain(id) { db.trains = db.trains.filter(t => t.id !== id); save(); }
+    function delRoute(i) { db.routes.splice(i, 1); save(); }
+    function delSch(id) { db.schedules = db.schedules.filter(s => s.id !== id); save(); }
+    function cancelTicket(id, sid) { db.tickets = db.tickets.filter(t => t.id !== id); const s = db.schedules.find(x => x.id == sid); if(s) s.seats++; save(); }
+
+    function save() { localStorage.setItem('train_final_v6', JSON.stringify(db)); updateUI(); }
+    function renderTable(id, html) { document.querySelector(`#${id} tbody`).innerHTML = html.join('') || '<tr><td colspan="4">No Data Available</td></tr>'; }
+
+    function updateUI() {
+        renderTable('trainList', db.trains.map(t => `<tr><td>${t.id}</td><td>${t.type}</td><td><button class="action-btn upd-btn" onclick="editTrain('${t.id}','${t.type}')">Update</button><button class="action-btn del-btn" onclick="delTrain('${t.id}')">Delete</button></td></tr>`));
+        renderTable('routeList', db.routes.map((r, i) => `<tr><td>${r}</td><td><button class="action-btn upd-btn" onclick="editRoute(${i})">Update</button><button class="action-btn del-btn" onclick="delRoute(${i})">Delete</button></td></tr>`));
+        renderTable('schList', db.schedules.map(s => `<tr><td>${s.train}</td><td>${s.route}</td><td>${s.time}</td><td>${s.seats}</td><td><button class="action-btn upd-btn" onclick="editSch(${s.id})">Update</button><button class="action-btn del-btn" onclick="delSch(${s.id})">Delete</button></td></tr>`));
+        renderTable('psList', db.passengers.map(p => `<tr><td>${p.name}</td><td>${p.id}</td></tr>`));
+        renderTable('tkTable', db.tickets.map(t => `<tr><td>${t.p}</td><td>${t.trip}</td><td><button class="action-btn del-btn" onclick="cancelTicket(${t.id}, ${t.sid})">Cancel</button></td></tr>`));
+        renderTable('dailyView', db.schedules.map(s => `<tr><td>${s.route}</td><td>${s.time}</td><td>${s.seats}</td></tr>`));
+        
+        document.getElementById('sch_train').innerHTML = db.trains.map(t => `<option>${t.id}</option>`).join('');
+        document.getElementById('sch_route').innerHTML = db.routes.map(r => `<option>${r}</option>`).join('');
+        document.getElementById('tk_passenger').innerHTML = db.passengers.map(p => `<option value="${p.name} (ID: ${p.id})">${p.name} (ID: ${p.id})</option>`).join('');
+        document.getElementById('tk_trip').innerHTML = db.schedules.map(s => `<option value="${s.id}">${s.route} (${s.time})</option>`).join('');
     }
-  }
 </script>
+</body>
+</html>
