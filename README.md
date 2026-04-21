@@ -19,5 +19,5 @@ A centralized system designed to manage train schedules, process ticket reservat
 
 
 #Notes 
-• The project is for Software Engineering 1 (SE1) 
-• Final development and complete system logic will continue in Software Engineering 2 (SE2)
+- The project is for Software Engineering 1 (SE1) 
+- Final development and complete system logic will continue in Software Engineering 2 (SE2)
