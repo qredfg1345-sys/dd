@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RailRoute Central | Secure Access</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div id="particles-js"></div>
+
+    <div class="login-card">
+        <div class="brand-logo">
+            <i class="fa-solid fa-shield-halved"></i>
+        </div>
+        
+        <h1>RAILROUTE CENTRAL</h1>
+        <p class="system-subtitle">Infrastructure & Reservation Governance</p>
+
+        <form onsubmit="return false">
+            <div class="input-section">
+                <label>Operations Domain</label>
+                <select id="role">
+                    <option value="admin">Infrastructure Administrator (Admin)</option>
+                    <option value="staff">Station Operational Staff (Staff)</option>
+                </select>
+            </div>
+
+            <div class="input-section">
+                <label>Authentication Identifier</label>
+                <input type="text" id="user" placeholder="Enter ID or Username" required>
+            </div>
+
+            <div class="input-section">
+                <label>Secure Key</label>
+                <input type="password" id="pass" placeholder="••••••••" required>
+            </div>
+
+            <button type="submit" class="btn-authorize" onclick="handleLogin()">
+                Authorize Access
+            </button>
+        </form>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
