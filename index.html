@@ -2,102 +2,45 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RailRoute Central | Secure Access</title>
+    <title>RailRoute Central | Authentication</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
-    <style>
-        /* تنسيقات إضافية خاصة بمركزية كرت الدخول فقط */
-        body {
-            align-items: center;
-            justify-content: center;
-        }
-        .login-card {
-            background: rgba(255, 255, 255, 0.98);
-            padding: 50px 40px;
-            border-radius: 28px;
-            width: 100%;
-            max-width: 400px;
-            text-align: center;
-            box-shadow: 0 25px 60px rgba(15, 23, 42, 0.15);
-            border: 1px solid rgba(30, 64, 175, 0.1);
-            z-index: 10;
-            backdrop-filter: blur(10px);
-        }
-        .brand-logo {
-            width: 80px; height: 80px;
-            background: linear-gradient(135deg, var(--navy-deep), var(--blue-royal));
-            color: white;
-            border-radius: 22px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 35px;
-            margin: 0 auto 25px;
-            box-shadow: 0 12px 24px rgba(30, 64, 175, 0.2);
-        }
-    </style>
 </head>
 <body>
 
-    <div class="tech-web-bg"></div>
+    <div class="tech-web-canvas"></div>
+    <div class="web-nodes"></div>
 
     <div class="login-card">
         <div class="brand-logo">
             <i class="fa-solid fa-shield-halved"></i>
         </div>
         
-        <h1 style="margin: 0; font-size: 22px; color: var(--navy-deep); letter-spacing: 1px;">RAILROUTE CENTRAL</h1>
-        <p style="color: var(--slate-500); font-size: 13px; margin: 8px 0 35px;">Infrastructure & Reservation Governance</p>
+        <h1 style="font-size: 20px; margin: 0; letter-spacing: 1px;">RAILROUTE CENTRAL</h1>
+        <p style="color: #64748b; font-size: 12px; margin: 8px 0 35px;">Infrastructure & Reservation Governance</p>
 
-        <form onsubmit="return handleLogin(event)">
-            <div style="text-align: left; margin-bottom: 22px;">
-                <label style="display: block; font-size: 11px; font-weight: 800; text-transform: uppercase; margin-bottom: 8px; color: var(--navy-deep);">
-                    Operations Domain
-                </label>
-                <select id="role">
+        <form onsubmit="return false">
+            <div style="text-align: left; margin-bottom: 20px;">
+                <label style="font-size: 11px; font-weight: 800; color: #0f172a; text-transform: uppercase;">Operations Domain</label>
+                <select id="role" style="width: 100%; padding: 14px; border-radius: 10px; border: 1.5px solid #e2e8f0; margin-top: 8px;">
                     <option value="admin">Infrastructure Administrator (Admin)</option>
                     <option value="staff">Station Operational Staff (Staff)</option>
                 </select>
             </div>
 
-            <div style="text-align: left; margin-bottom: 22px;">
-                <label style="display: block; font-size: 11px; font-weight: 800; text-transform: uppercase; margin-bottom: 8px; color: var(--navy-deep);">
-                    Authentication Identifier
-                </label>
-                <input type="text" id="user" placeholder="Enter ID or Username" required>
+            <div style="text-align: left; margin-bottom: 20px;">
+                <label style="font-size: 11px; font-weight: 800; color: #0f172a; text-transform: uppercase;">Authentication Identifier</label>
+                <input type="text" placeholder="Enter ID or Username" style="width: 100%; padding: 14px; border-radius: 10px; border: 1.5px solid #e2e8f0; margin-top: 8px; box-sizing: border-box;">
             </div>
 
-            <div style="text-align: left; margin-bottom: 25px;">
-                <label style="display: block; font-size: 11px; font-weight: 800; text-transform: uppercase; margin-bottom: 8px; color: var(--navy-deep);">
-                    Secure Key
-                </label>
-                <input type="password" id="pass" placeholder="••••••••" required>
+            <div style="text-align: left; margin-bottom: 30px;">
+                <label style="font-size: 11px; font-weight: 800; color: #0f172a; text-transform: uppercase;">Secure Key</label>
+                <input type="password" placeholder="••••••••" style="width: 100%; padding: 14px; border-radius: 10px; border: 1.5px solid #e2e8f0; margin-top: 8px; box-sizing: border-box;">
             </div>
 
-            <button type="submit" class="btn btn-primary" style="width: 100%; padding: 18px; letter-spacing: 2px;">
-                Authorize Access
-            </button>
+            <button class="btn-primary">Authorize Access</button>
         </form>
     </div>
 
-    <script>
-        function handleLogin(event) {
-            event.preventDefault();
-            const user = document.getElementById('user').value;
-            const pass = document.getElementById('pass').value;
-            const role = document.getElementById('role').value;
-
-            // منطق بسيط للتحقق (يمكنك ربطه لاحقاً بقاعدة البيانات)
-            if ((user === 'admin' && pass === 'admin' && role === 'admin') || 
-                (user === 'staff' && pass === 'staff' && role === 'staff')) {
-                alert("Identity Verified. Accessing " + role.toUpperCase() + " Terminal...");
-                // التوجيه لصفحة الداشبورد الرئيسية بعد النجاح
-                // window.location.href = "dashboard.html"; 
-            } else {
-                alert("Security Alert: Invalid credentials or unauthorized domain.");
-            }
-        }
-    </script>
 </body>
 </html>
