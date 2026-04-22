@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RailRoute Central | Secure Access</title>
+    <title>RailRoute Central | Secure Login</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --navy-deep: #0f172a;    /* كحلي إداري غامق */
-            --blue-royal: #1e40af;   /* أزرق ملكي */
-            --blue-light: #3b82f6;   /* أزرق فاتح للشبكة */
+            --navy-deep: #0f172a;
+            --blue-royal: #1e40af;
+            --blue-tech: #3b82f6;
             --white-pure: #ffffff;
         }
 
@@ -21,66 +21,63 @@
             overflow: hidden; position: relative;
         }
 
-        /* تصميم الشبكة العنكبوتية التقنية (Technical Web) */
-        .tech-web-bg {
+        /* تصميم الشبكة العنكبوتية التقنية في الخلفية */
+        .spider-web-bg {
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
             z-index: 0;
-            /* رسم الشبكة باستخدام SVG متداخل */
-            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0L100 100M100 0L0 100' stroke='rgba(30, 64, 175, 0.06)' stroke-width='0.5'/%3E%3Ccircle cx='50' cy='50' r='1.2' fill='rgba(59, 130, 246, 0.2)'/%3E%3C/svg%3E");
-            background-size: 80px 80px;
+            background-image: 
+                radial-gradient(circle at 2px 2px, rgba(30, 64, 175, 0.1) 1px, transparent 0),
+                linear-gradient(45deg, rgba(30, 64, 175, 0.02) 25%, transparent 25%, transparent 75%, rgba(30, 64, 175, 0.02) 75%, rgba(30, 64, 175, 0.02)),
+                linear-gradient(-45deg, rgba(30, 64, 175, 0.02) 25%, transparent 25%, transparent 75%, rgba(30, 64, 175, 0.02) 75%, rgba(30, 64, 175, 0.02));
+            background-size: 40px 40px, 80px 80px, 80px 80px;
         }
 
-        /* توهج الشبكة في الزوايا (Spider Web Nodes) */
-        .web-node {
+        /* خطوط الشبكة في الزوايا */
+        .corner-mesh {
             position: absolute;
-            width: 700px; height: 700px;
-            background: radial-gradient(circle, rgba(59, 130, 246, 0.08) 0%, transparent 70%);
-            border-radius: 50%;
+            width: 500px; height: 500px;
+            background: 
+                repeating-linear-gradient(45deg, transparent, transparent 35px, rgba(59, 130, 246, 0.05) 35px, rgba(59, 130, 246, 0.05) 36px),
+                repeating-linear-gradient(-45deg, transparent, transparent 35px, rgba(59, 130, 246, 0.05) 35px, rgba(59, 130, 246, 0.05) 36px);
             z-index: 1;
         }
-        .node-tl { top: -300px; left: -300px; border: 1px solid rgba(30, 64, 175, 0.05); }
-        .node-br { bottom: -300px; right: -300px; border: 1px solid rgba(30, 64, 175, 0.05); }
+        .mesh-tl { top: -150px; left: -150px; }
+        .mesh-br { bottom: -150px; right: -150px; }
 
+        /* حاوية تسجيل الدخول */
         .login-card {
-            background: rgba(255, 255, 255, 0.96);
+            background: rgba(255, 255, 255, 0.98);
             padding: 55px 45px;
             border-radius: 24px;
             width: 100%;
             max-width: 400px;
             text-align: center;
-            box-shadow: 0 25px 50px rgba(15, 23, 42, 0.1);
+            box-shadow: 0 25px 60px rgba(15, 23, 42, 0.12);
             border: 1px solid rgba(30, 64, 175, 0.1);
             position: relative;
             z-index: 10;
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(8px);
         }
 
-        /* أيقونة المسارات المتطورة */
-        .brand-icon {
-            width: 75px; height: 75px;
+        /* الأيقونة التقنية */
+        .icon-box {
+            width: 80px; height: 80px;
             background: linear-gradient(135deg, var(--navy-deep), var(--blue-royal));
-            color: white;
-            border-radius: 20px;
+            color: white; border-radius: 20px;
             display: flex; align-items: center; justify-content: center;
-            font-size: 32px;
-            margin: 0 auto 25px;
-            box-shadow: 0 10px 20px rgba(30, 64, 175, 0.2);
+            font-size: 32px; margin: 0 auto 25px;
+            box-shadow: 0 12px 24px rgba(30, 64, 175, 0.2);
         }
 
         h1 {
-            color: var(--navy-deep);
-            font-size: 20px;
-            font-weight: 800;
-            margin: 0;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
+            color: var(--navy-deep); font-size: 22px;
+            font-weight: 800; margin: 0;
+            text-transform: uppercase; letter-spacing: 1.5px;
         }
 
         .subtitle {
-            color: var(--slate-gray);
-            font-size: 13px;
-            margin: 8px 0 35px;
+            color: #64748b; font-size: 13px; margin: 8px 0 35px;
         }
 
         .input-group { text-align: left; margin-bottom: 22px; }
@@ -88,76 +85,75 @@
         label {
             display: block; font-size: 11px; font-weight: 700;
             color: var(--navy-deep); text-transform: uppercase;
-            margin-bottom: 8px; letter-spacing: 0.5px;
+            margin-bottom: 8px; letter-spacing: 0.8px;
         }
 
         input, select {
-            width: 100%; padding: 14px 16px;
-            border: 1.5px solid #e2e8f0; border-radius: 12px;
-            font-size: 14px; outline: none; background: #fcfcfc;
-            transition: all 0.3s ease; color: var(--navy-deep);
+            width: 100%; padding: 15px 18px;
+            border: 2px solid #f1f5f9; border-radius: 12px;
+            font-size: 14px; outline: none; background: #fafafa;
+            transition: 0.3s ease; color: var(--navy-deep);
         }
 
         input:focus, select:focus {
             border-color: var(--blue-royal);
             background: white;
-            box-shadow: 0 0 0 4px rgba(30, 64, 175, 0.08);
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.08);
         }
 
-        /* زر الدخول بلون كحلي متدرج احترافي */
+        /* الزر بتدرج الأزرق والكحلي */
         .btn-authorize {
-            width: 100%; padding: 16px;
-            background: linear-gradient(to right, var(--navy-deep), var(--blue-royal));
-            color: white;
-            border: none; border-radius: 12px;
+            width: 100%; padding: 18px;
+            background: linear-gradient(135deg, var(--navy-deep) 0%, var(--blue-royal) 100%);
+            color: white; border: none; border-radius: 12px;
             font-size: 14px; font-weight: 700;
             cursor: pointer; text-transform: uppercase;
-            letter-spacing: 1.5px; transition: all 0.3s ease;
+            letter-spacing: 2px; transition: 0.3s;
             margin-top: 10px;
         }
 
         .btn-authorize:hover {
-            background: linear-gradient(to right, var(--blue-royal), var(--blue-light));
+            background: linear-gradient(135deg, var(--blue-royal) 0%, var(--blue-tech) 100%);
             transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(15, 23, 42, 0.2);
+            box-shadow: 0 10px 20px rgba(30, 64, 175, 0.25);
         }
 
     </style>
 </head>
 <body>
 
-    <div class="tech-web-bg"></div>
-    <div class="web-node node-tl"></div>
-    <div class="web-node node-br"></div>
+    <div class="spider-web-bg"></div>
+    <div class="corner-mesh mesh-tl"></div>
+    <div class="corner-mesh mesh-br"></div>
 
     <div class="login-card">
-        <div class="brand-icon">
-            <i class="fa-solid fa-route"></i>
+        <div class="icon-box">
+            <i class="fa-solid fa-tower-observation"></i>
         </div>
         
         <h1>RailRoute Central</h1>
-        <p class="subtitle">Operations & Reservation Control</p>
+        <p class="subtitle">Secure Operational Management System</p>
 
         <div class="input-group">
-            <label>Personnel Domain</label>
+            <label>Access Level</label>
             <select id="role">
-                <option value="admin">Infrastructure Administrator (Admin)</option>
-                <option value="staff">Station Operational Staff (Staff)</option>
+                <option value="admin">Administrator (Admin)</option>
+                <option value="staff">Operations Staff (Staff)</option>
             </select>
         </div>
 
         <div class="input-group">
-            <label>Personnel Identifier</label>
-            <input type="text" id="user" placeholder="Enter employee ID">
+            <label>Authentication</label>
+            <input type="text" id="user" placeholder="Enter ID or Username">
         </div>
 
         <div class="input-group">
-            <label>Secure Token</label>
+            <label>Security Key</label>
             <input type="password" id="pass" placeholder="••••••••">
         </div>
 
         <button class="btn-authorize" onclick="attemptLogin()">
-            Authorize Access
+            Authenticate Access
         </button>
     </div>
 
@@ -165,10 +161,10 @@
         function attemptLogin() {
             const u = document.getElementById('user').value;
             const p = document.getElementById('pass').value;
-            if (u && p) {
-                alert("Authenticating... Redirecting to Management Terminal.");
+            if(u && p) {
+                alert("Verifying identity... Please wait.");
             } else {
-                alert("Security Alert: Invalid credentials.");
+                alert("Credentials required.");
             }
         }
     </script>
