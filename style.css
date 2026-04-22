@@ -1,184 +1,100 @@
-/* 1. إعدادات الألوان والمتغيرات الأساسية */
+/* 1. الإعدادات الأساسية */
 :root {
-    --navy-deep: #0f172a;    /* الكحلي الإداري */
-    --blue-royal: #1e40af;   /* الأزرق الملكي */
-    --blue-tech: #3b82f6;    /* أزرق الشبكة التقنية */
-    --white-pure: #ffffff;   /* الخلفية الأساسية */
-    --slate-50: #f8fafc;     /* تظليل خفيف جداً */
-    --slate-200: #e2e8f0;    /* حدود الحقول */
-    --slate-500: #64748b;    /* النصوص الفرعية */
-    --danger: #ef4444;       /* لون الحذف/الإلغاء */
-    --sidebar-width: 280px;
+    --navy-deep: #0f172a;
+    --blue-royal: #1e40af;
+    --blue-tech: #3b82f6;
+    --white-pure: #ffffff;
 }
 
-/* 2. تنسيق الهيكل العام */
-body {
+/* 2. تنسيق الهيكل وضمان ظهور الخلفية */
+body, html {
     margin: 0;
-    font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    font-family: 'Inter', sans-serif;
     background-color: var(--white-pure);
-    color: var(--navy-deep);
+    position: relative;
     display: flex;
-    height: 100vh;
-    overflow: hidden;
+    align-items: center;
+    justify-content: center;
 }
 
-/* 3. خلفية الشبكة العنكبوتية التقنية (تظهر في كل الصفحات) */
+/* 3. الكود الفعلي للشبكة العنكبوتية التقنية */
 .tech-web-bg {
     position: fixed;
-    top: 0; left: 0; width: 100%; height: 100%;
-    z-index: -1;
-    background-image: url("data:image/svg+xml,%3Csvg width='200' height='200' viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%233b82f6' stroke-width='0.3' stroke-opacity='0.1'%3E%3Ccircle cx='100' cy='100' r='1.5' fill-opacity='0.1' fill='%233b82f6'/%3E%3Cpath d='M100 100L150 150M100 100L50 50M100 100L150 50M100 100L50 150'/%3E%3C/g%3E%3C/svg%3E");
-    background-size: 120px 120px;
-}
-
-/* 4. الشريط الجانبي (Sidebar) */
-.sidebar {
-    width: var(--sidebar-width);
-    background: var(--navy-deep);
-    color: white;
-    display: flex;
-    flex-direction: column;
-    box-shadow: 4px 0 15px rgba(15, 23, 42, 0.1);
-    z-index: 10;
-}
-
-.sidebar-header {
-    padding: 40px 25px;
-    text-align: center;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-}
-
-.sidebar-header h2 {
-    font-size: 20px;
-    color: var(--blue-tech);
-    margin: 0;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-}
-
-.nav-menu {
-    flex-grow: 1;
-    padding: 20px 0;
-}
-
-.nav-item {
-    padding: 15px 30px;
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    color: #94a3b8;
-    cursor: pointer;
-    transition: 0.3s;
-    font-size: 14px;
-    border-left: 4px solid transparent;
-}
-
-.nav-item:hover, .nav-item.active {
-    background: rgba(59, 130, 246, 0.08);
-    color: white;
-    border-left-color: var(--blue-tech);
-}
-
-/* 5. منطقة المحتوى (Main Content) */
-.main-wrapper {
-    flex-grow: 1;
-    display: flex;
-    flex-direction: column;
-    overflow-y: auto;
-    position: relative;
-    background: rgba(255, 255, 255, 0.7); /* شفافية لإظهار الشبكة خلف المحتوى */
-}
-
-.header-bar {
-    height: 70px;
-    background: white;
-    border-bottom: 1px solid var(--slate-200);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 40px;
-    position: sticky;
     top: 0;
-}
-
-.view-card {
-    background: white;
-    margin: 30px;
-    padding: 35px;
-    border-radius: 20px;
-    box-shadow: 0 10px 25px rgba(15, 23, 42, 0.04);
-    border: 1px solid rgba(15, 23, 42, 0.05);
-}
-
-/* 6. تنسيق الجداول والأزرار */
-table {
+    left: 0;
     width: 100%;
-    border-collapse: separate;
-    border-spacing: 0 10px;
-    margin-top: 20px;
+    height: 100%;
+    z-index: 1; /* جعلها فوق الخلفية البيضاء */
+    pointer-events: none;
+    
+    /* رسم الشبكة باستخدام تدرجات خطية متقاطعة دقيقة */
+    background-image: 
+        radial-gradient(circle at 2px 2px, rgba(30, 64, 175, 0.15) 1.5px, transparent 0),
+        linear-gradient(rgba(59, 130, 246, 0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(59, 130, 246, 0.05) 1px, transparent 1px);
+    background-size: 40px 40px, 40px 40px, 40px 40px;
 }
 
-th {
-    text-align: left;
-    padding: 15px;
-    font-size: 11px;
-    text-transform: uppercase;
-    color: var(--slate-500);
-    letter-spacing: 1px;
+/* إيقونة الشبكة المتشعبة في الزوايا لمحاكاة "بيت العنكبوت التقني" */
+.tech-web-bg::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: 
+        repeating-linear-gradient(45deg, transparent, transparent 40px, rgba(30, 64, 175, 0.03) 40px, rgba(30, 64, 175, 0.03) 41px),
+        repeating-linear-gradient(-45deg, transparent, transparent 40px, rgba(30, 64, 175, 0.03) 40px, rgba(30, 64, 175, 0.03) 41px);
 }
 
-td {
-    padding: 15px;
-    background: white;
-    border-top: 1px solid var(--slate-50);
-    border-bottom: 1px solid var(--slate-50);
-    font-size: 14px;
+/* 4. كرت تسجيل الدخول */
+.login-card {
+    position: relative;
+    z-index: 10; /* لضمان ظهوره فوق الشبكة */
+    background: rgba(255, 255, 255, 0.95);
+    padding: 50px 40px;
+    border-radius: 28px;
+    width: 380px;
+    text-align: center;
+    box-shadow: 0 25px 60px rgba(15, 23, 42, 0.1);
+    border: 1px solid rgba(30, 64, 175, 0.1);
+    backdrop-filter: blur(10px);
 }
 
-td:first-child { border-left: 1px solid var(--slate-50); border-radius: 12px 0 0 12px; }
-td:last-child { border-right: 1px solid var(--slate-50); border-radius: 0 12px 12px 0; }
-
-.btn {
-    padding: 12px 24px;
+/* 5. الأزرار والحقول (تدرج الكحلي والأزرق) */
+.btn-primary {
+    width: 100%;
+    padding: 16px;
+    background: linear-gradient(135deg, var(--navy-deep), var(--blue-royal));
+    color: white;
     border: none;
-    border-radius: 10px;
+    border-radius: 12px;
     font-weight: 700;
     cursor: pointer;
     transition: 0.3s;
-    font-size: 13px;
     text-transform: uppercase;
-}
-
-.btn-primary {
-    background: linear-gradient(135deg, var(--navy-deep), var(--blue-royal));
-    color: white;
+    letter-spacing: 1px;
 }
 
 .btn-primary:hover {
-    box-shadow: 0 8px 15px rgba(30, 64, 175, 0.2);
     transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(30, 64, 175, 0.2);
+    background: linear-gradient(135deg, var(--blue-royal), var(--blue-tech));
 }
 
-.btn-outline {
-    background: transparent;
-    border: 1.5px solid var(--slate-200);
-    color: var(--slate-500);
-}
-
-/* 7. تنسيق الحقول (Inputs) */
 input, select {
     width: 100%;
     padding: 14px;
-    border: 1.5px solid var(--slate-200);
+    margin-top: 8px;
+    border: 2px solid #f1f5f9;
     border-radius: 12px;
-    font-size: 14px;
+    background: #f8fafc;
     outline: none;
-    transition: 0.3s;
-    background-color: var(--slate-50);
+    box-sizing: border-box;
 }
 
 input:focus {
     border-color: var(--blue-tech);
-    background-color: white;
-    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+    background: white;
 }
