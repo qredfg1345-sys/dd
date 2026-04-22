@@ -3,245 +3,249 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RailForce | Advanced Railway Management System</title>
+    <title>SRMS | Saudi Rail Management System</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --primary: #0f172a;
-            --accent: #3b82f6;
+            --navy: #0a192f;
+            --gold: #c5a059;
+            --slate: #64748b;
+            --bg: #f8fafc;
+            --white: #ffffff;
             --success: #10b981;
             --danger: #ef4444;
-            --warning: #f59e0b;
-            --sidebar-width: 280px;
-            --bg-gray: #f8fafc;
         }
 
-        body { font-family: 'Inter', 'Segoe UI', sans-serif; background: var(--bg-gray); margin: 0; display: flex; height: 100vh; color: #334155; }
+        body { font-family: 'Segoe UI', Roboto, sans-serif; background: var(--bg); margin: 0; display: flex; height: 100vh; overflow: hidden; color: var(--navy); }
 
-        /* Sidebar Styling */
-        .sidebar { width: var(--sidebar-width); background: var(--primary); color: white; display: flex; flex-direction: column; transition: 0.3s; }
-        .sidebar-header { padding: 30px 20px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.05); }
-        .sidebar-header h2 { font-size: 22px; font-weight: 800; color: white; letter-spacing: 1px; margin: 0; }
-        .sidebar-header span { font-size: 10px; color: #94a3b8; text-transform: uppercase; letter-spacing: 2px; }
+        /* Sidebar - Executive Look */
+        .sidebar { width: 300px; background: var(--navy); color: var(--white); display: flex; flex-direction: column; transition: 0.3s; }
+        .sidebar-header { padding: 40px 25px; border-bottom: 1px solid rgba(255,255,255,0.05); text-align: center; }
+        .sidebar-header h2 { font-size: 20px; font-weight: 800; color: var(--gold); margin: 0; letter-spacing: 2px; }
+        .sidebar-header p { font-size: 10px; color: var(--slate); text-transform: uppercase; margin-top: 5px; }
 
-        .nav-menu { flex-grow: 1; padding: 20px 0; }
-        .nav-label { padding: 10px 25px; font-size: 11px; text-transform: uppercase; color: #475569; font-weight: 800; }
-        .nav-item { padding: 14px 25px; cursor: pointer; display: flex; align-items: center; gap: 15px; color: #94a3b8; font-size: 14px; transition: 0.2s; }
-        .nav-item:hover { background: rgba(255,255,255,0.03); color: white; }
-        .nav-item.active { background: rgba(59, 130, 246, 0.1); color: var(--accent); border-right: 4px solid var(--accent); }
+        .nav-container { flex-grow: 1; padding: 25px 0; overflow-y: auto; }
+        .nav-label { padding: 10px 30px; font-size: 11px; text-transform: uppercase; color: var(--slate); font-weight: 800; letter-spacing: 1px; }
+        .nav-item { padding: 15px 30px; cursor: pointer; display: flex; align-items: center; gap: 15px; color: #cbd5e1; font-size: 14px; transition: 0.2s; border-left: 4px solid transparent; }
+        .nav-item:hover { background: rgba(255,255,255,0.03); color: var(--gold); }
+        .nav-item.active { background: rgba(197, 160, 89, 0.1); color: var(--gold); border-left-color: var(--gold); }
 
-        .sidebar-footer { padding: 20px; border-top: 1px solid rgba(255,255,255,0.05); }
-        .logout-btn { background: rgba(239, 68, 68, 0.1); color: var(--danger); width: 100%; padding: 12px; border: 1px solid rgba(239, 68, 68, 0.2); border-radius: 8px; cursor: pointer; font-weight: bold; }
-        .logout-btn:hover { background: var(--danger); color: white; }
+        .sidebar-footer { padding: 25px; border-top: 1px solid rgba(255,255,255,0.05); }
+        .btn-logout { background: transparent; color: var(--danger); border: 1px solid var(--danger); width: 100%; padding: 12px; border-radius: 6px; cursor: pointer; font-weight: 700; transition: 0.3s; }
+        .btn-logout:hover { background: var(--danger); color: white; }
 
-        /* Main Content */
-        .main-wrapper { flex-grow: 1; display: flex; flex-direction: column; overflow: hidden; }
-        .top-nav { height: 70px; background: white; border-bottom: 1px solid #e2e8f0; display: flex; align-items: center; justify-content: space-between; padding: 0 40px; }
-        .breadcrumb { font-size: 14px; font-weight: 600; color: var(--primary); }
-
-        .content-area { padding: 40px; overflow-y: auto; }
-        .card { background: white; padding: 35px; border-radius: 16px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); display: none; }
-        .card.active { display: block; animation: fadeIn 0.4s; }
+        /* Content Area */
+        .main-wrapper { flex-grow: 1; display: flex; flex-direction: column; }
+        .top-status-bar { height: 60px; background: white; border-bottom: 1px solid #e2e8f0; display: flex; align-items: center; justify-content: space-between; padding: 0 40px; }
+        
+        .main-content { padding: 40px; overflow-y: auto; flex-grow: 1; }
+        .glass-card { background: var(--white); padding: 35px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); display: none; }
+        .glass-card.active { display: block; animation: fadeIn 0.5s ease; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* Forms & Inputs */
-        .grid-form { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; margin-bottom: 25px; }
-        .field-group { display: flex; flex-direction: column; gap: 8px; }
-        label { font-size: 12px; font-weight: 700; color: #64748b; text-transform: uppercase; }
-        input, select { padding: 12px; border: 1px solid #e2e8f0; border-radius: 8px; outline: none; transition: 0.2s; font-size: 14px; }
-        input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1); }
+        /* Form Controls */
+        .admin-form { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-bottom: 30px; }
+        .input-group { display: flex; flex-direction: column; gap: 8px; }
+        label { font-size: 12px; font-weight: 800; color: var(--slate); text-transform: uppercase; }
+        input, select { padding: 12px 15px; border: 1px solid #e2e8f0; border-radius: 6px; outline: none; font-size: 14px; }
+        input:focus { border-color: var(--gold); }
 
-        .btn-group { display: flex; gap: 10px; margin-top: 10px; }
-        .btn { padding: 12px 24px; border: none; border-radius: 8px; font-weight: 700; cursor: pointer; transition: 0.3s; font-size: 14px; }
-        .btn-primary { background: var(--accent); color: white; }
-        .btn-secondary { background: #64748b; color: white; }
-        .btn-danger { background: var(--danger); color: white; }
-        .btn:hover { transform: translateY(-1px); opacity: 0.9; }
+        .action-btns { display: flex; gap: 10px; }
+        .btn-core { padding: 12px 25px; border: none; border-radius: 6px; font-weight: 700; cursor: pointer; transition: 0.3s; }
+        .btn-gold { background: var(--gold); color: var(--navy); }
+        .btn-cancel { background: var(--slate); color: white; }
 
-        /* Table Design */
-        table { width: 100%; border-collapse: collapse; margin-top: 25px; }
-        th { text-align: left; padding: 15px; background: #f8fafc; font-size: 12px; color: #64748b; border-bottom: 2px solid #f1f5f9; }
-        td { padding: 18px 15px; border-bottom: 1px solid #f1f5f9; font-size: 14px; }
-        .status-badge { padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: 700; background: #f1f5f9; }
+        /* Professional Tables */
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th { text-align: left; padding: 15px; background: #f8fafc; font-size: 11px; text-transform: uppercase; color: var(--slate); border-bottom: 2px solid #edf2f7; }
+        td { padding: 15px; border-bottom: 1px solid #f1f5f9; font-size: 14px; }
+        .badge { padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: 800; }
+        .bg-success { background: #dcfce7; color: #166534; }
+        
+        /* Dashboard Reports */
+        .report-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-bottom: 30px; }
+        .report-card { background: white; padding: 20px; border-radius: 12px; border-top: 4px solid var(--gold); box-shadow: 0 4px 6px rgba(0,0,0,0.02); }
+        .report-card h4 { margin: 0; color: var(--slate); font-size: 11px; text-transform: uppercase; }
+        .report-card h2 { margin: 10px 0 0; font-size: 28px; color: var(--navy); }
 
-        /* Dashboard Overview */
-        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 25px; margin-bottom: 35px; }
-        .stat-card { background: white; padding: 25px; border-radius: 16px; border: 1px solid #f1f5f9; text-align: center; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
-        .stat-card i { font-size: 30px; color: var(--accent); margin-bottom: 15px; }
-        .stat-card h3 { margin: 0; font-size: 32px; font-weight: 800; color: var(--primary); }
-        .stat-card p { margin: 5px 0 0; font-size: 12px; font-weight: 700; color: #94a3b8; text-transform: uppercase; }
-
-        /* Login */
-        #login-overlay { position: fixed; inset: 0; background: var(--primary); display: flex; justify-content: center; align-items: center; z-index: 1000; }
-        .login-card { background: white; padding: 50px; border-radius: 24px; width: 400px; text-align: center; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); }
+        /* Login Overlay */
+        #login-overlay { position: fixed; inset: 0; background: var(--navy); display: flex; align-items: center; justify-content: center; z-index: 2000; }
+        .login-container { background: white; padding: 50px; border-radius: 15px; width: 400px; text-align: center; }
     </style>
 </head>
 <body>
 
 <div id="login-overlay">
-    <div class="login-card">
-        <i class="fa-solid fa-train-subway" style="font-size: 50px; color: var(--accent); margin-bottom: 20px;"></i>
-        <h2 style="margin: 0; color: var(--primary);">RailForce RMS</h2>
-        <p style="color: #64748b; margin-bottom: 35px;">Corporate Management Gateway</p>
-        <select id="role-select" style="margin-bottom: 15px; width: 100%;">
-            <option value="admin">System Administrator</option>
-            <option value="staff">Station Operations</option>
+    <div class="login-container">
+        <i class="fa-solid fa-building-shield" style="font-size: 40px; color: var(--gold); margin-bottom: 20px;"></i>
+        <h2 style="margin:0;">SRMS LOGIN</h2>
+        <p style="color: var(--slate); font-size: 13px; margin-bottom: 30px;">Authorized Access Only</p>
+        <select id="role-select" style="width:100%; margin-bottom:15px;">
+            <option value="admin">Infrastructure Administrator</option>
+            <option value="staff">Station Operations Staff</option>
         </select>
-        <input type="text" id="user" placeholder="Access ID" style="margin-bottom: 15px; width: 100%;">
-        <input type="password" id="pass" placeholder="Security Token" style="margin-bottom: 25px; width: 100%;">
-        <button class="btn btn-primary" style="width: 100%;" onclick="handleLogin()">Sign In</button>
+        <input type="text" id="user" placeholder="Username" style="width:100%; margin-bottom:10px;">
+        <input type="password" id="pass" placeholder="Password" style="width:100%; margin-bottom:20px;">
+        <button class="btn-core btn-gold" style="width:100%" onclick="handleLogin()">AUTHENTICATE</button>
     </div>
 </div>
 
 <div class="sidebar" id="sidebar" style="display:none;">
     <div class="sidebar-header">
-        <h2>RailForce</h2>
-        <span>Railway Systems</span>
+        <h2>SRMS PORTAL</h2>
+        <p>Enterprise Railway Solutions</p>
     </div>
     
-    <div class="nav-menu">
+    <div class="nav-container">
         <div id="admin-nav">
-            <div class="nav-label">Assets</div>
-            <div class="nav-item active" id="n-trains" onclick="nav('sec-trains', 'n-trains')"><i class="fa-solid fa-train"></i> Train Fleet</div>
-            <div class="nav-item" id="n-routes" onclick="nav('sec-routes', 'n-routes')"><i class="fa-solid fa-map-location-dot"></i> Route Network</div>
-            <div class="nav-label">Logistics</div>
-            <div class="nav-item" id="n-schedules" onclick="nav('sec-schedules', 'n-schedules')"><i class="fa-solid fa-clock"></i> Trip Schedules</div>
-            <div class="nav-item" id="n-reports" onclick="nav('sec-reports', 'n-reports')"><i class="fa-solid fa-chart-pie"></i> Management Audit</div>
+            <div class="nav-label">Infrastructure</div>
+            <div class="nav-item active" id="n-trains" onclick="nav('sec-trains', 'n-trains')"><i class="fa-solid fa-train"></i> Train Fleet Mgt</div>
+            <div class="nav-item" id="n-routes" onclick="nav('sec-routes', 'n-routes')"><i class="fa-solid fa-map"></i> Network Mapping</div>
+            <div class="nav-label">Administration</div>
+            <div class="nav-item" id="n-schedules" onclick="nav('sec-schedules', 'n-schedules')"><i class="fa-solid fa-calendar-check"></i> Trip Scheduling</div>
+            <div class="nav-item" id="n-reports" onclick="nav('sec-reports', 'n-reports')"><i class="fa-solid fa-file-contract"></i> Analytical Audit</div>
         </div>
+        
         <div id="staff-nav" style="display:none;">
-            <div class="nav-label">Service Desk</div>
-            <div class="nav-item" id="n-passengers" onclick="nav('sec-passengers', 'n-passengers')"><i class="fa-solid fa-users"></i> Passenger Directory</div>
-            <div class="nav-item" id="n-tickets" onclick="nav('sec-tickets', 'n-tickets')"><i class="fa-solid fa-ticket"></i> Ticket Issuance</div>
+            <div class="nav-label">Operational Services</div>
+            <div class="nav-item" id="n-passengers" onclick="nav('sec-passengers', 'n-passengers')"><i class="fa-solid fa-id-badge"></i> Passenger Registry</div>
+            <div class="nav-item" id="n-tickets" onclick="nav('sec-tickets', 'n-tickets')"><i class="fa-solid fa-ticket"></i> Revenue & Ticketing</div>
+            <div class="nav-item" id="n-daily" onclick="nav('sec-daily', 'n-daily')"><i class="fa-solid fa-chalkboard-user"></i> Daily Operations</div>
         </div>
     </div>
     
     <div class="sidebar-footer">
-        <button class="logout-btn" onclick="location.reload()"><i class="fa-solid fa-power-off"></i> Terminate Session</button>
+        <button class="btn-logout" onclick="location.reload()">Terminate Session</button>
     </div>
 </div>
 
 <div class="main-wrapper" id="main" style="display:none;">
-    <div class="top-nav">
-        <div class="breadcrumb" id="bc-text">Dashboard / Fleet</div>
-        <div id="user-display" style="font-size: 13px; font-weight: 700; color: #64748b;">ADMIN: 001</div>
+    <div class="top-status-bar">
+        <div style="font-weight: 700; color: var(--navy);" id="header-breadcrumb">DASHBOARD / FLEET</div>
+        <div style="font-size: 13px; color: var(--slate);"><i class="fa-solid fa-circle-check" style="color:var(--success)"></i> System Online</div>
     </div>
 
-    <div class="content-area">
-        <section id="sec-trains" class="card active">
-            <h2 style="margin-top:0;">Fleet Asset Management</h2>
-            <div class="grid-form">
-                <div class="field-group"><label>Asset ID</label><input type="text" id="train_id" placeholder="Ex: Bull-01"></div>
-                <div class="field-group"><label>Category</label><input type="text" id="train_type" placeholder="Ex: High-Speed"></div>
+    <div class="main-content">
+        <section id="sec-trains" class="glass-card active">
+            <h2 style="margin-top:0;">Fleet Asset Tracking</h2>
+            <div class="admin-form">
+                <div class="input-group"><label>Asset ID</label><input type="text" id="train_id" placeholder="Ex: SR-99"></div>
+                <div class="input-group"><label>Asset Type</label><input type="text" id="train_type" placeholder="Ex: Freight / Bullet"></div>
             </div>
-            <div class="btn-group">
-                <button class="btn btn-primary" onclick="saveTrain()" id="btn-save-train">Confirm Asset</button>
-                <button class="btn btn-secondary" id="btn-cancel-train" style="display:none;" onclick="resetForm('train')">Cancel</button>
+            <div class="action-btns">
+                <button class="btn-core btn-gold" onclick="saveTrain()" id="btn-save-train">Commit Asset</button>
+                <button class="btn-core btn-cancel" id="btn-cancel-train" style="display:none;" onclick="resetForm('train')">Cancel</button>
             </div>
-            <table id="trainList"><thead><tr><th>Asset ID</th><th>Category</th><th>Status</th><th>Control</th></tr></thead><tbody></tbody></table>
+            <table id="trainList"><thead><tr><th>Asset ID</th><th>Type</th><th>Status</th><th>Actions</th></tr></thead><tbody></tbody></table>
         </section>
 
-        <section id="sec-routes" class="card">
-            <h2 style="margin-top:0;">Route Network Configuration</h2>
-            <div class="grid-form">
+        <section id="sec-routes" class="glass-card">
+            <h2>Network Network Mapping</h2>
+            <div class="admin-form">
                 <input type="hidden" id="edit_route_idx" value="-1">
-                <div class="field-group"><label>Network Vector</label><input type="text" id="route_path" placeholder="Origin - Destination"></div>
+                <div class="input-group"><label>Route Vector</label><input type="text" id="route_path" placeholder="Origin - Destination"></div>
             </div>
-            <div class="btn-group">
-                <button class="btn btn-primary" onclick="saveRoute()" id="btn-save-route">Establish Route</button>
-                <button class="btn btn-secondary" id="btn-cancel-route" style="display:none;" onclick="resetForm('route')">Cancel Mapping</button>
+            <div class="action-btns">
+                <button class="btn-core btn-gold" onclick="saveRoute()" id="btn-save-route">Save Vector</button>
+                <button class="btn-core btn-cancel" id="btn-cancel-route" style="display:none;" onclick="resetForm('route')">Cancel</button>
             </div>
-            <table id="routeList"><thead><tr><th>Network Path</th><th>Status</th><th>Control</th></tr></thead><tbody></tbody></table>
+            <table id="routeList"><thead><tr><th>Network Path</th><th>Actions</th></tr></thead><tbody></tbody></table>
         </section>
 
-        <section id="sec-schedules" class="card">
-            <h2 style="margin-top:0;">Logistics Scheduling</h2>
-            <div class="grid-form">
+        <section id="sec-schedules" class="glass-card">
+            <h2>Operational Trip Scheduling</h2>
+            <div class="admin-form">
                 <input type="hidden" id="edit_sch_id" value="-1">
-                <div class="field-group"><label>Assigned Train</label><select id="sch_train"></select></div>
-                <div class="field-group"><label>Route Vector</label><select id="sch_route"></select></div>
-                <div class="field-group"><label>Departure Window</label><input type="datetime-local" id="sch_time"></div>
-                <div class="field-group"><label>Payload Capacity</label><input type="number" id="sch_seats"></div>
+                <div class="input-group"><label>Train Asset</label><select id="sch_train"></select></div>
+                <div class="input-group"><label>Network Route</label><select id="sch_route"></select></div>
+                <div class="input-group"><label>Departure Window</label><input type="datetime-local" id="sch_time"></div>
+                <div class="input-group"><label>Payload Capacity</label><input type="number" id="sch_seats"></div>
             </div>
-            <div class="btn-group">
-                <button class="btn btn-primary" onclick="saveSchedule()" id="btn-save-sch">Commit Schedule</button>
-                <button class="btn btn-secondary" id="btn-cancel-sch" style="display:none;" onclick="resetForm('sch')">Cancel Schedule</button>
+            <div class="action-btns">
+                <button class="btn-core btn-gold" onclick="saveSchedule()" id="btn-save-sch">Authorize Trip</button>
+                <button class="btn-core btn-cancel" id="btn-cancel-sch" style="display:none;" onclick="resetForm('sch')">Cancel</button>
             </div>
-            <table id="schList"><thead><tr><th>Train</th><th>Vector</th><th>ETA/ETD</th><th>Load</th><th>Control</th></tr></thead><tbody></tbody></table>
+            <table id="schList"><thead><tr><th>Train</th><th>Route</th><th>Departure</th><th>Load</th><th>Actions</th></tr></thead><tbody></tbody></table>
         </section>
 
-        <section id="sec-reports" class="card">
-            <h2 style="margin-top:0;">Management Analytics</h2>
-            <div class="stats-grid">
-                <div class="stat-card"><i class="fa-solid fa-train"></i><h3 id="a-t">0</h3><p>Total Fleet</p></div>
-                <div class="stat-card"><i class="fa-solid fa-route"></i><h3 id="a-r">0</h3><p>Network Paths</p></div>
-                <div class="stat-card"><i class="fa-solid fa-id-card"></i><h3 id="a-p">0</h3><p>Users Registered</p></div>
+        <section id="sec-reports" class="glass-card">
+            <h2>System Analytical Audit</h2>
+            <div class="report-grid">
+                <div class="report-card"><h4>Fleet Assets</h4><h2 id="r-t">0</h2></div>
+                <div class="report-card"><h4>Network Paths</h4><h2 id="r-r">0</h2></div>
+                <div class="report-card"><h4>Revenue Tokens</h4><h2 id="r-tk">0</h2></div>
+                <div class="report-card"><h4>Registered Users</h4><h2 id="r-p">0</h2></div>
             </div>
-            <div style="background: #f8fafc; padding: 20px; border-radius: 12px; border-left: 5px solid var(--accent);">
-                <p style="margin:0; font-weight:700;">Operational Status: System running optimized.</p>
+            <div style="background:#f8fafc; padding:25px; border-radius:12px;">
+                <h4>Audit Log (Real-time Operations)</h4>
+                <div id="audit-log" style="font-size:13px; color:var(--slate);">No recent operations detected.</div>
             </div>
         </section>
 
-        <section id="sec-passengers" class="card">
-            <h2 style="margin-top:0;">Passenger Directory</h2>
-            <div class="grid-form">
-                <div class="field-group"><label>Full Legal Name</label><input type="text" id="ps_name"></div>
-                <div class="field-group"><label>Identifier (National ID)</label><input type="text" id="ps_id"></div>
+        <section id="sec-passengers" class="glass-card">
+            <h2>Passenger Identity Registry</h2>
+            <div class="admin-form">
+                <div class="input-group"><label>Full Legal Name</label><input type="text" id="ps_name"></div>
+                <div class="input-group"><label>National Identifier</label><input type="text" id="ps_id"></div>
             </div>
-            <button class="btn btn-primary" onclick="savePassenger()">Verify & Register</button>
-            <table id="psList"><thead><tr><th>Identity</th><th>ID Status</th></tr></thead><tbody></tbody></table>
+            <button class="btn-core btn-gold" onclick="savePassenger()">Verify & Register</button>
+            <hr style="margin:30px 0; border:0; border-top:1px solid #eee;">
+            <input type="text" id="ps_search" onkeyup="searchPS()" placeholder="Search Identity Records..." style="width:100%; padding:12px; margin-bottom:20px;">
+            <table id="psList"><thead><tr><th>Name</th><th>Identity ID</th></tr></thead><tbody></tbody></table>
         </section>
 
-        <section id="sec-tickets" class="card">
-            <h2 style="margin-top:0;">Ticketing Operations</h2>
-            <div style="background: #f8fafc; padding: 25px; border-radius: 16px; margin-bottom: 25px; border: 1px solid #e2e8f0;">
-                <label>Target Trip</label><select id="tk_trip" onchange="checkStatus()"></select>
-                <div id="tk-info" style="margin-top:15px; font-weight:700; color:var(--accent);">Select trip to run scan...</div>
-                <div id="issue-box" style="display:none; margin-top:20px; border-top: 1px solid #ddd; padding-top:20px;">
-                    <label>Link Passenger Profile</label><select id="tk_passenger" style="margin-bottom:15px; width:100%;"></select>
-                    <button class="btn btn-primary" style="width:100%" onclick="issueTicket()">Authorize Token Issuance</button>
+        <section id="sec-tickets" class="glass-card">
+            <h2>Revenue & Ticketing Issuance</h2>
+            <div style="background:#f8fafc; padding:30px; border-radius:12px; border-left:5px solid var(--gold);">
+                <label>Target Trip Schedule</label><select id="tk_trip" style="width:100%; margin-top:10px;" onchange="checkSeats()"></select>
+                <div id="seat-status" style="margin-top:15px; font-weight:bold;">Run availability scan...</div>
+                <div id="booking-area" style="display:none; margin-top:20px; border-top:1px solid #ddd; padding-top:20px;">
+                    <label>Passenger Profile</label><select id="tk_passenger" style="width:100%; margin-top:10px;"></select>
+                    <button class="btn-core btn-gold" style="width:100%; margin-top:20px;" onclick="issueTicket()">Authorize Issuance</button>
                 </div>
             </div>
-            <table id="tkTable"><thead><tr><th>Passenger</th><th>Vector</th><th>Control</th></tr></thead><tbody></tbody></table>
+            <table id="tkTable"><thead><tr><th>Identity</th><th>Vector</th><th>Actions</th></tr></thead><tbody></tbody></table>
+        </section>
+
+        <section id="sec-daily" class="glass-card">
+            <h2>Station Operational Board</h2>
+            <table id="dailyBoard"><thead><tr><th>Route Vector</th><th>Time Window</th><th>Load Status</th></tr></thead><tbody></tbody></table>
         </section>
     </div>
 </div>
 
 <script>
-    let db = JSON.parse(localStorage.getItem('railforce_rms_db')) || { trains: [], routes: [], schedules: [], passengers: [], tickets: [] };
+    let db = JSON.parse(localStorage.getItem('srms_corp_db')) || { trains: [], routes: [], schedules: [], passengers: [], tickets: [], logs: [] };
 
     function handleLogin() {
-        const u = document.getElementById('user').value, p = document.getElementById('pass').value, role = document.getElementById('role-select').value;
-        if((u === 'admin' && p === 'admin') || (u === 'staff' && p === 'staff')) {
+        const u = document.getElementById('user').value, p = document.getElementById('pass').value, r = document.getElementById('role-select').value;
+        if((u==='admin' && p==='admin') || (u==='staff' && p==='staff')) {
             document.getElementById('login-overlay').style.display = 'none';
             document.getElementById('sidebar').style.display = 'flex';
             document.getElementById('main').style.display = 'flex';
-            document.getElementById('admin-nav').style.display = role === 'admin' ? 'block' : 'none';
-            document.getElementById('staff-nav').style.display = role === 'staff' ? 'block' : 'none';
-            document.getElementById('user-display').innerText = role.toUpperCase() + ": ACTIVE";
-            nav(role === 'admin' ? 'sec-trains' : 'sec-passengers', role === 'admin' ? 'n-trains' : 'n-passengers');
+            document.getElementById('admin-nav').style.display = r === 'admin' ? 'block' : 'none';
+            document.getElementById('staff-nav').style.display = r === 'staff' ? 'block' : 'none';
+            nav(r==='admin' ? 'sec-trains' : 'sec-passengers', r==='admin' ? 'n-trains' : 'n-passengers');
             updateUI();
-        } else alert("Authorization Failure: Invalid Credentials.");
+        } else alert("Authorization Failed: Invalid Credentials");
     }
 
     function nav(id, linkId) {
-        document.querySelectorAll('.card').forEach(c => c.classList.remove('active'));
+        document.querySelectorAll('.glass-card').forEach(c => c.classList.remove('active'));
         document.getElementById(id).classList.add('active');
         document.querySelectorAll('.nav-item').forEach(l => l.classList.remove('active'));
         document.getElementById(linkId).classList.add('active');
-        document.getElementById('bc-text').innerText = "Management / " + document.getElementById(linkId).innerText;
-        if(id === 'sec-reports') {
-            document.getElementById('a-t').innerText = db.trains.length;
-            document.getElementById('a-r').innerText = db.routes.length;
-            document.getElementById('a-p').innerText = db.passengers.length;
-        }
+        document.getElementById('header-breadcrumb').innerText = "PORTAL / " + document.getElementById(linkId).innerText.toUpperCase();
+        if(id === 'sec-reports') runAudit();
     }
 
-    // --- FLEET ---
+    // Logic Functions
     function saveTrain() {
         const id = document.getElementById('train_id').value.trim(), ty = document.getElementById('train_type').value.trim();
         if(!id || !ty) return;
         const idx = db.trains.findIndex(t => t.id === id);
-        if(idx > -1) db.trains[idx].type = ty; else db.trains.push({id, type: ty});
+        if(idx > -1) { db.trains[idx].type = ty; log("Updated Train Asset: " + id); }
+        else { db.trains.push({id, type: ty}); log("Registered New Train: " + id); }
         resetForm('train'); save();
     }
     function editTrain(id, type) {
@@ -250,24 +254,23 @@
         document.getElementById('btn-cancel-train').style.display = "inline-block";
     }
 
-    // --- NETWORK ---
     function saveRoute() {
         const p = document.getElementById('route_path').value.trim(), idx = document.getElementById('edit_route_idx').value;
         if(!p) return;
-        if(idx == -1) db.routes.push(p); else db.routes[idx] = p;
+        if(idx == -1) { db.routes.push(p); log("Mapped New Vector: " + p); }
+        else { db.routes[idx] = p; log("Modified Vector: " + p); }
         resetForm('route'); save();
     }
     function editRoute(i) {
         document.getElementById('route_path').value = db.routes[i]; document.getElementById('edit_route_idx').value = i;
-        document.getElementById('btn-save-route').innerText = "Modify Vector";
         document.getElementById('btn-cancel-route').style.display = "inline-block";
     }
 
-    // --- SCHEDULING ---
     function saveSchedule() {
         const sid = document.getElementById('edit_sch_id').value;
         const s = { id: sid == -1 ? Date.now() : parseInt(sid), train: document.getElementById('sch_train').value, route: document.getElementById('sch_route').value, time: document.getElementById('sch_time').value, seats: parseInt(document.getElementById('sch_seats').value) };
-        if(sid == -1) db.schedules.push(s); else db.schedules[db.schedules.findIndex(x => x.id == sid)] = s;
+        if(sid == -1) { db.schedules.push(s); log("Deployed Trip Schedule for " + s.route); }
+        else { db.schedules[db.schedules.findIndex(x => x.id == sid)] = s; log("Modified Schedule for " + s.route); }
         resetForm('sch'); save();
     }
     function editSch(id) {
@@ -275,45 +278,59 @@
         document.getElementById('sch_train').value = s.train; document.getElementById('sch_route').value = s.route;
         document.getElementById('sch_time').value = s.time; document.getElementById('sch_seats').value = s.seats;
         document.getElementById('edit_sch_id').value = s.id;
-        document.getElementById('btn-save-sch').innerText = "Update Schedule";
         document.getElementById('btn-cancel-sch').style.display = "inline-block";
     }
 
-    // --- STAFF ---
     function savePassenger() {
-        const n = document.getElementById('ps_name').value, id = document.getElementById('ps_id').value;
-        if(id.length < 5 || db.passengers.some(p => p.id === id)) return alert("Error: Unique ID required.");
-        db.passengers.push({name: n, id: id}); save();
+        const n = document.getElementById('ps_name').value.trim(), id = document.getElementById('ps_id').value.trim();
+        if(id.length < 5 || db.passengers.some(p => p.id === id)) return alert("Identity Validation Error");
+        db.passengers.push({name: n, id: id}); log("Registered Passenger: " + n); save();
     }
-    function checkStatus() {
+
+    function checkSeats() {
         const s = db.schedules.find(x => x.id == document.getElementById('tk_trip').value);
-        if(s) { document.getElementById('tk-info').innerText = `Scan Result: ${s.seats} Seats Available`; document.getElementById('issue-box').style.display = s.seats > 0 ? 'block' : 'none'; }
+        if(s) { document.getElementById('seat-status').innerText = s.seats + " Load Units Available"; document.getElementById('booking-area').style.display = s.seats > 0 ? 'block' : 'none'; }
     }
+
     function issueTicket() {
         const s = db.schedules.find(x => x.id == document.getElementById('tk_trip').value);
-        if(s && s.seats > 0) { s.seats--; db.tickets.push({p: document.getElementById('tk_passenger').value, trip: s.route, sid: s.id, id: Date.now()}); save(); }
+        if(s && s.seats > 0) { s.seats--; db.tickets.push({p: document.getElementById('tk_passenger').value, trip: s.route, sid: s.id, id: Date.now()}); log("Issued Ticket for trip " + s.route); save(); }
     }
 
-    // --- UTILS ---
+    function searchPS() {
+        const q = document.getElementById('ps_search').value.toLowerCase();
+        const res = db.passengers.filter(p => p.name.toLowerCase().includes(q) || p.id.includes(q));
+        render('psList', res.map(p => `<tr><td>${p.name}</td><td>${p.id}</td></tr>`));
+    }
+
+    // Core Utils
+    function log(m) { db.logs.unshift(new Date().toLocaleTimeString() + " : " + m); if(db.logs.length > 10) db.logs.pop(); }
+    function runAudit() {
+        document.getElementById('r-t').innerText = db.trains.length;
+        document.getElementById('r-r').innerText = db.routes.length;
+        document.getElementById('r-tk').innerText = db.tickets.length;
+        document.getElementById('r-p').innerText = db.passengers.length;
+        document.getElementById('audit-log').innerHTML = db.logs.map(l => `<p style="margin:5px 0;">${l}</p>`).join('');
+    }
     function resetForm(t) {
-        if(t==='train') { document.getElementById('train_id').value=''; document.getElementById('train_type').value=''; document.getElementById('btn-save-train').innerText="Confirm Asset"; document.getElementById('btn-cancel-train').style.display="none"; }
-        if(t==='route') { document.getElementById('route_path').value=''; document.getElementById('edit_route_idx').value='-1'; document.getElementById('btn-save-route').innerText="Establish Route"; document.getElementById('btn-cancel-route').style.display="none"; }
-        if(t==='sch') { document.getElementById('edit_sch_id').value='-1'; document.getElementById('btn-save-sch').innerText="Commit Schedule"; document.getElementById('btn-cancel-sch').style.display="none"; }
+        if(t==='train') { document.getElementById('train_id').value=''; document.getElementById('train_type').value=''; document.getElementById('btn-save-train').innerText="Commit Asset"; document.getElementById('btn-cancel-train').style.display="none"; }
+        if(t==='route') { document.getElementById('route_path').value=''; document.getElementById('edit_route_idx').value='-1'; document.getElementById('btn-cancel-route').style.display="none"; }
+        if(t==='sch') { document.getElementById('edit_sch_id').value='-1'; document.getElementById('btn-cancel-sch').style.display="none"; }
     }
-
-    function save() { localStorage.setItem('railforce_rms_db', JSON.stringify(db)); updateUI(); }
-    function render(id, html) { document.querySelector(`#${id} tbody`).innerHTML = html.join('') || '<tr><td colspan="4" style="text-align:center; color:#94a3b8;">No records found.</td></tr>'; }
+    function save() { localStorage.setItem('srms_corp_db', JSON.stringify(db)); updateUI(); }
+    function render(id, html) { document.querySelector(`#${id} tbody`).innerHTML = html.join('') || '<tr><td colspan="5">NO ACTIVE RECORDS</td></tr>'; }
 
     function updateUI() {
-        render('trainList', db.trains.map(t => `<tr><td><b>${t.id}</b></td><td>${t.type}</td><td><span class="status-badge">Operational</span></td><td><button class="btn btn-primary btn-sm" style="padding:5px 10px; background:#3b82f6;" onclick="editTrain('${t.id}','${t.type}')">Update</button><button class="btn btn-danger btn-sm" style="padding:5px 10px;" onclick="db.trains=db.trains.filter(x=>x.id!=='${t.id}');save()">Delete</button></td></tr>`));
-        render('routeList', db.routes.map((r, i) => `<tr><td>${r}</td><td><span class="status-badge">Mapped</span></td><td><button class="btn btn-primary btn-sm" style="padding:5px 10px; background:#3b82f6;" onclick="editRoute(${i})">Update</button><button class="btn btn-danger btn-sm" style="padding:5px 10px;" onclick="db.routes.splice(${i},1);save()">Delete</button></td></tr>`));
-        render('schList', db.schedules.map(s => `<tr><td>${s.train}</td><td>${s.route}</td><td>${s.time}</td><td>${s.seats}</td><td><button class="btn btn-primary btn-sm" style="padding:5px 10px; background:#3b82f6;" onclick="editSch(${s.id})">Update</button><button class="btn btn-danger btn-sm" style="padding:5px 10px;" onclick="db.schedules=db.schedules.filter(x=>x.id!==${s.id});save()">Delete</button></td></tr>`));
-        render('psList', db.passengers.map(p => `<tr><td>${p.name}</td><td><span class="status-badge">ID: ${p.id}</span></td></tr>`));
-        render('tkTable', db.tickets.map(t => `<tr><td>${t.p}</td><td>${t.trip}</td><td><button class="btn btn-danger btn-sm" onclick="db.tickets=db.tickets.filter(x=>x.id!==${t.id});save()">Void</button></td></tr>`));
+        render('trainList', db.trains.map(t => `<tr><td><b>${t.id}</b></td><td>${t.type}</td><td><span class="badge bg-success">ACTIVE</span></td><td><button class="btn-core btn-gold btn-sm" onclick="editTrain('${t.id}','${t.type}')">Update</button><button class="btn-core btn-cancel btn-sm" onclick="db.trains=db.trains.filter(x=>x.id!=='${t.id}');save()">Delete</button></td></tr>`));
+        render('routeList', db.routes.map((r, i) => `<tr><td>${r}</td><td><button class="btn-core btn-gold btn-sm" onclick="editRoute(${i})">Update</button><button class="btn-core btn-cancel btn-sm" onclick="db.routes.splice(${i},1);save()">Delete</button></td></tr>`));
+        render('schList', db.schedules.map(s => `<tr><td>${s.train}</td><td>${s.route}</td><td>${s.time}</td><td>${s.seats}</td><td><button class="btn-core btn-gold btn-sm" onclick="editSch(${s.id})">Update</button><button class="btn-core btn-cancel btn-sm" onclick="db.schedules=db.schedules.filter(x=>x.id!==${s.id});save()">Delete</button></td></tr>`));
+        render('psList', db.passengers.map(p => `<tr><td>${p.name}</td><td>${p.id}</td></tr>`));
+        render('tkTable', db.tickets.map(t => `<tr><td>${t.p}</td><td>${t.trip}</td><td><button class="btn-core btn-cancel btn-sm" onclick="db.tickets=db.tickets.filter(x=>x.id!==${t.id});save()">Void</button></td></tr>`));
+        render('dailyBoard', db.schedules.map(s => `<tr><td>${s.route}</td><td>${s.time}</td><td><b>${s.seats} Units</b></td></tr>`));
         
         document.getElementById('sch_train').innerHTML = db.trains.map(t => `<option>${t.id}</option>`).join('');
         document.getElementById('sch_route').innerHTML = db.routes.map(r => `<option>${r}</option>`).join('');
-        document.getElementById('tk_passenger').innerHTML = db.passengers.map(p => `<option value="${p.name} (ID: ${p.id})">${p.name} (ID: ${p.id})</option>`).join('');
+        document.getElementById('tk_passenger').innerHTML = db.passengers.map(p => `<option value="${p.name} (ID:${p.id})">${p.name} (ID:${p.id})</option>`).join('');
         document.getElementById('tk_trip').innerHTML = db.schedules.map(s => `<option value="${s.id}">${s.route} (${s.time})</option>`).join('');
     }
 </script>
