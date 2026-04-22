@@ -3,205 +3,99 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RailRoute Central | Smart Access</title>
+    <title>RailRoute Central | Secure Access</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
     <style>
-        :root {
-            --navy-deep: #0f172a;
-            --blue-royal: #1e40af;
-            --blue-tech: #3b82f6;
-            --white-pure: #ffffff;
-            --slate-400: #94a3b8;
+        /* تنسيقات إضافية خاصة بمركزية كرت الدخول فقط */
+        body {
+            align-items: center;
+            justify-content: center;
         }
-
-        body, html {
-            margin: 0; padding: 0; width: 100%; height: 100vh;
-            font-family: 'Inter', 'Segoe UI', sans-serif;
-            background-color: var(--white-pure);
-            display: flex; align-items: center; justify-content: center;
-            overflow: hidden; position: relative;
-        }
-
-        /* --- تصميم الشبكة العنكبوتية التقنية (Technical Neural Web) --- */
-        .tech-network-bg {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            z-index: 0;
-            background-image: url("data:image/svg+xml,%3Csvg width='200' height='200' viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%233b82f6' stroke-width='0.4' stroke-opacity='0.1'%3E%3Ccircle cx='100' cy='100' r='2' fill-opacity='0.1' fill='%233b82f6'/%3E%3Cpath d='M100 100L150 150M100 100L50 50M100 100L150 50M100 100L50 150'/%3E%3C/g%3E%3C/svg%3E");
-            background-size: 150px 150px;
-        }
-
-        /* تأثير الخطوط العنكبوتية في الزوايا */
-        .corner-web {
-            position: absolute;
-            width: 600px; height: 600px;
-            z-index: 1;
-            opacity: 0.4;
-        }
-        .top-left {
-            top: -200px; left: -200px;
-            background: radial-gradient(circle, rgba(30, 64, 175, 0.1) 0%, transparent 80%);
-            border: 0.5px solid rgba(30, 64, 175, 0.05);
-            border-radius: 50%;
-        }
-        .bottom-right {
-            bottom: -200px; right: -200px;
-            background: radial-gradient(circle, rgba(59, 130, 246, 0.1) 0%, transparent 80%);
-            border: 0.5px solid rgba(59, 130, 246, 0.05);
-            border-radius: 50%;
-        }
-
-        /* --- كرت تسجيل الدخول --- */
         .login-card {
             background: rgba(255, 255, 255, 0.98);
-            padding: 60px 45px;
+            padding: 50px 40px;
             border-radius: 28px;
             width: 100%;
-            max-width: 420px;
+            max-width: 400px;
             text-align: center;
-            box-shadow: 0 30px 60px -12px rgba(15, 23, 42, 0.15);
-            border: 1px solid rgba(15, 23, 42, 0.05);
-            position: relative;
+            box-shadow: 0 25px 60px rgba(15, 23, 42, 0.15);
+            border: 1px solid rgba(30, 64, 175, 0.1);
             z-index: 10;
             backdrop-filter: blur(10px);
         }
-
-        /* الأيقونة التقنية الجديدة (بدون المربع المزعج) */
         .brand-logo {
-            width: 85px; height: 85px;
-            margin: 0 auto 30px;
-            background: linear-gradient(135deg, var(--navy-deep) 0%, var(--blue-royal) 100%);
-            border-radius: 24px;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 38px; color: white;
-            box-shadow: 0 15px 30px rgba(30, 64, 175, 0.25);
-            transform: rotate(-3deg);
-        }
-
-        h1 {
-            color: var(--navy-deep);
-            font-size: 24px;
-            font-weight: 800;
-            margin: 0;
-            letter-spacing: -0.5px;
-            text-transform: uppercase;
-        }
-
-        .subtitle {
-            color: var(--slate-400);
-            font-size: 13px;
-            margin: 10px 0 45px;
-            font-weight: 500;
-        }
-
-        .input-group {
-            text-align: left;
-            margin-bottom: 25px;
-        }
-
-        label {
-            display: block;
-            font-size: 11px;
-            font-weight: 800;
-            color: var(--navy-deep);
-            text-transform: uppercase;
-            margin-bottom: 10px;
-            letter-spacing: 1px;
-        }
-
-        input, select {
-            width: 100%;
-            padding: 16px 20px;
-            border: 2px solid #f1f5f9;
-            border-radius: 14px;
-            font-size: 14px;
-            background: #f8fafc;
-            transition: all 0.3s ease;
-            box-sizing: border-box;
-            outline: none;
-            color: var(--navy-deep);
-        }
-
-        input:focus, select:focus {
-            background: white;
-            border-color: var(--blue-tech);
-            box-shadow: 0 0 0 5px rgba(59, 130, 246, 0.1);
-        }
-
-        /* زر الدخول بتدرج احترافي */
-        .btn-authorize {
-            width: 100%;
-            padding: 18px;
-            background: linear-gradient(to right, var(--navy-deep), var(--blue-royal));
+            width: 80px; height: 80px;
+            background: linear-gradient(135deg, var(--navy-deep), var(--blue-royal));
             color: white;
-            border: none;
-            border-radius: 14px;
-            font-size: 15px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            cursor: pointer;
-            transition: all 0.4s ease;
-            margin-top: 15px;
-            box-shadow: 0 12px 25px -5px rgba(15, 23, 42, 0.3);
+            border-radius: 22px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 35px;
+            margin: 0 auto 25px;
+            box-shadow: 0 12px 24px rgba(30, 64, 175, 0.2);
         }
-
-        .btn-authorize:hover {
-            background: linear-gradient(to right, var(--blue-royal), var(--blue-tech));
-            transform: translateY(-3px);
-            box-shadow: 0 20px 35px -5px rgba(59, 130, 246, 0.4);
-        }
-
     </style>
 </head>
 <body>
 
-    <div class="tech-network-bg"></div>
-    <div class="corner-web top-left"></div>
-    <div class="corner-web bottom-right"></div>
+    <div class="tech-web-bg"></div>
 
     <div class="login-card">
         <div class="brand-logo">
             <i class="fa-solid fa-shield-halved"></i>
         </div>
         
-        <h1>RailRoute Central</h1>
-        <p class="subtitle">Secure Operational Management Gateway</p>
+        <h1 style="margin: 0; font-size: 22px; color: var(--navy-deep); letter-spacing: 1px;">RAILROUTE CENTRAL</h1>
+        <p style="color: var(--slate-500); font-size: 13px; margin: 8px 0 35px;">Infrastructure & Reservation Governance</p>
 
-        <div class="input-group">
-            <label>Operations Domain</label>
-            <select id="role">
-                <option value="admin">Infrastructure Administrator (Admin)</option>
-                <option value="staff">Station Operational Staff (Staff)</option>
-            </select>
-        </div>
+        <form onsubmit="return handleLogin(event)">
+            <div style="text-align: left; margin-bottom: 22px;">
+                <label style="display: block; font-size: 11px; font-weight: 800; text-transform: uppercase; margin-bottom: 8px; color: var(--navy-deep);">
+                    Operations Domain
+                </label>
+                <select id="role">
+                    <option value="admin">Infrastructure Administrator (Admin)</option>
+                    <option value="staff">Station Operational Staff (Staff)</option>
+                </select>
+            </div>
 
-        <div class="input-group">
-            <label>Authentication</label>
-            <input type="text" id="user" placeholder="Enter ID or Username">
-        </div>
+            <div style="text-align: left; margin-bottom: 22px;">
+                <label style="display: block; font-size: 11px; font-weight: 800; text-transform: uppercase; margin-bottom: 8px; color: var(--navy-deep);">
+                    Authentication Identifier
+                </label>
+                <input type="text" id="user" placeholder="Enter ID or Username" required>
+            </div>
 
-        <div class="input-group">
-            <label>Security Key</label>
-            <input type="password" id="pass" placeholder="••••••••">
-        </div>
+            <div style="text-align: left; margin-bottom: 25px;">
+                <label style="display: block; font-size: 11px; font-weight: 800; text-transform: uppercase; margin-bottom: 8px; color: var(--navy-deep);">
+                    Secure Key
+                </label>
+                <input type="password" id="pass" placeholder="••••••••" required>
+            </div>
 
-        <button class="btn-authorize" onclick="handleAuth()">
-            Authorize Access
-        </button>
+            <button type="submit" class="btn btn-primary" style="width: 100%; padding: 18px; letter-spacing: 2px;">
+                Authorize Access
+            </button>
+        </form>
     </div>
 
     <script>
-        function handleAuth() {
-            const u = document.getElementById('user').value;
-            const p = document.getElementById('pass').value;
-            const r = document.getElementById('role').value;
+        function handleLogin(event) {
+            event.preventDefault();
+            const user = document.getElementById('user').value;
+            const pass = document.getElementById('pass').value;
+            const role = document.getElementById('role').value;
 
-            if ((u === 'admin' && p === 'admin' && r === 'admin') || 
-                (u === 'staff' && p === 'staff' && r === 'staff')) {
-                alert("Identity Verified. Linking to Central System...");
+            // منطق بسيط للتحقق (يمكنك ربطه لاحقاً بقاعدة البيانات)
+            if ((user === 'admin' && pass === 'admin' && role === 'admin') || 
+                (user === 'staff' && pass === 'staff' && role === 'staff')) {
+                alert("Identity Verified. Accessing " + role.toUpperCase() + " Terminal...");
+                // التوجيه لصفحة الداشبورد الرئيسية بعد النجاح
+                // window.location.href = "dashboard.html"; 
             } else {
-                alert("Security Denial: Credentials mismatch.");
+                alert("Security Alert: Invalid credentials or unauthorized domain.");
             }
         }
     </script>
