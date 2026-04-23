@@ -3,40 +3,46 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RailRoute Central | Login</title>
+    <title>RailRoute Central | Secure Access</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+
     <div id="particles-js"></div>
 
     <div class="login-card">
-        <div class="brand-header">
-            <div class="brand-logo"><i class="fa-solid fa-shield-halved"></i></div>
+        <div class="brand-header" style="text-align: center;">
+            <div class="brand-logo">
+                <i class="fa-solid fa-shield-halved"></i>
+            </div>
             <h1>RailRoute Central</h1>
-            <p class="system-subtitle">Infrastructure & Reservation Governance</p>
+            <p class="system-subtitle" style="color: #64748b; font-size: 12px; margin-top: 5px;">Infrastructure & Reservation Governance</p>
         </div>
-
+        
         <form onsubmit="handleLogin(event)">
-            <div class="input-section">
-                <label>Operations Domain</label>
-                <select id="role">
+            
+            <div class="input-section" style="text-align: left; margin-top: 25px;">
+                <label style="display: block; font-size: 11px; font-weight: 800; color: #0f172a; text-transform: uppercase; margin-bottom: 8px;">Operations Domain</label>
+                <select id="role" style="width: 100%; padding: 14px; border-radius: 12px; border: 1.5px solid #e2e8f0; background: #f8fafc; text-align: left;">
                     <option value="admin">Infrastructure Administrator (Admin)</option>
                     <option value="staff">Station Operational Staff (Staff)</option>
                 </select>
             </div>
 
-            <div class="input-section">
-                <label>Authentication Identifier</label>
-                <input type="text" id="user" placeholder="Enter Username" required>
+            <div class="input-section" style="text-align: left; margin-top: 20px;">
+                <label style="display: block; font-size: 11px; font-weight: 800; color: #0f172a; text-transform: uppercase; margin-bottom: 8px;">Authentication Identifier</label>
+                <input type="text" id="user" placeholder="Enter Username" required style="width: 100%; padding: 14px; border-radius: 12px; border: 1.5px solid #e2e8f0; background: #f8fafc; text-align: left; box-sizing: border-box;">
             </div>
 
-            <div class="input-section">
-                <label>Secure Key</label>
-                <input type="password" id="pass" placeholder="••••••••" required>
+            <div class="input-section" style="text-align: left; margin-top: 20px; margin-bottom: 30px;">
+                <label style="display: block; font-size: 11px; font-weight: 800; color: #0f172a; text-transform: uppercase; margin-bottom: 8px;">Secure Key</label>
+                <input type="password" id="pass" placeholder="••••••••" required style="width: 100%; padding: 14px; border-radius: 12px; border: 1.5px solid #e2e8f0; background: #f8fafc; text-align: left; box-sizing: border-box;">
             </div>
 
-            <button type="submit" class="btn-authorize">Authorize Access</button>
+            <button type="submit" class="btn-authorize" style="width: 100%; padding: 18px; background: linear-gradient(135deg, #0f172a, #1e40af); color: white; border: none; border-radius: 12px; font-weight: 700; cursor: pointer; text-transform: uppercase; letter-spacing: 1px;">
+                Authorize Access
+            </button>
         </form>
     </div>
 
