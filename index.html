@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RailRoute Central | Secure Access</title>
+    <title>RailRoute Central | Admin Terminal</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
 </head>
@@ -11,90 +11,84 @@
 
     <div id="particles-js"></div>
 
-    <div class="login-card">
-        <div class="brand-logo">
-            <i class="fa-solid fa-shield-halved"></i>
-        </div>
-        
-        <h1>RailRoute Central</h1>
-        <p class="system-subtitle">Infrastructure & Reservation Governance</p>
-
-        <form onsubmit="return handleLogin(event)">
+    <div class="admin-container">
+        <aside class="sidebar">
+            <div class="brand-section">
+                <i class="fa-solid fa-train-subway"></i>
+                <span>RailRoute Admin</span>
+            </div>
             
-            <div class="input-section">
-                <label>Operations Domain</label>
-                <select id="role">
-                    <option value="admin">Infrastructure Administrator (Admin)</option>
-                    <option value="staff">Station Operational Staff (Staff)</option>
-                </select>
+            <nav class="menu">
+                <a href="#" class="active"><i class="fa-solid fa-gauge"></i> Dashboard</a>
+                <a href="#"><i class="fa-solid fa-train"></i> Add/Update Train</a>
+                <a href="#"><i class="fa-solid fa-route"></i> Define Route</a>
+                <a href="#"><i class="fa-solid fa-calendar-check"></i> Manage Schedule</a>
+                <a href="#"><i class="fa-solid fa-chart-line"></i> Generate Reports</a>
+                <div class="divider"></div>
+                <a href="login.html" class="logout"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
+            </nav>
+        </aside>
+
+        <main class="content">
+            <header class="top-bar">
+                <h2>Infrastructure Governance Terminal</h2>
+                <div class="admin-profile">
+                    <span>Welcome, Chief Admin</span>
+                    <i class="fa-solid fa-user-shield"></i>
+                </div>
+            </header>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <h3>Active Trains</h3>
+                    <p class="value">24</p>
+                </div>
+                <div class="stat-card">
+                    <h3>Defined Routes</h3>
+                    <p class="value">12</p>
+                </div>
+                <div class="stat-card">
+                    <h3>Today's Schedules</h3>
+                    <p class="value">45</p>
+                </div>
             </div>
 
-            <div class="input-section">
-                <label>Authentication Identifier</label>
-                <input type="text" id="user" placeholder="Enter ID or Username" required>
-            </div>
-
-            <div class="input-section">
-                <label>Secure Key</label>
-                <input type="password" id="pass" placeholder="••••••••" required>
-            </div>
-
-            <button type="submit" class="btn-authorize">
-                Authorize Access
-            </button>
-        </form>
+            <section class="action-panel">
+                <h3>Quick System Actions</h3>
+                <div class="btn-group">
+                    <button class="btn-action"><i class="fa-solid fa-plus"></i> New Train Entry</button>
+                    <button class="btn-action"><i class="fa-solid fa-map-location-dot"></i> Establish Route</button>
+                    <button class="btn-action"><i class="fa-solid fa-clock"></i> Assign Schedule</button>
+                </div>
+            </section>
+        </main>
     </div>
 
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
-    <script>
-        /* Particles Web Background Initialization */
-        particlesJS("particles-js", {
-            "particles": {
-                "number": { "value": 100, "density": { "enable": true, "value_area": 800 } },
-                "color": { "value": "#1e40af" },
-                "shape": { "type": "circle" },
-                "opacity": { "value": 0.3, "random": false },
-                "size": { "value": 3, "random": true },
-                "line_linked": {
-                    "enable": true,
-                    "distance": 150,
-                    "color": "#3b82f6",
-                    "opacity": 0.2,
-                    "width": 1
-                },
-                "move": { "enable": true, "speed": 2, "direction": "none", "random": false, "straight": false, "out_mode": "out", "bounce": false }
-            },
-            "interactivity": {
-                "detect_on": "canvas",
-                "events": { "onhover": { "enable": true, "mode": "grab" }, "onclick": { "enable": true, "mode": "push" }, "resize": true }
-            },
-            "retina_detect": true
-        });
+    /* Modified Authentication Logic */
+function handleLogin(event) {
+    event.preventDefault();
+    const user = document.getElementById('user').value;
+    const pass = document.getElementById('pass').value;
+    const role = document.getElementById('role').value;
 
-        /* Modified Authentication Logic for System Redirection */
-        function handleLogin(event) {
-            event.preventDefault(); // Prevents page refresh on form submit
-            
-            const user = document.getElementById('user').value;
-            const pass = document.getElementById('pass').value;
-            const role = document.getElementById('role').value;
-
-            /* Check credentials based on Use Case Scenario [cite: 35] */
-            if (user === 'admin' && pass === 'admin' && role === 'admin') {
-                alert("Identity Verified. Linking to Central Governance System...");
-                /* Redirect to Admin Dashboard [cite: 35] */
-                window.location.href = "admin_dashboard.html"; 
-            } 
-            else if (user === 'staff' && pass === 'staff' && role === 'staff') {
-                alert("Identity Verified. Linking to Staff Terminal...");
-                /* Redirect to Staff Dashboard [cite: 59] */
-                window.location.href = "staff_dashboard.html";
-            }
-            else {
-                /* Alternative Flow: System shows error message [cite: 35] */
-                alert("Security Denial: Invalid credentials or unauthorized domain.");
-            }
-        }
+    // Check credentials for Admin based on Use Case Scenario [cite: 35]
+    if (user === 'admin' && pass === 'admin' && role === 'admin') {
+        alert("Identity Verified. Linking to Central Governance System...");
+        // This is the missing part: Redirecting to Admin Dashboard
+        window.location.href = "admin_dashboard.html"; 
+    } 
+    else if (user === 'staff' && pass === 'staff' && role === 'staff') {
+        alert("Identity Verified. Linking to Staff Terminal...");
+        window.location.href = "staff_dashboard.html";
+    }
+    else {
+        // Alternative Flow: Invalid credentials [cite: 35]
+        alert("Security Denial: Invalid credentials or unauthorized domain.");
+    }
+}
+    <script src="script.js">
+        
     </script>
 </body>
 </html>
