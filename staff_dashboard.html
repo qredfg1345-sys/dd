@@ -2,124 +2,211 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RailStream Staff | Operations Terminal</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root { --navy: #0f172a; --blue: #1e40af; --bg: #f8fafc; --white: #ffffff; --red: #ef4444; }
+        :root { --navy: #0f172a; --blue: #1e40af; --accent: #3b82f6; --bg: #f8fafc; --white: #ffffff; --red: #ef4444; }
         * { box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
         body { margin: 0; background: var(--bg); display: flex; height: 100vh; overflow: hidden; }
+        
+        /* Sidebar - Matching Admin Style */
         .sidebar { width: 260px; background: var(--navy); color: white; display: flex; flex-direction: column; z-index: 10; }
+        .sidebar-header { padding: 30px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.1); }
         .nav-menu { padding: 20px; flex-grow: 1; }
-        .nav-item { padding: 12px; cursor: pointer; color: #94a3b8; display: flex; align-items: center; gap: 10px; margin-bottom: 5px; }
-        .nav-item.active { background: var(--blue); color: white; border-radius: 8px; }
-        .main-wrapper { flex-grow: 1; overflow-y: auto; padding: 40px; }
-        .glass-card { background: var(--white); border-radius: 16px; padding: 25px; display: none; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-        .glass-card.active { display: block; }
-        .btn-staff { padding: 12px; background: var(--blue); color: white; border: none; border-radius: 8px; cursor: pointer; width: 100%; font-weight: bold; }
+        .nav-item { padding: 12px 15px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 12px; margin-bottom: 5px; color: #94a3b8; transition: 0.3s; }
+        .nav-item:hover, .nav-item.active { background: var(--blue); color: white; }
+        .nav-label { font-size: 11px; text-transform: uppercase; color: #475569; margin: 20px 0 10px 10px; font-weight: bold; }
+        
+        /* Main Workspace */
+        .main-wrapper { flex-grow: 1; position: relative; z-index: 10; display: flex; flex-direction: column; overflow-y: auto; }
+        .top-bar { padding: 20px 40px; background: var(--white); display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e2e8f0; }
+        .content-body { padding: 40px; }
+        
+        /* Cards */
+        .glass-card { background: var(--white); border-radius: 16px; padding: 25px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); margin-bottom: 30px; display: none; }
+        .glass-card.active { display: block; animation: fadeIn 0.3s ease; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        
+        /* Form & Tables */
+        .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin-bottom: 20px; }
+        input, select { padding: 10px; border: 1px solid #e2e8f0; border-radius: 8px; outline: none; background: #fdfdfd; font-size: 13px; }
+        .data-table { width: 100%; border-collapse: collapse; }
+        .data-table th { background: #f8fafc; padding: 12px; text-align: left; font-size: 12px; color: #64748b; }
+        .data-table td { padding: 12px; border-bottom: 1px solid #f1f5f9; font-size: 14px; }
+        
+        /* Buttons */
+        .btn { border: none; padding: 8px 15px; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 13px; }
+        .btn-staff { background: var(--blue); color: white; width: 100%; padding: 12px; margin-top: 10px; }
+        .btn-update { color: var(--accent); background: none; font-weight: bold; margin-right: 8px; }
+        .btn-delete { color: var(--red); background: none; font-weight: bold; }
+        .btn-save { background: var(--navy); color: white; }
+        .btn-cancel { background: #f1f5f9; color: #64748b; margin-left: 5px; }
         .btn-logout { background: var(--red); color: white; border: none; padding: 12px; margin: auto 20px 20px; border-radius: 8px; cursor: pointer; text-align: center; font-weight: bold; text-decoration: none; }
-        .data-table { width: 100%; border-collapse: collapse; margin-top: 15px; }
-        .data-table th, td { padding: 12px; text-align: left; border-bottom: 1px solid #f1f5f9; }
-        input, select { width: 100%; padding: 10px; border: 1px solid #e2e8f0; border-radius: 8px; margin-bottom: 10px; }
+        .edit-input { padding: 5px; border: 1px solid var(--accent); border-radius: 4px; width: 90%; }
     </style>
 </head>
 <body>
     <aside class="sidebar">
-        <div class="sidebar-header" style="padding:30px; text-align:center;"><h2>RailStream</h2></div>
+        <div class="sidebar-header"><h2>RailStream</h2></div>
         <div class="nav-menu">
-            <div class="nav-item active" onclick="showTab('tab-pass')"><i class="fa-solid fa-users"></i> Registration</div>
+            <div class="nav-label">Passenger MGT</div>
+            <div class="nav-item active" onclick="showTab('tab-pass')"><i class="fa-solid fa-user-plus"></i> Registration</div>
             <div class="nav-item" onclick="showTab('tab-ticket')"><i class="fa-solid fa-ticket"></i> Issue Ticket</div>
-            <div class="nav-item" onclick="showTab('tab-view')"><i class="fa-solid fa-calendar-day"></i> View Schedule</div>
+            <div class="nav-label">Operations</div>
+            <div class="nav-item" onclick="showTab('tab-daily')"><i class="fa-solid fa-calendar-check"></i> Daily Schedule</div>
         </div>
         <a href="index.html" class="btn-logout"><i class="fa-solid fa-power-off"></i> Logout</a>
     </aside>
 
     <main class="main-wrapper">
-        <section id="tab-pass" class="glass-card active">
-            <h3>Passenger Registration</h3>
-            <input type="text" id="pID" placeholder="National ID / Passport">
-            <input type="text" id="pName" placeholder="Full Name">
-            <button class="btn-staff" onclick="registerPassenger()">Validate & Create Profile</button>
-            <table class="data-table" id="passengerTable">
-                <thead><tr><th>National ID</th><th>Full Name</th></tr></thead>
-                <tbody></tbody>
-            </table>
-        </section>
+        <div class="top-bar"><h3>Staff Terminal</h3><div><i class="fa-solid fa-user-tie"></i> Operational Staff</div></div>
+        <div class="content-body">
+            <section id="tab-pass" class="glass-card active">
+                <h3>Passenger Registration</h3>
+                <div class="form-grid">
+                    <input type="text" id="pID" placeholder="National ID / Passport">
+                    <input type="text" id="pName" placeholder="Full Name">
+                </div>
+                <button class="btn btn-staff" onclick="registerPassenger()">Validate & Create Profile</button>
+                <table class="data-table" id="passengerTable">
+                    <thead><tr><th>ID</th><th>Name</th><th>Actions</th></tr></thead>
+                    <tbody></tbody>
+                </table>
+            </section>
 
-        <section id="tab-ticket" class="glass-card">
-            <h3>Seat Allocation & Booking</h3>
-            <select id="pSelect"><option value="">Select Registered Passenger</option></select>
-            <select id="sSelect"><option value="">Select Scheduled Trip</option></select>
-            <button class="btn-staff" onclick="issueTicket()">Confirm Allocation</button>
-            <table class="data-table" id="ticketTable">
-                <thead><tr><th>Passenger</th><th>Trip</th><th>Actions</th></tr></thead>
-                <tbody></tbody>
-            </table>
-        </section>
+            <section id="tab-ticket" class="glass-card">
+                <h3>Issue Ticket & Seat Allocation</h3>
+                <div class="form-grid">
+                    <select id="pSelect"><option value="">Select Passenger</option></select>
+                    <select id="sSelect"><option value="">Select Trip</option></select>
+                    <input type="text" id="seatNo" placeholder="Seat Number">
+                </div>
+                <button class="btn btn-staff" onclick="issueTicket()">Confirm Booking</button>
+                <table class="data-table" id="ticketTable">
+                    <thead><tr><th>Passenger</th><th>Trip</th><th>Seat</th><th>Action</th></tr></thead>
+                    <tbody></tbody>
+                </table>
+            </section>
 
-        <section id="tab-view" class="glass-card">
-            <h3>Synced Daily Schedule</h3>
-            <table class="data-table" id="viewTable">
-                <thead><tr><th>Train Asset</th><th>Departure Time</th></tr></thead>
-                <tbody></tbody>
-            </table>
-        </section>
+            <section id="tab-daily" class="glass-card">
+                <h3>Daily Operational Schedule</h3>
+                <table class="data-table" id="viewTable">
+                    <thead><tr><th>Train</th><th>Departure Time</th><th>Route</th></tr></thead>
+                    <tbody></tbody>
+                </table>
+            </section>
+        </div>
     </main>
 
     <script>
         function showTab(id) {
             document.querySelectorAll('.glass-card').forEach(c => c.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
             document.getElementById(id).classList.add('active');
+            event.currentTarget.classList.add('active');
             syncData();
         }
 
-        // Use Case: Validate ID & Create Profile [cite: 12, 13]
+        // Use Case: Create Passenger Profile [cite: 10]
         function registerPassenger() {
             let id = document.getElementById('pID').value;
             let name = document.getElementById('pName').value;
-            if(!id || id.length < 5) return alert("ID Invalid: Minimum 5 digits required!"); // Validate ID 
+            if(!id || id.length < 5) return alert("Validation Error: Invalid ID Format"); // Validate ID 
             
-            let passengers = JSON.parse(localStorage.getItem('passengers')) || [];
-            passengers.push({ id, name });
-            localStorage.setItem('passengers', JSON.stringify(passengers));
+            let ps = JSON.parse(localStorage.getItem('passengers')) || [];
+            ps.push({ id, name });
+            localStorage.setItem('passengers', JSON.stringify(ps));
             renderPassengers();
+            document.getElementById('pID').value = ''; document.getElementById('pName').value = '';
         }
 
         function renderPassengers() {
             let ps = JSON.parse(localStorage.getItem('passengers')) || [];
-            document.querySelector('#passengerTable tbody').innerHTML = ps.map(p => `<tr><td>${p.id}</td><td>${p.name}</td></tr>`).join('');
+            document.querySelector('#passengerTable tbody').innerHTML = ps.map((p, i) => `
+                <tr id="p-row-${i}">
+                    <td class="id-cell">${p.id}</td>
+                    <td class="name-cell">${p.name}</td>
+                    <td class="action-cell">
+                        <button class="btn btn-update" onclick="enableEdit('p-row-${i}', 'passengers', ${i})">Update</button>
+                        <button class="btn btn-delete" onclick="deleteItem('passengers', ${i}, renderPassengers)">Delete</button>
+                    </td>
+                </tr>`).join('');
         }
 
-        function syncData() {
-            let ps = JSON.parse(localStorage.getItem('passengers')) || [];
-            let ss = JSON.parse(localStorage.getItem('schedules')) || [];
-            document.getElementById('pSelect').innerHTML = '<option value="">Select Passenger</option>' + ps.map(p => `<option value="${p.name}">${p.name}</option>`).join('');
-            document.getElementById('sSelect').innerHTML = '<option value="">Select Trip</option>' + ss.map(s => `<option value="${s.sTrain}">${s.sTrain} at ${s.sTime}</option>`).join('');
-            document.querySelector('#viewTable tbody').innerHTML = ss.map(s => `<tr><td>${s.sTrain}</td><td>${s.sTime}</td></tr>`).join('');
+        // In-place Editing Logic
+        function enableEdit(rowId, key, index) {
+            const row = document.getElementById(rowId);
+            const nameCell = row.querySelector('.name-cell');
+            const actionCell = row.querySelector('.action-cell');
+            const originalValue = nameCell.innerText;
+
+            nameCell.innerHTML = `<input type="text" class="edit-input" value="${originalValue}">`;
+            actionCell.innerHTML = `
+                <button class="btn btn-save" onclick="saveEdit('${rowId}', '${key}', ${index})">Save</button>
+                <button class="btn btn-cancel" onclick="cancelEdit('${rowId}', '${originalValue}', '${key}', ${index})">Cancel</button>
+            `;
         }
 
-        // Use Case: Issue Ticket [cite: 26]
+        function saveEdit(rowId, key, index) {
+            const row = document.getElementById(rowId);
+            const newValue = row.querySelector('.edit-input').value;
+            let data = JSON.parse(localStorage.getItem(key));
+            data[index].name = newValue;
+            localStorage.setItem(key, JSON.stringify(data));
+            finishEdit(row, newValue, key, index);
+        }
+
+        function cancelEdit(rowId, oldValue, key, index) {
+            const row = document.getElementById(rowId);
+            finishEdit(row, oldValue, key, index);
+        }
+
+        function finishEdit(row, value, key, index) {
+            row.querySelector('.name-cell').innerText = value;
+            row.querySelector('.action-cell').innerHTML = `
+                <button class="btn btn-update" onclick="enableEdit('${row.id}', '${key}', ${index})">Update</button>
+                <button class="btn btn-delete" onclick="deleteItem('${key}', ${index}, renderPassengers)">Delete</button>
+            `;
+        }
+
+        // Use Case: Issue Ticket & Seat Allocation [cite: 14, 26]
         function issueTicket() {
             let p = document.getElementById('pSelect').value;
             let s = document.getElementById('sSelect').value;
-            if(!p || !s) return alert("Select Trip and Passenger");
+            let seat = document.getElementById('seatNo').value;
+            if(!p || !s || !seat) return alert("Error: Trip, Passenger, and Seat must be selected");
             
             let tickets = JSON.parse(localStorage.getItem('tickets')) || [];
-            tickets.push({ p, s });
+            // Check Availability [cite: 15]
+            if(tickets.find(t => t.s === s && t.seat === seat)) return alert("Seat already occupied! Choose another.");
+            
+            tickets.push({ p, s, seat });
             localStorage.setItem('tickets', JSON.stringify(tickets));
             renderTickets();
         }
 
         function renderTickets() {
             let ts = JSON.parse(localStorage.getItem('tickets')) || [];
-            document.querySelector('#ticketTable tbody').innerHTML = ts.map((t, i) => `<tr><td>${t.p}</td><td>${t.s}</td><td><button style="color:red; border:none; background:none; cursor:pointer;" onclick="cancelTicket(${i})">Cancel</button></td></tr>`).join('');
+            document.querySelector('#ticketTable tbody').innerHTML = ts.map((t, i) => `
+                <tr><td>${t.p}</td><td>${t.s}</td><td>${t.seat}</td>
+                <td><button class="btn btn-delete" onclick="deleteItem('tickets', ${i}, renderTickets)">Cancel</button></td></tr>`).join('');
         }
 
-        // Use Case: Cancel Ticket 
-        function cancelTicket(i) {
-            let ts = JSON.parse(localStorage.getItem('tickets'));
-            ts.splice(i, 1);
-            localStorage.setItem('tickets', JSON.stringify(ts));
-            renderTickets();
+        function deleteItem(key, i, callback) {
+            let data = JSON.parse(localStorage.getItem(key));
+            data.splice(i, 1);
+            localStorage.setItem(key, JSON.stringify(data));
+            callback();
+        }
+
+        // Sync with Admin Data 
+        function syncData() {
+            let ps = JSON.parse(localStorage.getItem('passengers')) || [];
+            let ss = JSON.parse(localStorage.getItem('schedules')) || [];
+            document.getElementById('pSelect').innerHTML = '<option value="">Select Passenger</option>' + ps.map(p => `<option value="${p.name}">${p.name}</option>`).join('');
+            document.getElementById('sSelect').innerHTML = '<option value="">Select Trip</option>' + ss.map(s => `<option value="${s.sTrain}">${s.sTrain} - ${s.sTime}</option>`).join('');
+            document.querySelector('#viewTable tbody').innerHTML = ss.map(s => `<tr><td>${s.sTrain}</td><td>${s.sTime}</td><td>Active Route</td></tr>`).join('');
         }
 
         window.onload = () => { renderPassengers(); renderTickets(); syncData(); };
