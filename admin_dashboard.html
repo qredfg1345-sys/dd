@@ -2,143 +2,177 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RailStream Admin | System Control</title>
+    <title>RailStream | Admin Dashboard</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root {
-            --navy: #0f172a; --blue: #1e40af; --accent: #3b82f6; --bg: #f8fafc; --white: #ffffff;
-        }
-        * { box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
-        body { margin: 0; background: var(--bg); display: flex; height: 100vh; overflow: hidden; }
-
+        :root { --navy: #0f172a; --blue: #1e40af; --accent: #3b82f6; --bg: #f8fafc; --white: #ffffff; --red: #ef4444; }
+        body { margin: 0; font-family: 'Segoe UI', sans-serif; background: var(--bg); display: flex; height: 100vh; }
+        
         /* Sidebar */
         .sidebar { width: 260px; background: var(--navy); color: white; display: flex; flex-direction: column; }
-        .nav-item { padding: 12px 20px; cursor: pointer; color: #94a3b8; display: flex; align-items: center; gap: 10px; transition: 0.3s; }
+        .sidebar-header { padding: 30px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .nav-item { padding: 15px 20px; cursor: pointer; color: #94a3b8; display: flex; align-items: center; gap: 12px; transition: 0.3s; }
         .nav-item:hover, .nav-item.active { background: var(--blue); color: white; }
+        .btn-logout { background: var(--red); color: white; padding: 12px; margin: auto 20px 20px; border-radius: 8px; text-align: center; text-decoration: none; font-weight: bold; }
 
-        /* Main Content */
-        .main-wrapper { flex-grow: 1; display: flex; flex-direction: column; overflow-y: auto; }
-        .content-body { padding: 40px; }
-        .glass-card { background: var(--white); border-radius: 16px; padding: 25px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); margin-bottom: 30px; display: none; }
+        /* Content */
+        .main { flex-grow: 1; overflow-y: auto; padding: 40px; }
+        .glass-card { background: white; padding: 25px; border-radius: 16px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); display: none; }
         .glass-card.active { display: block; }
-
-        /* Table & In-line Editing */
-        .data-table { width: 100%; border-collapse: collapse; margin-top: 15px; }
-        .data-table th, td { padding: 12px; text-align: left; border-bottom: 1px solid #f1f5f9; }
-        .edit-input { padding: 5px; border: 1px solid var(--accent); border-radius: 4px; width: 80%; }
         
-        /* Professional Reports UI */
-        .report-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
-        .stat-card { background: white; padding: 25px; border-radius: 12px; border-top: 4px solid var(--blue); box-shadow: 0 4px 10px rgba(0,0,0,0.05); text-align: center; }
-        .stat-val { font-size: 28px; font-weight: bold; color: var(--navy); margin: 10px 0; }
-        .stat-label { color: #64748b; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; }
+        /* Table Styles */
+        .data-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        .data-table th, td { padding: 12px; text-align: left; border-bottom: 1px solid #f1f5f9; }
+        .edit-input { padding: 8px; border: 1px solid var(--accent); border-radius: 4px; width: 80%; }
+        
+        /* Reports Grid */
+        .report-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 20px; }
+        .stat-card { background: white; padding: 25px; border-radius: 12px; border-top: 4px solid var(--blue); text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+        .stat-val { font-size: 28px; font-weight: bold; color: var(--navy); margin-top: 10px; }
 
-        /* Buttons */
-        .btn { border: none; padding: 8px 15px; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 13px; }
+        .btn-action { border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-weight: bold; margin-right: 5px; }
         .btn-save { background: var(--navy); color: white; }
-        .btn-update { background: #e0f2fe; color: var(--blue); margin-right: 5px; }
-        .btn-delete { background: #fee2e2; color: #ef4444; }
-        .btn-cancel { background: #f1f5f9; color: #64748b; margin-left: 5px; }
+        .btn-cancel { background: #f1f5f9; color: #64748b; }
+        input, select { padding: 10px; border: 1px solid #e2e8f0; border-radius: 8px; margin-right: 10px; }
     </style>
 </head>
 <body>
-
     <aside class="sidebar">
-        <div style="padding: 30px; font-weight: bold; font-size: 20px; color: var(--accent);">RailStream Admin</div>
-        <div class="nav-item active" onclick="showTab('tab-trains')"><i class="fa-solid fa-train"></i> Fleet Management</div>
-        <div class="nav-item" onclick="showTab('tab-reports')"><i class="fa-solid fa-chart-pie"></i> Operational Reports</div>
-        <a href="index.html" class="nav-item" style="margin-top: auto; color: #ef4444;"><i class="fa-solid fa-power-off"></i> Logout</a>
+        <div class="sidebar-header"><h2>RailStream</h2></div>
+        <div class="nav-item active" onclick="showTab('tab-trains')"><i class="fa-solid fa-train"></i> Trains</div>
+        <div class="nav-item" onclick="showTab('tab-schedules')"><i class="fa-solid fa-calendar"></i> Schedules</div>
+        <div class="nav-item" onclick="showTab('tab-reports'); updateReports();"><i class="fa-solid fa-chart-line"></i> Reports</div>
+        <a href="index.html" class="btn-logout"><i class="fa-solid fa-power-off"></i> Logout</a>
     </aside>
 
-    <main class="main-wrapper">
-        <div class="content-body">
-            
-            <section id="tab-trains" class="glass-card active">
-                <h3>Train Assets Management</h3>
-                <table class="data-table" id="trainTable">
-                    <thead><tr><th>Train ID</th><th>Model</th><th>Actions</th></tr></thead>
-                    <tbody>
-                        <tr id="row-1">
-                            <td class="id-cell">EX-79</td>
-                            <td class="model-cell">Local Express</td>
-                            <td class="action-cell">
-                                <button class="btn btn-update" onclick="enableEdit('row-1')">Update</button>
-                                <button class="btn btn-delete" onclick="this.closest('tr').remove()">Delete</button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </section>
+    <main class="main">
+        <section id="tab-trains" class="glass-card active">
+            <h3>Fleet Management</h3>
+            <div style="margin-bottom: 20px;">
+                <input type="text" id="tID" placeholder="Train ID">
+                <input type="text" id="tModel" placeholder="Model">
+                <button onclick="addItem('trains', ['tID', 'tModel'])" class="btn-action btn-save">Add Train</button>
+            </div>
+            <table class="data-table" id="trainTable">
+                <thead><tr><th>ID</th><th>Model</th><th>Actions</th></tr></thead>
+                <tbody></tbody>
+            </table>
+        </section>
 
-            <section id="tab-reports" class="glass-card">
-                <h3>Operational Intelligence</h3>
-                <div class="report-grid">
-                    <div class="stat-card">
-                        <i class="fa-solid fa-train-subway fa-2x" style="color: var(--blue);"></i>
-                        <div class="stat-val">14</div>
-                        <div class="stat-label">Total Fleet</div>
-                    </div>
-                    <div class="stat-card">
-                        <i class="fa-solid fa-route fa-2x" style="color: #10b981;"></i>
-                        <div class="stat-val">8</div>
-                        <div class="stat-label">Active Routes</div>
-                    </div>
-                    <div class="stat-card">
-                        <i class="fa-solid fa-ticket fa-2x" style="color: #f59e0b;"></i>
-                        <div class="stat-val">1,250</div>
-                        <div class="stat-label">Daily Reservations</div>
-                    </div>
-                </div>
-            </section>
+        <section id="tab-schedules" class="glass-card">
+            <h3>Master Schedule</h3>
+            <div style="margin-bottom: 20px;">
+                <select id="sTrain"><option value="">Select Train</option></select>
+                <input type="datetime-local" id="sTime">
+                <button onclick="addSchedule()" class="btn-action btn-save">Create Schedule</button>
+            </div>
+            <table class="data-table" id="scheduleTable">
+                <thead><tr><th>Train</th><th>Time</th><th>Actions</th></tr></thead>
+                <tbody></tbody>
+            </table>
+        </section>
 
-        </div>
+        <section id="tab-reports" class="glass-card">
+            <h3>System Reports</h3>
+            <div class="report-grid" id="reportContent"></div>
+        </section>
     </main>
 
     <script>
-        // Tab switching function
         function showTab(id) {
             document.querySelectorAll('.glass-card').forEach(c => c.classList.remove('active'));
             document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
             document.getElementById(id).classList.add('active');
             event.currentTarget.classList.add('active');
+            if(id === 'tab-schedules') syncSelect();
         }
 
-        // --- In-line Editing Logic ---
-        function enableEdit(rowId) {
+        // Add Data
+        function addItem(key, ids) {
+            let data = JSON.parse(localStorage.getItem(key)) || [];
+            let obj = {};
+            ids.forEach(id => { obj[id] = document.getElementById(id).value; document.getElementById(id).value = ''; });
+            if(!Object.values(obj)[0]) return alert("Fill fields!");
+            data.push(obj);
+            localStorage.setItem(key, JSON.stringify(data));
+            renderAll();
+        }
+
+        // Add Schedule with Conflict Check
+        function addSchedule() {
+            let train = document.getElementById('sTrain').value;
+            let time = document.getElementById('sTime').value;
+            if(!train || !time) return alert("Select Train/Time");
+            
+            let scheds = JSON.parse(localStorage.getItem('schedules')) || [];
+            if(scheds.find(s => s.sTrain === train && s.sTime === time)) return alert("Conflict: Train is busy!");
+            
+            scheds.push({ sTrain: train, sTime: time });
+            localStorage.setItem('schedules', JSON.stringify(scheds));
+            renderAll();
+        }
+
+        // In-place Editing Logic
+        function enableEdit(rowId, key, index) {
             const row = document.getElementById(rowId);
-            const modelCell = row.querySelector('.model-cell');
-            const actionCell = row.querySelector('.action-cell');
-            const originalValue = modelCell.innerText;
-
-            // Replace text with Input field
-            modelCell.innerHTML = `<input type="text" class="edit-input" value="${originalValue}">`;
-
-            // Change buttons to (Save / Cancel)
-            actionCell.innerHTML = `
-                <button class="btn btn-save" onclick="saveEdit('${rowId}', '${originalValue}')">Save</button>
-                <button class="btn btn-cancel" onclick="cancelEdit('${rowId}', '${originalValue}')">Cancel</button>
+            const cells = row.querySelectorAll('td');
+            const oldValue = cells[1].innerText;
+            
+            cells[1].innerHTML = `<input type="text" class="edit-input" value="${oldValue}">`;
+            cells[2].innerHTML = `
+                <button class="btn-action btn-save" onclick="saveEdit('${rowId}', '${key}', ${index})">Save</button>
+                <button class="btn-action btn-cancel" onclick="renderAll()">Cancel</button>
             `;
         }
 
-        function saveEdit(rowId, oldValue) {
+        function saveEdit(rowId, key, index) {
+            let data = JSON.parse(localStorage.getItem(key));
             const row = document.getElementById(rowId);
             const newValue = row.querySelector('.edit-input').value;
-            finishEditing(row, newValue);
+            const keys = Object.keys(data[index]);
+            data[index][keys[1]] = newValue;
+            localStorage.setItem(key, JSON.stringify(data));
+            renderAll();
         }
 
-        function cancelEdit(rowId, oldValue) {
-            const row = document.getElementById(rowId);
-            finishEditing(row, oldValue); // Revert to the old value on cancel
+        function deleteItem(key, index) {
+            let data = JSON.parse(localStorage.getItem(key));
+            data.splice(index, 1);
+            localStorage.setItem(key, JSON.stringify(data));
+            renderAll();
         }
 
-        function finishEditing(row, value) {
-            row.querySelector('.model-cell').innerText = value;
-            row.querySelector('.action-cell').innerHTML = `
-                <button class="btn btn-update" onclick="enableEdit('${row.id}')">Update</button>
-                <button class="btn btn-delete" onclick="this.closest('tr').remove()">Delete</button>
-            `;
+        function renderAll() {
+            // Render Trains
+            let trains = JSON.parse(localStorage.getItem('trains')) || [];
+            document.querySelector('#trainTable tbody').innerHTML = trains.map((t, i) => `
+                <tr id="t-row-${i}"><td>${t.tID}</td><td>${t.tModel}</td>
+                <td><button class="btn-action" onclick="enableEdit('t-row-${i}', 'trains', ${i})">Update</button>
+                <button class="btn-action" style="color:red" onclick="deleteItem('trains', ${i})">Delete</button></td></tr>`).join('');
+
+            // Render Schedules
+            let scheds = JSON.parse(localStorage.getItem('schedules')) || [];
+            document.querySelector('#scheduleTable tbody').innerHTML = scheds.map((s, i) => `
+                <tr id="s-row-${i}"><td>${s.sTrain}</td><td>${s.sTime}</td>
+                <td><button class="btn-action" style="color:red" onclick="deleteItem('schedules', ${i})">Delete</button></td></tr>`).join('');
         }
+
+        function syncSelect() {
+            let trains = JSON.parse(localStorage.getItem('trains')) || [];
+            document.getElementById('sTrain').innerHTML = trains.map(t => `<option value="${t.tID}">${t.tID}</option>`).join('');
+        }
+
+        function updateReports() {
+            let t = JSON.parse(localStorage.getItem('trains')) || [];
+            let s = JSON.parse(localStorage.getItem('schedules')) || [];
+            let b = JSON.parse(localStorage.getItem('tickets')) || [];
+            document.getElementById('reportContent').innerHTML = `
+                <div class="stat-card"><i class="fa-solid fa-train"></i><div class="stat-val">${t.length}</div><div>Total Trains</div></div>
+                <div class="stat-card"><i class="fa-solid fa-calendar-check"></i><div class="stat-val">${s.length}</div><div>Total Trips</div></div>
+                <div class="stat-card"><i class="fa-solid fa-ticket"></i><div class="stat-val">${b.length}</div><div>Tickets Issued</div></div>`;
+        }
+
+        window.onload = renderAll;
     </script>
 </body>
 </html>
