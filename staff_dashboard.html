@@ -45,7 +45,7 @@
 
     <aside class="sidebar">
         <div class="sidebar-header">
-            <h2 style="margin:0; font-size: 1.1rem;"><i class="fa-solid fa-train"></i> RailStream</h2>
+            <h2 style="margin:0; font-size: 1.1rem;"><i class="fa-solid fa-train"></i> RailStream Staff</h2>
         </div>
         <div class="nav-menu">
             <div class="nav-label">Passenger MGT</div>
@@ -84,9 +84,11 @@
             <section id="tab-ticketing" class="glass-card">
                 <h3>Issue Ticket & Seat Allocation</h3>
                 <div class="form-grid">
-                    <input type="text" placeholder="Enter Passenger ID">
-                    <select id="ticketTripList"><option>Select Trip (From Admin)</option></select>
-                    <input type="text" placeholder="Seat No.">
+                    <input type="text" id="ticketPassengerID" placeholder="Enter Passenger ID">
+                    <select id="ticketTripList">
+                        <option value="">Select Trip (From Admin)</option>
+                    </select>
+                    <input type="text" id="ticketSeatNo" placeholder="Seat No.">
                     <button class="btn-staff" onclick="alert('Ticket Issued successfully')">Issue Ticket</button>
                 </div>
             </section>
@@ -94,7 +96,7 @@
             <section id="tab-daily" class="glass-card">
                 <h3>Current Operational Schedule</h3>
                 <table class="data-table" id="staffScheduleTable">
-                    <thead><tr><th>Train</th><th>Departure</th><th>Route</th><th>Status</th></tr></thead>
+                    <thead><tr><th>Train</th><th>Departure Date</th><th>Time</th><th>Status</th></tr></thead>
                     <tbody></tbody>
                 </table>
             </section>
@@ -115,30 +117,41 @@
             event.currentTarget.classList.add('active');
             document.getElementById('current-title').innerText = event.currentTarget.innerText;
             
-            // Sync data from Admin when viewing schedule
-            if(tabId === 'tab-daily') syncFromAdmin();
+            // Sync data and update UI when switching tabs
+            syncFromAdmin();
         }
 
-        /* Real-time sync from Admin using localStorage */
+        /* Real-time sync from Admin using localStorage  */
         function syncFromAdmin() {
             const table = document.getElementById('staffScheduleTable').getElementsByTagName('tbody')[0];
-            table.innerHTML = ""; 
+            const tripSelect = document.getElementById('ticketTripList');
             
-            // Get schedules stored by Admin
+            table.innerHTML = ""; 
+            // Clear trip selection except for the first option
+            tripSelect.innerHTML = '<option value="">Select Trip (From Admin)</option>';
+            
+            // Get schedules stored by Admin in localStorage
             let adminData = JSON.parse(localStorage.getItem('masterSchedules')) || [];
             
             if(adminData.length === 0) {
-                table.innerHTML = "<tr><td colspan='4'>No schedules published by Admin yet.</td></tr>";
+                table.innerHTML = "<tr><td colspan='4' style='text-align:center;'>No schedules published by Admin yet.</td></tr>";
                 return;
             }
 
             adminData.forEach(trip => {
+                // Populate Daily Schedule Table
                 let row = table.insertRow();
-                row.innerHTML = `<td>${trip.train}</td><td>${trip.time}</td><td>${trip.route || 'Defined Route'}</td><td><span class="status-badge">Active</span></td>`;
+                row.innerHTML = `<td>${trip.train}</td><td>${trip.date || 'TBD'}</td><td>${trip.time}</td><td><span class="status-badge">Active</span></td>`;
+                
+                // Populate Issue Ticket Dropdown
+                let option = document.createElement("option");
+                option.value = trip.train;
+                option.text = `${trip.train} - ${trip.time} (${trip.date || ''})`;
+                tripSelect.add(option);
             });
         }
 
-        /* Passenger registration use case */
+        /* Passenger registration use case [cite: 57, 61, 62] */
         function registerPassenger() {
             let id = document.getElementById('pID').value;
             let name = document.getElementById('pName').value;
@@ -147,7 +160,14 @@
             let table = document.getElementById('passengerTable').getElementsByTagName('tbody')[0];
             let row = table.insertRow();
             row.innerHTML = `<td>${id}</td><td>${name}</td><td><span class="status-badge">Verified</span></td>`;
+            
+            // Reset inputs
+            document.getElementById('pID').value = "";
+            document.getElementById('pName').value = "";
         }
+
+        // Initial sync call on page load
+        window.onload = syncFromAdmin;
     </script>
 </body>
 </html>
