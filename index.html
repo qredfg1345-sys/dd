@@ -5,148 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RailRoute Central | Secure Access</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        /* --- Color Variables based on project requirements --- */
-        :root {
-            --navy-deep: #0f172a;
-            --blue-royal: #1e40af;
-            --blue-tech: #3b82f6;
-            --white-pure: #ffffff;
-            --slate-100: #f1f5f9;
-            --slate-500: #64748b;
-        }
-
-        /* --- Basic Page Layout & Centering --- */
-        body, html {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            height: 100%;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--white-pure);
-            display: flex;
-            align-items: center; /* Vertical Center */
-            justify-content: center; /* Horizontal Center */
-            overflow: hidden;
-        }
-
-        /* --- Technical Web Background (Full Screen) --- */
-        #particles-js {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 1; /* Behind the card */
-            background-color: var(--white-pure);
-        }
-
-        /* --- Login Card (Organized and Professional) --- */
-        .login-card {
-            position: relative;
-            z-index: 10; /* Above the particles web */
-            background: rgba(255, 255, 255, 0.98);
-            padding: 45px;
-            border-radius: 24px;
-            width: 100%;
-            max-width: 400px;
-            text-align: center;
-            box-shadow: 0 20px 50px rgba(15, 23, 42, 0.1);
-            border: 1px solid rgba(30, 64, 175, 0.1);
-            backdrop-filter: blur(10px);
-        }
-
-        /* Professional Logo Style */
-        .brand-logo {
-            width: 75px;
-            height: 75px;
-            background: linear-gradient(135deg, var(--navy-deep), var(--blue-royal));
-            color: white;
-            border-radius: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 32px;
-            margin: 0 auto 25px;
-            box-shadow: 0 10px 20px rgba(30, 64, 175, 0.2);
-        }
-
-        h1 {
-            color: var(--navy-deep);
-            font-size: 22px;
-            font-weight: 800;
-            margin: 0;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-        }
-
-        .subtitle {
-            color: var(--slate-500);
-            font-size: 12px;
-            margin: 8px 0 35px;
-            font-weight: 500;
-        }
-
-        /* --- Form Input Styling --- */
-        .input-group {
-            text-align: left;
-            margin-bottom: 20px;
-        }
-
-        label {
-            display: block;
-            font-size: 11px;
-            font-weight: 700;
-            color: var(--navy-deep);
-            text-transform: uppercase;
-            margin-bottom: 8px;
-            letter-spacing: 0.5px;
-        }
-
-        input, select {
-            width: 100%;
-            padding: 14px 16px;
-            border: 1.5px solid var(--slate-100);
-            border-radius: 12px;
-            font-size: 14px;
-            background-color: #f8fafc;
-            color: var(--navy-deep);
-            outline: none;
-            transition: all 0.3s ease;
-            box-sizing: border-box; /* Ensures inputs stay within card boundaries */
-        }
-
-        input:focus, select:focus {
-            border-color: var(--blue-tech);
-            background-color: white;
-            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
-        }
-
-        /* --- Colored Authorize Button --- */
-        .btn-authorize {
-            width: 100%;
-            padding: 16px;
-            background: linear-gradient(135deg, var(--navy-deep) 0%, var(--blue-royal) 100%);
-            color: white;
-            border: none;
-            border-radius: 12px;
-            font-size: 14px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            cursor: pointer;
-            transition: 0.3s ease;
-            margin-top: 10px;
-            box-shadow: 0 10px 20px rgba(15, 23, 42, 0.2);
-        }
-
-        .btn-authorize:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 15px 25px rgba(30, 64, 175, 0.3);
-            background: linear-gradient(135deg, var(--blue-royal), var(--blue-tech));
-        }
-
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
@@ -158,10 +17,11 @@
         </div>
         
         <h1>RailRoute Central</h1>
-        <p class="subtitle">Infrastructure & Reservation Governance</p>
+        <p class="system-subtitle">Infrastructure & Reservation Governance</p>
 
         <form onsubmit="return handleLogin(event)">
-            <div class="input-group">
+            
+            <div class="input-section">
                 <label>Operations Domain</label>
                 <select id="role">
                     <option value="admin">Infrastructure Administrator (Admin)</option>
@@ -169,12 +29,12 @@
                 </select>
             </div>
 
-            <div class="input-group">
+            <div class="input-section">
                 <label>Authentication Identifier</label>
                 <input type="text" id="user" placeholder="Enter ID or Username" required>
             </div>
 
-            <div class="input-group">
+            <div class="input-section">
                 <label>Secure Key</label>
                 <input type="password" id="pass" placeholder="••••••••" required>
             </div>
@@ -187,13 +47,13 @@
 
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
     <script>
-        /* Technical Web Background Configuration */
+        /* Particles Web Background Initialization */
         particlesJS("particles-js", {
             "particles": {
                 "number": { "value": 100, "density": { "enable": true, "value_area": 800 } },
                 "color": { "value": "#1e40af" },
                 "shape": { "type": "circle" },
-                "opacity": { "value": 0.2, "random": false },
+                "opacity": { "value": 0.3, "random": false },
                 "size": { "value": 3, "random": true },
                 "line_linked": {
                     "enable": true,
@@ -206,26 +66,32 @@
             },
             "interactivity": {
                 "detect_on": "canvas",
-                "events": {
-                    "onhover": { "enable": true, "mode": "grab" },
-                    "onclick": { "enable": true, "mode": "push" },
-                    "resize": true
-                }
+                "events": { "onhover": { "enable": true, "mode": "grab" }, "onclick": { "enable": true, "mode": "push" }, "resize": true }
             },
             "retina_detect": true
         });
 
-        /* Authentication Logic (UC-1) [cite: 2] */
+        /* Modified Authentication Logic for System Redirection */
         function handleLogin(event) {
-            event.preventDefault();
+            event.preventDefault(); // Prevents page refresh on form submit
+            
             const user = document.getElementById('user').value;
             const pass = document.getElementById('pass').value;
             const role = document.getElementById('role').value;
 
-            if ((user === 'admin' && pass === 'admin' && role === 'admin') || 
-                (user === 'staff' && pass === 'staff' && role === 'staff')) {
+            /* Check credentials based on Use Case Scenario [cite: 35] */
+            if (user === 'admin' && pass === 'admin' && role === 'admin') {
                 alert("Identity Verified. Linking to Central Governance System...");
-            } else {
+                /* Redirect to Admin Dashboard [cite: 35] */
+                window.location.href = "admin_dashboard.html"; 
+            } 
+            else if (user === 'staff' && pass === 'staff' && role === 'staff') {
+                alert("Identity Verified. Linking to Staff Terminal...");
+                /* Redirect to Staff Dashboard [cite: 59] */
+                window.location.href = "staff_dashboard.html";
+            }
+            else {
+                /* Alternative Flow: System shows error message [cite: 35] */
                 alert("Security Denial: Invalid credentials or unauthorized domain.");
             }
         }
