@@ -2,210 +2,143 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>RailStream Admin | System Governance</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RailStream Admin | System Control</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root { --navy: #0f172a; --blue: #1e40af; --accent: #3b82f6; --bg: #f8fafc; --white: #ffffff; --red: #ef4444; }
+        :root {
+            --navy: #0f172a; --blue: #1e40af; --accent: #3b82f6; --bg: #f8fafc; --white: #ffffff;
+        }
         * { box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
         body { margin: 0; background: var(--bg); display: flex; height: 100vh; overflow: hidden; }
-        #particles-js { position: fixed; width: 100%; height: 100%; z-index: 1; pointer-events: none; opacity: 0.3; }
-        
+
         /* Sidebar */
-        .sidebar { width: 260px; background: var(--navy); color: white; display: flex; flex-direction: column; z-index: 10; }
-        .sidebar-header { padding: 30px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.1); }
-        .nav-menu { padding: 20px; flex-grow: 1; }
-        .nav-item { padding: 12px 15px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 12px; margin-bottom: 5px; color: #94a3b8; transition: 0.3s; }
+        .sidebar { width: 260px; background: var(--navy); color: white; display: flex; flex-direction: column; }
+        .nav-item { padding: 12px 20px; cursor: pointer; color: #94a3b8; display: flex; align-items: center; gap: 10px; transition: 0.3s; }
         .nav-item:hover, .nav-item.active { background: var(--blue); color: white; }
-        .nav-label { font-size: 11px; text-transform: uppercase; color: #475569; margin: 20px 0 10px 10px; font-weight: bold; }
-        
+
         /* Main Content */
-        .main-wrapper { flex-grow: 1; position: relative; z-index: 10; display: flex; flex-direction: column; overflow-y: auto; }
-        .top-bar { padding: 20px 40px; background: var(--white); display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e2e8f0; }
+        .main-wrapper { flex-grow: 1; display: flex; flex-direction: column; overflow-y: auto; }
         .content-body { padding: 40px; }
-        
-        /* Components */
         .glass-card { background: var(--white); border-radius: 16px; padding: 25px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); margin-bottom: 30px; display: none; }
-        .glass-card.active { display: block; animation: fadeIn 0.3s ease; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        
-        .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin-bottom: 20px; }
-        input, select { padding: 10px; border: 1px solid #e2e8f0; border-radius: 8px; outline: none; background: #fdfdfd; font-size: 13px; }
-        .btn-add { padding: 10px 20px; background: var(--blue); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; }
-        
-        /* Table Styles */
-        .data-table { width: 100%; border-collapse: collapse; }
-        .data-table th { background: #f8fafc; padding: 12px; text-align: left; font-size: 12px; color: #64748b; }
-        .data-table td { padding: 12px; border-bottom: 1px solid #f1f5f9; font-size: 14px; }
-        .btn-update { color: var(--accent); border: none; background: none; cursor: pointer; font-weight: bold; margin-right: 10px; }
-        .btn-delete { color: var(--red); border: none; background: none; cursor: pointer; font-weight: bold; }
+        .glass-card.active { display: block; }
+
+        /* Table & In-line Editing */
+        .data-table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        .data-table th, td { padding: 12px; text-align: left; border-bottom: 1px solid #f1f5f9; }
+        .edit-input { padding: 5px; border: 1px solid var(--accent); border-radius: 4px; width: 80%; }
         
         /* Professional Reports UI */
         .report-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
-        .stat-card { background: white; padding: 20px; border-radius: 12px; border-top: 4px solid var(--blue); box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
-        .stat-val { font-size: 24px; font-weight: bold; color: var(--navy); margin-top: 5px; }
-        
-        /* Uniform Logout Button */
-        .btn-logout { background: var(--red); color: white; border: none; padding: 12px; margin: auto 20px 20px; border-radius: 8px; cursor: pointer; text-align: center; font-weight: bold; text-decoration: none; }
+        .stat-card { background: white; padding: 25px; border-radius: 12px; border-top: 4px solid var(--blue); box-shadow: 0 4px 10px rgba(0,0,0,0.05); text-align: center; }
+        .stat-val { font-size: 28px; font-weight: bold; color: var(--navy); margin: 10px 0; }
+        .stat-label { color: #64748b; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; }
+
+        /* Buttons */
+        .btn { border: none; padding: 8px 15px; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 13px; }
+        .btn-save { background: var(--navy); color: white; }
+        .btn-update { background: #e0f2fe; color: var(--blue); margin-right: 5px; }
+        .btn-delete { background: #fee2e2; color: #ef4444; }
+        .btn-cancel { background: #f1f5f9; color: #64748b; margin-left: 5px; }
     </style>
 </head>
 <body>
-    <div id="particles-js"></div>
+
     <aside class="sidebar">
-        <div class="sidebar-header"><h2>RailStream</h2></div>
-        <div class="nav-menu">
-            <div class="nav-label">Fleet MGT</div>
-            <div class="nav-item active" onclick="showTab('tab-trains')"><i class="fa-solid fa-train"></i> Manage Trains</div>
-            <div class="nav-item" onclick="showTab('tab-routes')"><i class="fa-solid fa-route"></i> Define Routes</div>
-            <div class="nav-label">Operations</div>
-            <div class="nav-item" onclick="showTab('tab-schedules')"><i class="fa-solid fa-calendar-day"></i> Master Schedule</div>
-            <div class="nav-label">Analytics</div>
-            <div class="nav-item" onclick="showTab('tab-reports'); generateReport();"><i class="fa-solid fa-chart-pie"></i> Reports</div>
-        </div>
-        <a href="index.html" class="btn-logout"><i class="fa-solid fa-power-off"></i> Logout</a>
+        <div style="padding: 30px; font-weight: bold; font-size: 20px; color: var(--accent);">RailStream Admin</div>
+        <div class="nav-item active" onclick="showTab('tab-trains')"><i class="fa-solid fa-train"></i> Fleet Management</div>
+        <div class="nav-item" onclick="showTab('tab-reports')"><i class="fa-solid fa-chart-pie"></i> Operational Reports</div>
+        <a href="index.html" class="nav-item" style="margin-top: auto; color: #ef4444;"><i class="fa-solid fa-power-off"></i> Logout</a>
     </aside>
 
     <main class="main-wrapper">
-        <div class="top-bar"><h3 id="tab-title">Manage Trains</h3><div><i class="fa-solid fa-user-shield"></i> Admin Portal</div></div>
         <div class="content-body">
+            
             <section id="tab-trains" class="glass-card active">
-                <h3>Train Assets</h3>
-                <div class="form-grid">
-                    <input type="text" id="tID" placeholder="Train ID">
-                    <input type="text" id="tModel" placeholder="Model">
-                    <button class="btn-add" onclick="saveItem('trains', ['tID', 'tModel'])">Save Train</button>
-                </div>
+                <h3>Train Assets Management</h3>
                 <table class="data-table" id="trainTable">
-                    <thead><tr><th>ID</th><th>Model</th><th>Actions</th></tr></thead>
-                    <tbody></tbody>
-                </table>
-            </section>
-
-            <section id="tab-routes" class="glass-card">
-                <h3>Define Network Routes</h3>
-                <div class="form-grid">
-                    <input type="text" id="rID" placeholder="Route ID">
-                    <input type="text" id="rPath" placeholder="Source - Destination">
-                    <button class="btn-add" onclick="saveItem('routes', ['rID', 'rPath'])">Save Route</button>
-                </div>
-                <table class="data-table" id="routeTable">
-                    <thead><tr><th>ID</th><th>Route Path</th><th>Actions</th></tr></thead>
-                    <tbody></tbody>
-                </table>
-            </section>
-
-            <section id="tab-schedules" class="glass-card">
-                <h3>Scheduling & Dispatch</h3>
-                <div class="form-grid">
-                    <select id="sTrain"><option value="">Select Train</option></select>
-                    <input type="datetime-local" id="sTime">
-                    <button class="btn-add" onclick="saveSchedule()">Commit Schedule</button>
-                </div>
-                <table class="data-table" id="schedTable">
-                    <thead><tr><th>Train</th><th>Departure Time</th><th>Actions</th></tr></thead>
-                    <tbody></tbody>
+                    <thead><tr><th>Train ID</th><th>Model</th><th>Actions</th></tr></thead>
+                    <tbody>
+                        <tr id="row-1">
+                            <td class="id-cell">EX-79</td>
+                            <td class="model-cell">Local Express</td>
+                            <td class="action-cell">
+                                <button class="btn btn-update" onclick="enableEdit('row-1')">Update</button>
+                                <button class="btn btn-delete" onclick="this.closest('tr').remove()">Delete</button>
+                            </td>
+                        </tr>
+                    </tbody>
                 </table>
             </section>
 
             <section id="tab-reports" class="glass-card">
-                <h3>System Performance Overview</h3>
-                <div id="reportContainer" class="report-grid"></div>
+                <h3>Operational Intelligence</h3>
+                <div class="report-grid">
+                    <div class="stat-card">
+                        <i class="fa-solid fa-train-subway fa-2x" style="color: var(--blue);"></i>
+                        <div class="stat-val">14</div>
+                        <div class="stat-label">Total Fleet</div>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fa-solid fa-route fa-2x" style="color: #10b981;"></i>
+                        <div class="stat-val">8</div>
+                        <div class="stat-label">Active Routes</div>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fa-solid fa-ticket fa-2x" style="color: #f59e0b;"></i>
+                        <div class="stat-val">1,250</div>
+                        <div class="stat-label">Daily Reservations</div>
+                    </div>
+                </div>
             </section>
+
         </div>
     </main>
 
-    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
     <script>
-        particlesJS("particles-js", { "particles": { "number": { "value": 40 }, "size": { "value": 2 }, "line_linked": { "opacity": 0.2 }, "move": { "speed": 1 } } });
-
-        function showTab(tabId) {
+        // Tab switching function
+        function showTab(id) {
             document.querySelectorAll('.glass-card').forEach(c => c.classList.remove('active'));
             document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
-            document.getElementById(tabId).classList.add('active');
+            document.getElementById(id).classList.add('active');
             event.currentTarget.classList.add('active');
-            document.getElementById('tab-title').innerText = event.currentTarget.innerText;
-            if(tabId === 'tab-schedules') syncDropdowns();
         }
 
-        // Generic Save Logic [cite: 8]
-        function saveItem(key, inputs) {
-            let data = JSON.parse(localStorage.getItem(key)) || [];
-            let obj = {};
-            inputs.forEach(id => { obj[id] = document.getElementById(id).value; document.getElementById(id).value = ''; });
-            if(Object.values(obj).some(v => !v)) return alert("Fill all fields");
-            data.push(obj);
-            localStorage.setItem(key, JSON.stringify(data));
-            renderAll();
-        }
+        // --- In-line Editing Logic ---
+        function enableEdit(rowId) {
+            const row = document.getElementById(rowId);
+            const modelCell = row.querySelector('.model-cell');
+            const actionCell = row.querySelector('.action-cell');
+            const originalValue = modelCell.innerText;
 
-        // Use Case: Create Schedule with Conflict Check 
-        function saveSchedule() {
-            let train = document.getElementById('sTrain').value;
-            let time = document.getElementById('sTime').value;
-            if(!train || !time) return alert("Select Train and Time");
-            
-            let schedules = JSON.parse(localStorage.getItem('schedules')) || [];
-            // Conflict Check 
-            if(schedules.find(s => s.sTrain === train && s.sTime === time)) return alert("Scheduling Conflict: Train busy!");
-            
-            schedules.push({ sTrain: train, sTime: time });
-            localStorage.setItem('schedules', JSON.stringify(schedules));
-            renderAll();
-        }
+            // Replace text with Input field
+            modelCell.innerHTML = `<input type="text" class="edit-input" value="${originalValue}">`;
 
-        function syncDropdowns() {
-            let trains = JSON.parse(localStorage.getItem('trains')) || [];
-            document.getElementById('sTrain').innerHTML = '<option value="">Select Train</option>' + 
-                trains.map(t => `<option value="${t.tID}">${t.tID}</option>`).join('');
-        }
-
-        function renderAll() {
-            const keys = ['trains', 'routes', 'schedules'];
-            keys.forEach(k => {
-                let data = JSON.parse(localStorage.getItem(k)) || [];
-                let tbody = document.querySelector(`#${k.slice(0,-1)}Table tbody`);
-                if(!tbody) return;
-                tbody.innerHTML = data.map((item, i) => `
-                    <tr>
-                        ${Object.values(item).map(v => `<td>${v}</td>`).join('')}
-                        <td>
-                            <button class="btn-update" onclick="updateItem('${k}', ${i})">Update</button>
-                            <button class="btn-delete" onclick="deleteItem('${k}', ${i})">Delete</button>
-                        </td>
-                    </tr>
-                `).join('');
-            });
-        }
-
-        function deleteItem(key, i) {
-            let data = JSON.parse(localStorage.getItem(key));
-            data.splice(i, 1);
-            localStorage.setItem(key, JSON.stringify(data));
-            renderAll();
-        }
-
-        function updateItem(key, i) {
-            let data = JSON.parse(localStorage.getItem(key));
-            let newVal = prompt("Enter New Value:", Object.values(data[i])[1]);
-            if(newVal) {
-                let keys = Object.keys(data[i]);
-                data[i][keys[1]] = newVal;
-                localStorage.setItem(key, JSON.stringify(data));
-                renderAll();
-            }
-        }
-
-        function generateReport() {
-            let trains = JSON.parse(localStorage.getItem('trains')) || [];
-            let schedules = JSON.parse(localStorage.getItem('schedules')) || [];
-            let tickets = JSON.parse(localStorage.getItem('tickets')) || [];
-            document.getElementById('reportContainer').innerHTML = `
-                <div class="stat-card"><div>Total Fleet</div><div class="stat-val">${trains.length} Units</div></div>
-                <div class="stat-card"><div>Active Trips</div><div class="stat-val">${schedules.length} Scheduled</div></div>
-                <div class="stat-card"><div>System Health</div><div class="stat-val">${tickets.length > 0 ? '98%' : 'Idle'}</div></div>
+            // Change buttons to (Save / Cancel)
+            actionCell.innerHTML = `
+                <button class="btn btn-save" onclick="saveEdit('${rowId}', '${originalValue}')">Save</button>
+                <button class="btn btn-cancel" onclick="cancelEdit('${rowId}', '${originalValue}')">Cancel</button>
             `;
         }
 
-        window.onload = renderAll;
+        function saveEdit(rowId, oldValue) {
+            const row = document.getElementById(rowId);
+            const newValue = row.querySelector('.edit-input').value;
+            finishEditing(row, newValue);
+        }
+
+        function cancelEdit(rowId, oldValue) {
+            const row = document.getElementById(rowId);
+            finishEditing(row, oldValue); // Revert to the old value on cancel
+        }
+
+        function finishEditing(row, value) {
+            row.querySelector('.model-cell').innerText = value;
+            row.querySelector('.action-cell').innerHTML = `
+                <button class="btn btn-update" onclick="enableEdit('${row.id}')">Update</button>
+                <button class="btn btn-delete" onclick="this.closest('tr').remove()">Delete</button>
+            `;
+        }
     </script>
 </body>
 </html>
