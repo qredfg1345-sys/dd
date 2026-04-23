@@ -193,6 +193,21 @@
             btn.style.display = "none";
             row.querySelector('.btn-edit').style.display = "inline-block";
         }
+        // Function in admin_dashboard.html to save and sync
+function saveScheduleToSync() {
+    let train = document.getElementById('sTrain').value;
+    let time = document.getElementById('sTime').value;
+    
+    let newTrip = { train: train, time: time };
+    
+    // Get existing or create new array
+    let schedules = JSON.parse(localStorage.getItem('masterSchedules')) || [];
+    schedules.push(newTrip);
+    
+    // Save to local storage (shared between pages)
+    localStorage.setItem('masterSchedules', JSON.stringify(schedules));
+    alert("Trip published to Staff terminal!");
+}
     </script>
 </body>
 </html>
