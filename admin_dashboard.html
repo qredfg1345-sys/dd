@@ -29,12 +29,10 @@
         .glass-card.active { display: block; animation: fadeIn 0.3s ease; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        /* Improved Form Group */
         .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin-bottom: 20px; }
         input, select { padding: 10px; border: 1px solid #e2e8f0; border-radius: 8px; outline: none; background: #fdfdfd; font-size: 13px; text-align: left; }
         .btn-add { padding: 10px 20px; background: var(--blue); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 13px; }
 
-        /* Professional In-line Editing Table */
         .data-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
         .data-table th { background: #f8fafc; padding: 12px; text-align: left; font-size: 12px; color: #64748b; border-bottom: 2px solid #edf2f7; }
         .data-table td { padding: 12px; border-bottom: 1px solid #f1f5f9; font-size: 14px; }
@@ -43,7 +41,6 @@
         .btn-delete { color: #ef4444; cursor: pointer; border:none; background:none; font-weight: bold; }
         .editable { border: 1px solid var(--accent); background: #fff; padding: 4px; border-radius: 4px; width: 100%; }
 
-        /* Stat Cards */
         .stat-group { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; }
         .stat-card { background: #eff6ff; padding: 15px; border-radius: 12px; border-left: 4px solid var(--blue); }
     </style>
@@ -57,15 +54,15 @@
             <h2 style="margin:0; font-size: 1.1rem; letter-spacing: 1px;"><i class="fa-solid fa-train"></i> RailStream</h2>
         </div>
         <div class="nav-menu">
-            <div class="nav-label">Infrastructure</div>
+            <div class="nav-label">Infrastructure [cite: 1]</div>
             <div class="nav-item active" onclick="showTab('tab-trains')"><i class="fa-solid fa-subway"></i> Fleet Management</div>
-            <div class="nav-item" onclick="showTab('tab-routes')"><i class="fa-solid fa-route"></i> Define Routes</div>
+            <div class="nav-item" onclick="showTab('tab-routes')"><i class="fa-solid fa-route"></i> Define Routes [cite: 7]</div>
             
-            <div class="nav-label">Operations</div>
-            <div class="nav-item" onclick="showTab('tab-schedules')"><i class="fa-solid fa-clock"></i> Master Schedule</div>
+            <div class="nav-label">Operations [cite: 3]</div>
+            <div class="nav-item" onclick="showTab('tab-schedules')"><i class="fa-solid fa-clock"></i> Master Schedule [cite: 24]</div>
             
-            <div class="nav-label">System Data</div>
-            <div class="nav-item" onclick="showTab('tab-reports')"><i class="fa-solid fa-chart-line"></i> Operational Reports</div>
+            <div class="nav-label">System Data [cite: 28]</div>
+            <div class="nav-item" onclick="showTab('tab-reports')"><i class="fa-solid fa-chart-line"></i> Operational Reports </div>
             
             <a href="index.html" class="nav-item" style="margin-top:50px; text-decoration:none; color:#f87171;"><i class="fa-solid fa-sign-out-alt"></i> Logout</a>
         </div>
@@ -73,60 +70,62 @@
 
     <main class="main-wrapper">
         <div class="top-bar">
-            <h3 id="current-title" style="color: var(--navy);">Fleet Management</h3>
-            <div style="font-size: 13px; color: #64748b;"><i class="fa-solid fa-circle-user"></i> Admin Terminal</div>
+            <h3 id="current-title" style="color: var(--navy);">Fleet Management [cite: 40]</h3>
+            <div style="font-size: 13px; color: #64748b;"><i class="fa-solid fa-circle-user"></i> Admin Terminal [cite: 20]</div>
         </div>
 
         <div class="content-body">
             
             <section id="tab-trains" class="glass-card active">
-                <h3>Manage Train Fleet</h3>
+                <h3>Manage Train Fleet </h3>
                 <div class="form-grid">
                     <input type="text" id="tID" placeholder="Train ID (EX-79)">
                     <input type="text" id="tModel" placeholder="Model (Bullet, Local)">
                     <input type="number" id="tCap" placeholder="Total Capacity">
-                    <button class="btn-add" onclick="addItem('trainTable', ['tID', 'tModel', 'tCap'])">Save Train</button>
+                    <button class="btn-add" onclick="saveTrainAsset()">Save Train [cite: 54]</button>
                 </div>
                 <table class="data-table" id="trainTable">
-                    <thead><tr><th>Train ID</th><th>Model</th><th>Capacity</th><th>Actions</th></tr></thead>
+                    <thead><tr><th>Train ID</th><th>Model</th><th>Capacity</th><th>Actions [cite: 5, 8]</th></tr></thead>
                     <tbody></tbody>
                 </table>
             </section>
 
             <section id="tab-routes" class="glass-card">
-                <h3>Define Network Routes</h3>
+                <h3>Define Network Routes [cite: 52]</h3>
                 <div class="form-grid">
                     <input type="text" id="rID" placeholder="Route ID">
                     <input type="text" id="rSource" placeholder="Source Station">
                     <input type="text" id="rDest" placeholder="Destination">
-                    <button class="btn-add" onclick="addItem('routeTable', ['rID', 'rSource', 'rDest'])">Save Route</button>
+                    <button class="btn-add" onclick="addItem('routeTable', ['rID', 'rSource', 'rDest'])">Save Route [cite: 52]</button>
                 </div>
                 <table class="data-table" id="routeTable">
-                    <thead><tr><th>Route ID</th><th>Source</th><th>Destination</th><th>Actions</th></tr></thead>
+                    <thead><tr><th>Route ID</th><th>Source</th><th>Destination</th><th>Actions [cite: 16, 21]</th></tr></thead>
                     <tbody></tbody>
                 </table>
             </section>
 
             <section id="tab-schedules" class="glass-card">
-                <h3>Scheduling & Dispatch</h3>
+                <h3>Scheduling & Dispatch [cite: 22, 53]</h3>
                 <div class="form-grid">
-                    <input type="text" id="sTrain" placeholder="Train ID">
+                    <select id="sTrain">
+                        <option value="">Select Train ID </option>
+                    </select>
                     <input type="date" id="sDate"> 
                     <input type="time" id="sTime">
-                    <button class="btn-add" onclick="addItem('schedTable', ['sTrain', 'sDate', 'sTime']); saveScheduleToSync();">Create Schedule</button>
+                    <button class="btn-add" onclick="saveScheduleToSync()">Create Schedule </button>
                 </div>
                 <table class="data-table" id="schedTable">
-                    <thead><tr><th>Train</th><th>Departure Date</th><th>Time</th><th>Actions</th></tr></thead>
+                    <thead><tr><th>Train</th><th>Departure Date</th><th>Time</th><th>Actions [cite: 25, 27]</th></tr></thead>
                     <tbody></tbody>
                 </table>
             </section>
 
             <section id="tab-reports" class="glass-card">
-                <h3>Operational Performance</h3>
-                <div class="stat-group">
-                    <div class="stat-card"><small>Fleet Activity</small><div style="font-size:1.5rem; font-weight:bold;">12 Trains</div></div>
-                    <div class="stat-card"><small>Active Routes</small><div style="font-size:1.5rem; font-weight:bold;">8 Paths</div></div>
-                    <div class="stat-card"><small>Daily Revenue</small><div style="font-size:1.5rem; font-weight:bold;">$4,250</div></div>
+                <h3>Operational Performance [cite: 28, 56]</h3>
+                <div id="reportData" class="stat-group">
+                    </div>
+                <div style="margin-top:30px; text-align:center;">
+                    <button class="btn-add" onclick="generateProfessionalReport()"><i class="fa-solid fa-sync"></i> Refresh Data </button>
                 </div>
             </section>
 
@@ -135,65 +134,103 @@
 
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
     <script>
-        // Particles.js configuration for visual effect
         particlesJS("particles-js", { "particles": { "number": { "value": 50 }, "size": { "value": 2 }, "color": { "value": "#cbd5e1" }, "line_linked": { "enable": true, "color": "#cbd5e1", "opacity": 0.3 }, "move": { "enable": true, "speed": 1 } } });
 
-        // Function to switch between dashboard tabs
         function showTab(tabId) {
             document.querySelectorAll('.glass-card').forEach(c => c.classList.remove('active'));
             document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
             document.getElementById(tabId).classList.add('active');
             event.currentTarget.classList.add('active');
             document.getElementById('current-title').innerText = event.currentTarget.innerText;
+            if(tabId === 'tab-schedules') populateTrainDropdown();
+            if(tabId === 'tab-reports') generateProfessionalReport();
         }
 
-        // Standard function to add items to the current UI table
-        function addItem(tableId, inputIds) {
-            let values = inputIds.map(id => document.getElementById(id).value);
-            if(values.some(v => v === "")) return alert("Please fill all fields to validate data");
-            
-            let table = document.getElementById(tableId).getElementsByTagName('tbody')[0];
-            let row = table.insertRow();
-            values.forEach(v => { let cell = row.insertCell(); cell.innerText = v; });
-            
-            let actionCell = row.insertCell();
-            actionCell.innerHTML = `<button class="btn-edit" onclick="makeEditable(this)">Update</button><button class="btn-save-inline" onclick="saveInline(this)">Save</button><button class="btn-delete" onclick="this.parentElement.parentElement.remove()">Delete</button>`;
-            
-            inputIds.forEach(id => document.getElementById(id).value = "");
+        // Use Case: Add Train & Store for Dropdown [cite: 6, 44]
+        function saveTrainAsset() {
+            let id = document.getElementById('tID').value;
+            let model = document.getElementById('tModel').value;
+            let cap = document.getElementById('tCap').value;
+
+            if(!id || !model || !cap) return alert("Please fill all fields [cite: 55]");
+
+            let trainAssets = JSON.parse(localStorage.getItem('trainAssets')) || [];
+            trainAssets.push({ id, model, cap });
+            localStorage.setItem('trainAssets', JSON.stringify(trainAssets));
+
+            addItemToTable('trainTable', [id, model, cap]);
+            document.getElementById('tID').value = "";
+            document.getElementById('tModel').value = "";
+            document.getElementById('tCap').value = "";
         }
 
-        // Logic to push schedules to shared LocalStorage for Staff access
+        // Populate Schedule Dropdown from Fleet MGT 
+        function populateTrainDropdown() {
+            let dropdown = document.getElementById('sTrain');
+            dropdown.innerHTML = '<option value="">Select Train ID </option>';
+            let trains = JSON.parse(localStorage.getItem('trainAssets')) || [];
+            trains.forEach(t => {
+                let opt = document.createElement('option');
+                opt.value = t.id;
+                opt.innerHTML = `${t.id} (${t.model})`;
+                dropdown.appendChild(opt);
+            });
+        }
+
+        // Sync Logic for Staff access [cite: 31, 53]
         function saveScheduleToSync() {
-            // Retrieve values from the specific schedule inputs
             let train = document.getElementById('sTrain').value;
             let date = document.getElementById('sDate').value; 
             let time = document.getElementById('sTime').value;
             
-            // Only sync if data exists (Validation check)
             if (train && date && time) {
-                let newTrip = { 
-                    train: train, 
-                    date: date, 
-                    time: time 
-                };
-                
-                // Get existing data from storage or start fresh
                 let schedules = JSON.parse(localStorage.getItem('masterSchedules')) || [];
+                // Check conflicts Use Case 
+                if(schedules.some(s => s.train === train && s.date === date && s.time === time)) {
+                    return alert("System conflict: Train is already scheduled at this time ");
+                }
+
+                let newTrip = { train, date, time };
                 schedules.push(newTrip);
-                
-                // Save updated array to masterSchedules key
                 localStorage.setItem('masterSchedules', JSON.stringify(schedules));
-                console.log("System Sync: New schedule published to database.");
+                addItemToTable('schedTable', [train, date, time]);
             }
         }
 
-        // In-line editing functions for better UX
+        // Professional Report Generation 
+        function generateProfessionalReport() {
+            let trains = JSON.parse(localStorage.getItem('trainAssets')) || [];
+            let schedules = JSON.parse(localStorage.getItem('masterSchedules')) || [];
+            let passengers = JSON.parse(localStorage.getItem('passengers')) || [];
+
+            document.getElementById('reportData').innerHTML = `
+                <div class="stat-card"><small>Total Fleet </small><div style="font-size:1.5rem; font-weight:bold;">${trains.length} Units</div></div>
+                <div class="stat-card"><small>Active Trips </small><div style="font-size:1.5rem; font-weight:bold;">${schedules.length} Paths</div></div>
+                <div class="stat-card"><small>Registered Passengers [cite: 57]</small><div style="font-size:1.5rem; font-weight:bold;">${passengers.length} Users</div></div>
+            `;
+        }
+
+        function addItemToTable(tableId, values) {
+            let table = document.getElementById(tableId).getElementsByTagName('tbody')[0];
+            let row = table.insertRow();
+            values.forEach(v => { let cell = row.insertCell(); cell.innerText = v; });
+            let actionCell = row.insertCell();
+            actionCell.innerHTML = `<button class="btn-edit" onclick="makeEditable(this)">Update</button><button class="btn-save-inline" onclick="saveInline(this)">Save</button><button class="btn-delete" onclick="this.parentElement.parentElement.remove()">Delete</button>`;
+        }
+
+        // Generic addItem for other sections
+        function addItem(tableId, inputIds) {
+            let values = inputIds.map(id => document.getElementById(id).value);
+            if(values.some(v => v === "")) return alert("Please fill all fields [cite: 55]");
+            addItemToTable(tableId, values);
+            inputIds.forEach(id => document.getElementById(id).value = "");
+        }
+
         function makeEditable(btn) {
             let row = btn.parentElement.parentElement;
             for(let i=0; i < row.cells.length - 1; i++) {
                 let cell = row.cells[i];
-                let currentVal = cell.innerText;
-                cell.innerHTML = `<input type="text" class="editable" value="${currentVal}">`;
+                cell.innerHTML = `<input type="text" class="editable" value="${cell.innerText}">`;
             }
             btn.style.display = "none";
             row.querySelector('.btn-save-inline').style.display = "inline-block";
@@ -203,8 +240,7 @@
             let row = btn.parentElement.parentElement;
             for(let i=0; i < row.cells.length - 1; i++) {
                 let cell = row.cells[i];
-                let input = cell.querySelector('input');
-                cell.innerText = input.value;
+                cell.innerText = cell.querySelector('input').value;
             }
             btn.style.display = "none";
             row.querySelector('.btn-edit').style.display = "inline-block";
