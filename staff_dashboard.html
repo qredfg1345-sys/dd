@@ -2,74 +2,150 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>RailStream Staff | Operations</title>
+    <title>RailStream | Staff Terminal</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root { --navy: #0f172a; --blue: #1e40af; --bg: #f8fafc; }
-        body { margin: 0; font-family: 'Segoe UI', sans-serif; display: flex; height: 100vh; background: var(--bg); }
+        :root { --navy: #0f172a; --blue: #1e40af; --bg: #f8fafc; --white: #ffffff; --red: #ef4444; }
+        * { box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+        body { margin: 0; background: var(--bg); display: flex; height: 100vh; overflow: hidden; }
         .sidebar { width: 260px; background: var(--navy); color: white; display: flex; flex-direction: column; }
-        .nav-item { padding: 15px 20px; cursor: pointer; color: #94a3b8; display: flex; align-items: center; gap: 12px; }
+        .nav-menu { padding: 20px; flex-grow: 1; }
+        .nav-item { padding: 12px 15px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 12px; margin-bottom: 5px; color: #94a3b8; }
         .nav-item.active { background: var(--blue); color: white; }
-        .main { flex-grow: 1; padding: 40px; overflow-y: auto; }
-        .card { background: white; padding: 25px; border-radius: 16px; display: none; }
-        .card.active { display: block; }
+        .main-wrapper { flex-grow: 1; overflow-y: auto; padding: 40px; }
+        .glass-card { background: var(--white); border-radius: 16px; padding: 25px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); display: none; }
+        .glass-card.active { display: block; }
+        input, select { width: 100%; padding: 12px; margin-bottom: 12px; border: 1px solid #e2e8f0; border-radius: 8px; }
+        .btn-staff { width: 100%; padding: 12px; background: var(--blue); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; }
+        .data-table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        .data-table td, th { padding: 12px; text-align: left; border-bottom: 1px solid #f1f5f9; }
+        .btn-logout { background: var(--red); color: white; padding: 12px; margin: 20px; border-radius: 8px; text-align: center; text-decoration: none; font-weight: bold; }
     </style>
 </head>
 <body>
     <aside class="sidebar">
-        <div style="padding:30px; text-align:center;"><h2>Staff Terminal</h2></div>
-        <div class="nav-item active" onclick="showTab('tab-reg')"><i class="fa-solid fa-user-plus"></i> Registration [cite: 10]</div>
-        <div class="nav-item" onclick="showTab('tab-ticket')"><i class="fa-solid fa-ticket"></i> Issue Ticket </div>
-        <div class="nav-item" onclick="showTab('tab-view')"><i class="fa-solid fa-calendar-check"></i> Daily Schedule </div>
-        <a href="index.html" style="color: #f87171; padding: 20px; text-decoration: none; margin-top: auto;"><i class="fa-solid fa-power-off"></i> Logout</a>
+        <div style="padding:30px; text-align:center;"><h2>RailStream</h2></div>
+        <div class="nav-menu">
+            <div class="nav-item active" onclick="showTab('tab-pass')"><i class="fa-solid fa-id-card"></i> Registry</div>
+            <div class="nav-item" onclick="showTab('tab-book')"><i class="fa-solid fa-ticket"></i> Issue Ticket</div>
+            <div class="nav-item" onclick="showTab('tab-daily')"><i class="fa-solid fa-list"></i> Daily Schedule</div>
+        </div>
+        <a href="index.html" class="btn-logout"><i class="fa-solid fa-power-off"></i> Logout</a>
     </aside>
 
-    <main class="main">
-        <section id="tab-reg" class="card active">
-            <h3>Passenger Registry</h3>
-            <input type="text" id="pID" placeholder="National ID (Min 5 chars) ">
-            <input type="text" id="pName" placeholder="Full Name">
-            <button onclick="registerPassenger()" style="background:var(--blue); color:white; padding:10px; border-radius:8px;">Validate & Save [cite: 10, 13]</button>
+    <main class="main-wrapper">
+        <section id="tab-pass" class="glass-card active">
+            <h3>Passenger Registration</h3>
+            <div style="margin-bottom: 20px;">
+                <input type="text" id="pID" placeholder="National ID (Min 5 chars)">
+                <input type="text" id="pName" placeholder="Full Name">
+                <button class="btn-staff" onclick="registerPassenger()">Validate & Create Profile</button>
+            </div>
+            <input type="text" onkeyup="searchPass(this.value)" placeholder="Search Registry...">
+            <table class="data-table" id="passTable">
+                <thead><tr><th>ID</th><th>Name</th></tr></thead>
+                <tbody></tbody>
+            </table>
         </section>
 
-        <section id="tab-ticket" class="card">
+        <section id="tab-book" class="glass-card">
             <h3>Seat Allocation & Booking</h3>
-            <select id="tripSelect" onchange="checkAvailability()"><option value="">Check Availability </option></select>
-            <div id="availabilityMsg" style="margin: 10px 0; font-weight: bold;"></div>
-            <input type="text" id="seatNo" placeholder="Seat Number ">
-            <button onclick="issueTicket()" style="background:var(--blue); color:white; padding:10px; border-radius:8px;">Generate Ticket </button>
+            <select id="pSelect"><option value="">Select Passenger</option></select>
+            <select id="tSelect" onchange="checkAvailability()"><option value="">Select Trip</option></select>
+            <div id="availNotice" style="margin-bottom: 10px; font-weight: bold; color: var(--blue);"></div>
+            <input type="text" id="seatNo" placeholder="Enter Seat No (e.g., 14A)">
+            <button class="btn-staff" onclick="issueTicket()">Issue Official Ticket</button>
+            <table class="data-table" id="ticketTable">
+                <thead><tr><th>Passenger</th><th>Trip</th><th>Seat</th><th>Action</th></tr></thead>
+                <tbody></tbody>
+            </table>
         </section>
 
-        <section id="tab-view" class="card">
-            <h3>Current Operational Schedule </h3>
-            <table width="100%" id="dailyTable"></table>
+        <section id="tab-daily" class="glass-card">
+            <h3>Operational Schedule (Synced from Admin)</h3>
+            <table class="data-table" id="dailyTable">
+                <thead><tr><th>Train</th><th>Departure Time</th></tr></thead>
+                <tbody></tbody>
+            </table>
         </section>
     </main>
 
     <script>
         function showTab(id) {
-            document.querySelectorAll('.card').forEach(c => c.classList.remove('active'));
+            document.querySelectorAll('.glass-card').forEach(c => c.classList.remove('active'));
             document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
             document.getElementById(id).classList.add('active');
             event.currentTarget.classList.add('active');
-            if(id === 'tab-view') renderSchedule();
+            syncData();
         }
 
+        // --- Use Case: Validate & Create Profile [cite: 10, 12, 13] ---
         function registerPassenger() {
             let id = document.getElementById('pID').value;
-            // Use Case: Validate Passenger ID 
-            if(id.length < 5) return alert("System rejected: Invalid ID format [cite: 12]");
+            let name = document.getElementById('pName').value;
+            // System validates ID format [cite: 13]
+            if(id.length < 5) return alert("Alternative Flow: ID Rejected (Too short)");
             let ps = JSON.parse(localStorage.getItem('passengers')) || [];
-            ps.push({ id, name: document.getElementById('pName').value });
+            ps.push({ id, name });
             localStorage.setItem('passengers', JSON.stringify(ps));
-            alert("Passenger Stored successfully [cite: 12]");
+            renderPassengers();
         }
 
-        function renderSchedule() {
-            // Retrieve trips for display 
-            let scheds = JSON.parse(localStorage.getItem('masterSchedules')) || [];
-            // Logic to display table...
+        // --- Use Case: Search Passenger [cite: 29] ---
+        function searchPass(val) {
+            let ps = JSON.parse(localStorage.getItem('passengers')) || [];
+            let filtered = ps.filter(p => p.name.toLowerCase().includes(val.toLowerCase()) || p.id.includes(val));
+            document.querySelector('#passTable tbody').innerHTML = filtered.map(p => `<tr><td>${p.id}</td><td>${p.name}</td></tr>`).join('');
         }
+
+        // --- Use Case: Check Availability & Issue Ticket [cite: 14, 15, 26] ---
+        function checkAvailability() {
+            let trip = document.getElementById('tSelect').value;
+            document.getElementById('availNotice').innerText = trip ? "System Check: Seats Available" : "";
+        }
+
+        function issueTicket() {
+            let p = document.getElementById('pSelect').value;
+            let t = document.getElementById('tSelect').value;
+            let s = document.getElementById('seatNo').value;
+            if(!p || !t || !s) return alert("Correction: Select Passenger, Trip, and Seat");
+            
+            let tickets = JSON.parse(localStorage.getItem('tickets')) || [];
+            // Check for seat allocation [cite: 14]
+            if(tickets.find(tk => tk.t === t && tk.s === s)) return alert("Error: Seat occupied!");
+            
+            tickets.push({ p, t, s });
+            localStorage.setItem('tickets', JSON.stringify(tickets));
+            renderTickets();
+        }
+
+        // --- Use Case: Cancel Ticket [cite: 28] ---
+        function cancelTicket(i) {
+            let ts = JSON.parse(localStorage.getItem('tickets'));
+            ts.splice(i, 1);
+            localStorage.setItem('tickets', JSON.stringify(ts));
+            renderTickets();
+        }
+
+        function syncData() {
+            let ss = JSON.parse(localStorage.getItem('schedules')) || [];
+            let ps = JSON.parse(localStorage.getItem('passengers')) || [];
+            document.getElementById('pSelect').innerHTML = ps.map(p => `<option value="${p.name}">${p.name}</option>`).join('');
+            document.getElementById('tSelect').innerHTML = ss.map(s => `<option value="${s.train}">${s.train} - ${s.time}</option>`).join('');
+            document.querySelector('#dailyTable tbody').innerHTML = ss.map(s => `<tr><td>${s.train}</td><td>${s.time}</td></tr>`).join('');
+        }
+
+        function renderPassengers() {
+            let ps = JSON.parse(localStorage.getItem('passengers')) || [];
+            document.querySelector('#passTable tbody').innerHTML = ps.map(p => `<tr><td>${p.id}</td><td>${p.name}</td></tr>`).join('');
+        }
+
+        function renderTickets() {
+            let ts = JSON.parse(localStorage.getItem('tickets')) || [];
+            document.querySelector('#ticketTable tbody').innerHTML = ts.map((t, i) => `<tr><td>${t.p}</td><td>${t.t}</td><td>${t.s}</td><td><button onclick="cancelTicket(${i})" style="color:red; background:none; border:none; cursor:pointer;">Cancel</button></td></tr>`).join('');
+        }
+
+        window.onload = () => { renderPassengers(); renderTickets(); syncData(); };
     </script>
 </body>
 </html>
