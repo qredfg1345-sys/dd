@@ -2,190 +2,210 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RailStream Admin | System Governance</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root { --navy: #0f172a; --blue: #1e40af; --accent: #3b82f6; --bg: #f8fafc; --white: #ffffff; }
+        :root { --navy: #0f172a; --blue: #1e40af; --accent: #3b82f6; --bg: #f8fafc; --white: #ffffff; --red: #ef4444; }
         * { box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
         body { margin: 0; background: var(--bg); display: flex; height: 100vh; overflow: hidden; }
         #particles-js { position: fixed; width: 100%; height: 100%; z-index: 1; pointer-events: none; opacity: 0.3; }
+        
+        /* Sidebar */
         .sidebar { width: 260px; background: var(--navy); color: white; display: flex; flex-direction: column; z-index: 10; }
         .sidebar-header { padding: 30px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.1); }
         .nav-menu { padding: 20px; flex-grow: 1; }
-        .nav-item { padding: 12px 15px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 12px; margin-bottom: 5px; transition: 0.3s; color: #94a3b8; }
+        .nav-item { padding: 12px 15px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 12px; margin-bottom: 5px; color: #94a3b8; transition: 0.3s; }
         .nav-item:hover, .nav-item.active { background: var(--blue); color: white; }
         .nav-label { font-size: 11px; text-transform: uppercase; color: #475569; margin: 20px 0 10px 10px; font-weight: bold; }
+        
+        /* Main Content */
         .main-wrapper { flex-grow: 1; position: relative; z-index: 10; display: flex; flex-direction: column; overflow-y: auto; }
         .top-bar { padding: 20px 40px; background: var(--white); display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e2e8f0; }
         .content-body { padding: 40px; }
-        .glass-card { background: var(--white); border-radius: 16px; padding: 25px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); margin-bottom: 30px; display: none; }
+        
+        /* Components */
+        .glass-card { background: var(--white); border-radius: 16px; padding: 25px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); margin-bottom: 30px; display: none; }
         .glass-card.active { display: block; animation: fadeIn 0.3s ease; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        
         .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin-bottom: 20px; }
         input, select { padding: 10px; border: 1px solid #e2e8f0; border-radius: 8px; outline: none; background: #fdfdfd; font-size: 13px; }
         .btn-add { padding: 10px 20px; background: var(--blue); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; }
-        .data-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-        .data-table th { background: #f8fafc; padding: 12px; text-align: left; font-size: 12px; color: #64748b; border-bottom: 2px solid #edf2f7; }
+        
+        /* Table Styles */
+        .data-table { width: 100%; border-collapse: collapse; }
+        .data-table th { background: #f8fafc; padding: 12px; text-align: left; font-size: 12px; color: #64748b; }
         .data-table td { padding: 12px; border-bottom: 1px solid #f1f5f9; font-size: 14px; }
-        .btn-delete { color: #ef4444; cursor: pointer; border:none; background:none; font-weight: bold; }
-        .stat-group { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; }
-        .stat-card { background: #eff6ff; padding: 15px; border-radius: 12px; border-left: 4px solid var(--blue); }
+        .btn-update { color: var(--accent); border: none; background: none; cursor: pointer; font-weight: bold; margin-right: 10px; }
+        .btn-delete { color: var(--red); border: none; background: none; cursor: pointer; font-weight: bold; }
+        
+        /* Professional Reports UI */
+        .report-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+        .stat-card { background: white; padding: 20px; border-radius: 12px; border-top: 4px solid var(--blue); box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        .stat-val { font-size: 24px; font-weight: bold; color: var(--navy); margin-top: 5px; }
+        
+        /* Uniform Logout Button */
+        .btn-logout { background: var(--red); color: white; border: none; padding: 12px; margin: auto 20px 20px; border-radius: 8px; cursor: pointer; text-align: center; font-weight: bold; text-decoration: none; }
     </style>
 </head>
 <body>
     <div id="particles-js"></div>
     <aside class="sidebar">
-        <div class="sidebar-header"><h2><i class="fa-solid fa-train"></i> RailStream</h2></div>
+        <div class="sidebar-header"><h2>RailStream</h2></div>
         <div class="nav-menu">
-            <div class="nav-label">Infrastructure</div>
-            <div class="nav-item active" onclick="showTab('tab-trains')"><i class="fa-solid fa-subway"></i> Fleet Management</div>
+            <div class="nav-label">Fleet MGT</div>
+            <div class="nav-item active" onclick="showTab('tab-trains')"><i class="fa-solid fa-train"></i> Manage Trains</div>
             <div class="nav-item" onclick="showTab('tab-routes')"><i class="fa-solid fa-route"></i> Define Routes</div>
             <div class="nav-label">Operations</div>
-            <div class="nav-item" onclick="showTab('tab-schedules')"><i class="fa-solid fa-clock"></i> Master Schedule</div>
-            <div class="nav-label">System Data</div>
-            <div class="nav-item" onclick="showTab('tab-reports'); generateProfessionalReport();"><i class="fa-solid fa-chart-line"></i> Reports</div>
-            <a href="index.html" class="nav-item" style="margin-top:50px; text-decoration:none; color:#f87171;"><i class="fa-solid fa-sign-out-alt"></i> Logout</a>
+            <div class="nav-item" onclick="showTab('tab-schedules')"><i class="fa-solid fa-calendar-day"></i> Master Schedule</div>
+            <div class="nav-label">Analytics</div>
+            <div class="nav-item" onclick="showTab('tab-reports'); generateReport();"><i class="fa-solid fa-chart-pie"></i> Reports</div>
         </div>
+        <a href="index.html" class="btn-logout"><i class="fa-solid fa-power-off"></i> Logout</a>
     </aside>
 
     <main class="main-wrapper">
-        <div class="top-bar"><h3 id="current-title">Fleet Management</h3><div>Admin Terminal</div></div>
+        <div class="top-bar"><h3 id="tab-title">Manage Trains</h3><div><i class="fa-solid fa-user-shield"></i> Admin Portal</div></div>
         <div class="content-body">
             <section id="tab-trains" class="glass-card active">
-                <h3>Manage Train Fleet</h3>
+                <h3>Train Assets</h3>
                 <div class="form-grid">
                     <input type="text" id="tID" placeholder="Train ID">
                     <input type="text" id="tModel" placeholder="Model">
-                    <button class="btn-add" onclick="saveTrain()">Add Train</button>
+                    <button class="btn-add" onclick="saveItem('trains', ['tID', 'tModel'])">Save Train</button>
                 </div>
                 <table class="data-table" id="trainTable">
-                    <thead><tr><th>ID</th><th>Model</th><th>Action</th></tr></thead>
+                    <thead><tr><th>ID</th><th>Model</th><th>Actions</th></tr></thead>
                     <tbody></tbody>
                 </table>
             </section>
 
             <section id="tab-routes" class="glass-card">
-                <h3>Define Routes</h3>
+                <h3>Define Network Routes</h3>
                 <div class="form-grid">
                     <input type="text" id="rID" placeholder="Route ID">
-                    <input type="text" id="rName" placeholder="Destination">
-                    <button class="btn-add" onclick="saveRoute()">Add Route</button>
+                    <input type="text" id="rPath" placeholder="Source - Destination">
+                    <button class="btn-add" onclick="saveItem('routes', ['rID', 'rPath'])">Save Route</button>
                 </div>
                 <table class="data-table" id="routeTable">
-                    <thead><tr><th>ID</th><th>Destination</th><th>Action</th></tr></thead>
+                    <thead><tr><th>ID</th><th>Route Path</th><th>Actions</th></tr></thead>
                     <tbody></tbody>
                 </table>
             </section>
 
             <section id="tab-schedules" class="glass-card">
-                <h3>Master Schedule</h3>
+                <h3>Scheduling & Dispatch</h3>
                 <div class="form-grid">
-                    <select id="sTrain"><option>Select Train</option></select>
-                    <select id="sRoute"><option>Select Route</option></select>
+                    <select id="sTrain"><option value="">Select Train</option></select>
                     <input type="datetime-local" id="sTime">
-                    <button class="btn-add" onclick="createSchedule()">Publish Schedule</button>
+                    <button class="btn-add" onclick="saveSchedule()">Commit Schedule</button>
                 </div>
                 <table class="data-table" id="schedTable">
-                    <thead><tr><th>Train</th><th>Route</th><th>Time</th><th>Action</th></tr></thead>
+                    <thead><tr><th>Train</th><th>Departure Time</th><th>Actions</th></tr></thead>
                     <tbody></tbody>
                 </table>
             </section>
 
             <section id="tab-reports" class="glass-card">
-                <h3>Operational Performance</h3>
-                <div id="reportContent" class="stat-group"></div>
+                <h3>System Performance Overview</h3>
+                <div id="reportContainer" class="report-grid"></div>
             </section>
         </div>
     </main>
 
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
     <script>
-        particlesJS("particles-js", { "particles": { "number": { "value": 30 }, "size": { "value": 2 }, "line_linked": { "enable": true, "opacity": 0.2 }, "move": { "speed": 1 } } });
+        particlesJS("particles-js", { "particles": { "number": { "value": 40 }, "size": { "value": 2 }, "line_linked": { "opacity": 0.2 }, "move": { "speed": 1 } } });
 
         function showTab(tabId) {
             document.querySelectorAll('.glass-card').forEach(c => c.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
             document.getElementById(tabId).classList.add('active');
-            if(tabId === 'tab-schedules') updateDropdowns();
+            event.currentTarget.classList.add('active');
+            document.getElementById('tab-title').innerText = event.currentTarget.innerText;
+            if(tabId === 'tab-schedules') syncDropdowns();
         }
 
-        // Use Case: Add Train
-        function saveTrain() {
-            let id = document.getElementById('tID').value;
-            let trains = JSON.parse(localStorage.getItem('trainAssets')) || [];
-            trains.push({ id, model: document.getElementById('tModel').value });
-            localStorage.setItem('trainAssets', JSON.stringify(trains));
-            renderTrains();
+        // Generic Save Logic [cite: 8]
+        function saveItem(key, inputs) {
+            let data = JSON.parse(localStorage.getItem(key)) || [];
+            let obj = {};
+            inputs.forEach(id => { obj[id] = document.getElementById(id).value; document.getElementById(id).value = ''; });
+            if(Object.values(obj).some(v => !v)) return alert("Fill all fields");
+            data.push(obj);
+            localStorage.setItem(key, JSON.stringify(data));
+            renderAll();
         }
 
-        function renderTrains() {
-            let trains = JSON.parse(localStorage.getItem('trainAssets')) || [];
-            document.querySelector('#trainTable tbody').innerHTML = trains.map((t, index) => 
-                `<tr><td>${t.id}</td><td>${t.model}</td><td><button class="btn-delete" onclick="deleteItem('trainAssets', ${index}, renderTrains)">Delete</button></td></tr>`).join('');
-        }
-
-        // Use Case: Add Route
-        function saveRoute() {
-            let id = document.getElementById('rID').value;
-            let routes = JSON.parse(localStorage.getItem('routeAssets')) || [];
-            routes.push({ id, name: document.getElementById('rName').value });
-            localStorage.setItem('routeAssets', JSON.stringify(routes));
-            renderRoutes();
-        }
-
-        function renderRoutes() {
-            let routes = JSON.parse(localStorage.getItem('routeAssets')) || [];
-            document.querySelector('#routeTable tbody').innerHTML = routes.map((r, index) => 
-                `<tr><td>${r.id}</td><td>${r.name}</td><td><button class="btn-delete" onclick="deleteItem('routeAssets', ${index}, renderRoutes)">Delete</button></td></tr>`).join('');
-        }
-
-        // Sync Dropdowns
-        function updateDropdowns() {
-            let trains = JSON.parse(localStorage.getItem('trainAssets')) || [];
-            let routes = JSON.parse(localStorage.getItem('routeAssets')) || [];
-            document.getElementById('sTrain').innerHTML = trains.map(t => `<option value="${t.id}">${t.id}</option>`).join('');
-            document.getElementById('sRoute').innerHTML = routes.map(r => `<option value="${r.name}">${r.name}</option>`).join('');
-        }
-
-        // Use Case: Create Schedule with Conflict Check
-        function createSchedule() {
+        // Use Case: Create Schedule with Conflict Check 
+        function saveSchedule() {
             let train = document.getElementById('sTrain').value;
             let time = document.getElementById('sTime').value;
-            let schedules = JSON.parse(localStorage.getItem('masterSchedules')) || [];
+            if(!train || !time) return alert("Select Train and Time");
             
-            // Alternative Flow: Conflict Check
-            if(schedules.find(s => s.train === train && s.time === time)) return alert("Conflict: Train is already scheduled at this time!");
-
-            schedules.push({ train, route: document.getElementById('sRoute').value, time });
-            localStorage.setItem('masterSchedules', JSON.stringify(schedules));
-            renderSchedules();
+            let schedules = JSON.parse(localStorage.getItem('schedules')) || [];
+            // Conflict Check 
+            if(schedules.find(s => s.sTrain === train && s.sTime === time)) return alert("Scheduling Conflict: Train busy!");
+            
+            schedules.push({ sTrain: train, sTime: time });
+            localStorage.setItem('schedules', JSON.stringify(schedules));
+            renderAll();
         }
 
-        function renderSchedules() {
-            let schedules = JSON.parse(localStorage.getItem('masterSchedules')) || [];
-            document.querySelector('#schedTable tbody').innerHTML = schedules.map((s, index) => 
-                `<tr><td>${s.train}</td><td>${s.route}</td><td>${s.time}</td><td><button class="btn-delete" onclick="deleteItem('masterSchedules', ${index}, renderSchedules)">Delete</button></td></tr>`).join('');
+        function syncDropdowns() {
+            let trains = JSON.parse(localStorage.getItem('trains')) || [];
+            document.getElementById('sTrain').innerHTML = '<option value="">Select Train</option>' + 
+                trains.map(t => `<option value="${t.tID}">${t.tID}</option>`).join('');
         }
 
-        function deleteItem(key, index, callback) {
+        function renderAll() {
+            const keys = ['trains', 'routes', 'schedules'];
+            keys.forEach(k => {
+                let data = JSON.parse(localStorage.getItem(k)) || [];
+                let tbody = document.querySelector(`#${k.slice(0,-1)}Table tbody`);
+                if(!tbody) return;
+                tbody.innerHTML = data.map((item, i) => `
+                    <tr>
+                        ${Object.values(item).map(v => `<td>${v}</td>`).join('')}
+                        <td>
+                            <button class="btn-update" onclick="updateItem('${k}', ${i})">Update</button>
+                            <button class="btn-delete" onclick="deleteItem('${k}', ${i})">Delete</button>
+                        </td>
+                    </tr>
+                `).join('');
+            });
+        }
+
+        function deleteItem(key, i) {
             let data = JSON.parse(localStorage.getItem(key));
-            data.splice(index, 1);
+            data.splice(i, 1);
             localStorage.setItem(key, JSON.stringify(data));
-            callback();
+            renderAll();
         }
 
-        // Use Case: Generate Reports
-        function generateProfessionalReport() {
-            let tickets = JSON.parse(localStorage.getItem('issuedTickets')) || [];
-            let schedules = JSON.parse(localStorage.getItem('masterSchedules')) || [];
-            document.getElementById('reportContent').innerHTML = `
-                <div class="stat-card"><small>Revenue</small><div>$${tickets.length * 50}</div></div>
-                <div class="stat-card"><small>Trips</small><div>${schedules.length}</div></div>
-                <div class="stat-card"><small>Tickets Sold</small><div>${tickets.length}</div></div>
+        function updateItem(key, i) {
+            let data = JSON.parse(localStorage.getItem(key));
+            let newVal = prompt("Enter New Value:", Object.values(data[i])[1]);
+            if(newVal) {
+                let keys = Object.keys(data[i]);
+                data[i][keys[1]] = newVal;
+                localStorage.setItem(key, JSON.stringify(data));
+                renderAll();
+            }
+        }
+
+        function generateReport() {
+            let trains = JSON.parse(localStorage.getItem('trains')) || [];
+            let schedules = JSON.parse(localStorage.getItem('schedules')) || [];
+            let tickets = JSON.parse(localStorage.getItem('tickets')) || [];
+            document.getElementById('reportContainer').innerHTML = `
+                <div class="stat-card"><div>Total Fleet</div><div class="stat-val">${trains.length} Units</div></div>
+                <div class="stat-card"><div>Active Trips</div><div class="stat-val">${schedules.length} Scheduled</div></div>
+                <div class="stat-card"><div>System Health</div><div class="stat-val">${tickets.length > 0 ? '98%' : 'Idle'}</div></div>
             `;
         }
 
-        window.onload = () => { renderTrains(); renderRoutes(); renderSchedules(); };
+        window.onload = renderAll;
     </script>
 </body>
 </html>
