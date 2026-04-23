@@ -1,242 +1,65 @@
-/* --- 1. Global Variables & Branding Identity --- */
 :root {
-    --navy-deep: #0f172a;    /* Administrative Dark Navy */
-    --blue-royal: #1e40af;   /* Royal Blue Accent for Buttons/Sidebar */
-    --blue-tech: #3b82f6;    /* Technical Web Blue for Active States */
+    --navy-deep: #0f172a;
+    --blue-royal: #1e40af;
+    --blue-tech: #3b82f6;
     --white-pure: #ffffff;
-    --slate-50: #f8fafc;     /* Background for Content Area */
-    --slate-100: #f1f5f9;    /* Borders and Input Backgrounds */
-    --slate-500: #64748b;    /* Muted Text for Subtitles */
-    --sidebar-width: 260px;
+    --slate-500: #64748b;
 }
 
-/* --- 2. Base Page Configuration --- */
 body, html {
-    margin: 0;
-    padding: 0;
-    width: 100%;
-    height: 100%;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0; padding: 0; width: 100%; height: 100%;
+    font-family: 'Segoe UI', Tahoma, sans-serif;
     background-color: var(--white-pure);
-    display: flex;
+    display: flex; align-items: center; justify-content: center;
     overflow: hidden;
-    position: relative;
 }
 
-/* --- 3. Technical Web Background (Full Screen Particles) --- */
 #particles-js {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 1; /* Always behind the main content */
-    background-color: var(--white-pure);
-    pointer-events: none;
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    z-index: 1; background-color: var(--white-pure);
 }
 
-/* --- 4. Login Card Styling (Special Case for Login View) --- */
 .login-card {
-    position: relative;
-    z-index: 10;
+    position: relative; z-index: 10;
     background: rgba(255, 255, 255, 0.98);
-    padding: 45px;
-    border-radius: 24px;
-    width: 100%;
-    max-width: 400px;
-    margin: auto; /* Centers the card when using Flex on Body */
-    text-align: center;
-    box-shadow: 0 20px 50px rgba(15, 23, 42, 0.1);
+    padding: 45px; border-radius: 24px;
+    width: 380px;
+    box-shadow: 0 25px 60px rgba(15, 23, 42, 0.15);
     border: 1px solid rgba(30, 64, 175, 0.1);
     backdrop-filter: blur(10px);
 }
 
+.brand-header { text-align: center; margin-bottom: 30px; }
+
 .brand-logo {
-    width: 75px;
-    height: 75px;
+    width: 75px; height: 75px;
     background: linear-gradient(135deg, var(--navy-deep), var(--blue-royal));
-    color: white;
-    border-radius: 20px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 32px;
-    margin: 0 auto 25px;
-    box-shadow: 0 10px 20px rgba(30, 64, 175, 0.2);
+    color: white; border-radius: 20px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 32px; margin: 0 auto 15px;
 }
 
-/* --- 5. Admin Dashboard Layout Construction --- */
-.admin-container {
-    display: flex;
-    width: 100%;
-    height: 100vh;
-    position: relative;
-    z-index: 10; /* Above particles background */
-}
-
-/* Sidebar Section */
-.sidebar {
-    width: var(--sidebar-width);
-    background: var(--navy-deep);
-    color: white;
-    padding: 30px 20px;
-    display: flex;
-    flex-direction: column;
-    box-shadow: 4px 0 15px rgba(15, 23, 42, 0.1);
-}
-
-.brand-section {
-    font-size: 20px;
-    font-weight: 800;
-    margin-bottom: 40px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    color: var(--blue-tech);
-    text-transform: uppercase;
-}
-
-.menu a {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    color: #cbd5e1;
-    text-decoration: none;
-    padding: 14px;
-    border-radius: 10px;
-    margin-bottom: 8px;
-    transition: all 0.3s ease;
-    font-size: 14px;
-}
-
-.menu a.active, .menu a:hover {
-    background: var(--blue-royal);
-    color: white;
-}
-
-.divider {
-    height: 1px;
-    background: rgba(255, 255, 255, 0.1);
-    margin: 20px 0;
-}
-
-/* Main Content Wrapper */
-.content {
-    flex: 1;
-    padding: 40px;
-    background: rgba(248, 250, 252, 0.85); /* Semi-transparent to reveal technical web */
-    overflow-y: auto;
-}
-
-.top-bar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 40px;
-    border-bottom: 1px solid var(--slate-100);
-    padding-bottom: 20px;
-}
-
-/* --- 6. Stats & UI Panels --- */
-.stats-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 25px;
-    margin-bottom: 40px;
-}
-
-.stat-card {
-    background: white;
-    padding: 25px;
-    border-radius: 18px;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.03);
-    border: 1px solid rgba(30, 64, 175, 0.08);
-}
-
-.stat-card h3 { font-size: 13px; color: var(--slate-500); text-transform: uppercase; margin: 0; }
-.stat-card .value { font-size: 32px; font-weight: 800; color: var(--navy-deep); margin: 10px 0 0; }
-
-.action-panel {
-    background: white;
-    padding: 30px;
-    border-radius: 20px;
-    border: 1px solid var(--slate-100);
-}
-
-/* --- 7. Standardized Inputs & Buttons --- */
-.input-group {
-    text-align: left;
-    margin-bottom: 20px;
-}
+.input-section { text-align: left; margin-bottom: 20px; }
 
 label {
-    display: block;
-    font-size: 11px;
-    font-weight: 800;
-    color: var(--navy-deep);
-    text-transform: uppercase;
-    margin-bottom: 8px;
-    letter-spacing: 0.5px;
+    display: block; font-size: 11px; font-weight: 800;
+    color: var(--navy-deep); text-transform: uppercase; margin-bottom: 8px;
 }
 
 input, select {
-    width: 100%;
-    padding: 14px 16px;
-    border: 1.5px solid var(--slate-100);
-    border-radius: 12px;
-    font-size: 14px;
-    background-color: #f8fafc;
-    color: var(--navy-deep);
-    outline: none;
-    transition: all 0.3s ease;
+    width: 100%; padding: 14px; border: 1.5px solid #e2e8f0;
+    border-radius: 12px; font-size: 14px; outline: none;
+    background: #f8fafc; transition: 0.3s;
+    text-align: left; /* Fixed text alignment to left */
     box-sizing: border-box;
 }
 
-input:focus, select:focus {
-    border-color: var(--blue-tech);
-    background-color: white;
-    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
-}
+input:focus { border-color: var(--blue-tech); background: white; }
 
-/* Primary Action Buttons (Authorization / Addition) */
-.btn-authorize, .btn-primary {
-    width: 100%;
-    padding: 16px;
-    background: linear-gradient(135deg, var(--navy-deep) 0%, var(--blue-royal) 100%);
-    color: white;
-    border: none;
-    border-radius: 12px;
-    font-size: 14px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 1.5px;
-    cursor: pointer;
-    transition: 0.3s ease;
-    box-shadow: 0 10px 20px rgba(15, 23, 42, 0.2);
-}
-
-.btn-authorize:hover, .btn-primary:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 15px 25px rgba(30, 64, 175, 0.3);
-    background: linear-gradient(135deg, var(--blue-royal), var(--blue-tech));
-}
-
-/* Secondary Dashboard Action Buttons */
-.btn-action {
-    padding: 14px 22px;
-    background: white;
-    border: 1.5px solid var(--blue-royal);
-    color: var(--blue-royal);
-    border-radius: 10px;
-    font-weight: 700;
-    font-size: 13px;
-    cursor: pointer;
-    margin-right: 12px;
-    transition: 0.3s;
-    text-transform: uppercase;
-}
-
-.btn-action:hover {
-    background: var(--blue-royal);
-    color: white;
+.btn-authorize {
+    width: 100%; padding: 16px;
+    background: linear-gradient(135deg, var(--navy-deep), var(--blue-royal));
+    color: white; border: none; border-radius: 12px;
+    font-size: 14px; font-weight: 700; cursor: pointer;
+    text-transform: uppercase; letter-spacing: 1px;
 }
