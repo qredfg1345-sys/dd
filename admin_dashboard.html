@@ -2,76 +2,123 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Admin Terminal | RailRoute Central</title>
+    <title>Admin Dashboard | Interactive Terminal</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
+    <style>
+        .admin-main { position: relative; z-index: 10; width: 95%; max-width: 1200px; margin: 20px auto; display: grid; grid-template-columns: 250px 1fr; gap: 20px; }
+        .sidebar-nav { background: rgba(15, 23, 42, 0.95); padding: 25px; border-radius: 20px; color: white; min-height: 80vh; }
+        .dashboard-content { background: rgba(255, 255, 255, 0.98); padding: 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+        
+        /* Form Styling for Add Train */
+        .management-form { background: #f8fafc; padding: 20px; border-radius: 15px; margin-bottom: 30px; border: 1px solid #e2e8f0; }
+        .form-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-top: 10px; }
+        
+        .data-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        .data-table th { background: #f1f5f9; padding: 12px; text-align: left; font-size: 13px; }
+        .data-table td { padding: 12px; border-bottom: 1px solid #e2e8f0; font-size: 14px; }
+        
+        .btn-action { padding: 8px 15px; border-radius: 8px; border: none; cursor: pointer; transition: 0.3s; }
+        .btn-add { background: #1e40af; color: white; width: 100%; }
+        .btn-delete { background: #fee2e2; color: #b91c1c; }
+        .btn-delete:hover { background: #ef4444; color: white; }
+    </style>
 </head>
 <body>
     <div id="particles-js"></div>
 
-    <div class="admin-wrapper">
-        <nav class="sidebar">
-            <h2 style="color: var(--blue-tech);"><i class="fa-solid fa-train-subway"></i> RailRoute</h2>
-            <div style="margin-top: 40px;">
-                <p style="font-size: 12px; color: #64748b;">MANAGEMENT</p>
-                <a href="#" class="nav-item" style="display:block; color:white; padding:10px 0; text-decoration:none;"><i class="fa-solid fa-train"></i> Trains</a>
-                <a href="#" class="nav-item" style="display:block; color:white; padding:10px 0; text-decoration:none;"><i class="fa-solid fa-route"></i> Routes</a>
-                <a href="#" class="nav-item" style="display:block; color:white; padding:10px 0; text-decoration:none;"><i class="fa-solid fa-calendar-check"></i> Schedules</a>
-                <p style="font-size: 12px; color: #64748b; margin-top:30px;">ANALYTICS</p>
-                <a href="#" class="nav-item" style="display:block; color:white; padding:10px 0; text-decoration:none;"><i class="fa-solid fa-file-contract"></i> Generate Reports</a>
-            </div>
-            <button onclick="window.location.href='index.html'" style="margin-top:100px; background:none; border:1px solid #f87171; color:#f87171; padding:10px; cursor:pointer; width:100%; border-radius:8px;">Logout</button>
-        </nav>
+    <div class="admin-main">
+        <aside class="sidebar-nav">
+            <h2 style="color: #3b82f6;"><i class="fa-solid fa-train-subway"></i> RailRoute</h2>
+            <nav style="margin-top: 40px;">
+                <a href="#" onclick="showSection('train-sec')" class="nav-item" style="display:block; color:white; padding:12px 0; text-decoration:none;"><i class="fa-solid fa-train"></i> Train Assets</a>
+                <a href="#" onclick="showSection('reports-sec')" class="nav-item" style="display:block; color:white; padding:12px 0; text-decoration:none;"><i class="fa-solid fa-chart-line"></i> Analytics</a>
+                <a href="index.html" style="display:block; margin-top:50px; color:#f87171; text-decoration:none;"><i class="fa-solid fa-power-off"></i> Logout</a>
+            </nav>
+        </aside>
 
-        <main class="main-content">
-            <header style="display:flex; justify-content:space-between; align-items:center; margin-bottom:30px;">
-                <h1>Infrastructure Governance</h1>
-                <div style="background:white; padding:10px 20px; border-radius:12px; box-shadow:0 4px 6px rgba(0,0,0,0.05);">
-                    <i class="fa-solid fa-user-shield"></i> Chief Administrator
-                </div>
-            </header>
+        <section class="dashboard-content">
+            <div id="train-sec">
+                <header style="display:flex; justify-content:space-between; align-items:center;">
+                    <h1>Train Management</h1>
+                    <span id="train-count" style="background:#1e40af; color:white; padding:5px 15px; border-radius:20px;">Total: 1</span>
+                </header>
 
-            <section style="background:white; padding:30px; border-radius:20px; box-shadow:0 10px 30px rgba(0,0,0,0.05);">
-                <div style="display:flex; justify-content:space-between; margin-bottom:20px;">
-                    <h3>Train Assets Management</h3>
-                    <button class="btn-authorize" style="width:auto; padding:10px 25px;">+ Add New Train</button>
+                <div class="management-form">
+                    <h3><i class="fa-solid fa-plus-circle"></i> Add New Train Asset</h3>
+                    <div class="form-grid">
+                        <input type="text" id="trainModel" placeholder="Train Model (e.g. Express X)">
+                        <input type="number" id="trainCap" placeholder="Seating Capacity">
+                        <button class="btn-action btn-add" onclick="addNewTrain()">Add to System</button>
+                    </div>
                 </div>
-                <table style="width:100%; border-collapse:collapse; text-align:left;">
-                    <tr style="background:#f1f5f9;">
-                        <th style="padding:15px;">ID</th>
-                        <th style="padding:15px;">Model</th>
-                        <th style="padding:15px;">Status</th>
-                        <th style="padding:15px;">Actions</th>
-                    </tr>
-                    <tr>
-                        <td style="padding:15px; border-bottom:1px solid #f1f5f9;">TR-2026</td>
-                        <td style="padding:15px; border-bottom:1px solid #f1f5f9;">Bullet Express</td>
-                        <td style="padding:15px; border-bottom:1px solid #f1f5f9;"><span style="color:#10b981;">● Active</span></td>
-                        <td style="padding:15px; border-bottom:1px solid #f1f5f9;">
-                            <button style="color:var(--blue-royal); border:none; background:none; cursor:pointer;">Edit</button>
-                            <button style="color:#ef4444; border:none; background:none; cursor:pointer; margin-left:10px;">Delete</button>
-                        </td>
-                    </tr>
+
+                <table class="data-table" id="trainTable">
+                    <thead>
+                        <tr>
+                            <th>Train ID</th>
+                            <th>Model</th>
+                            <th>Capacity</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>#TR-8821</td>
+                            <td>Bullet-V1</td>
+                            <td>300</td>
+                            <td><span style="color:#10b981;">Active</span></td>
+                            <td><button class="btn-action btn-delete" onclick="deleteRow(this)">Delete</button></td>
+                        </tr>
+                    </tbody>
                 </table>
-            </section>
-
-            <section style="margin-top:30px; display:grid; grid-template-columns: repeat(3, 1fr); gap:20px;">
-                <div style="background:white; padding:20px; border-radius:15px; text-align:center;">
-                    <h4>Route Efficiency</h4>
-                    <p style="font-size:24px; font-weight:bold; color:var(--blue-royal);">94%</p>
-                </div>
-                <div style="background:white; padding:20px; border-radius:15px; text-align:center;">
-                    <h4>Daily Trips</h4>
-                    <p style="font-size:24px; font-weight:bold; color:var(--blue-royal);">48</p>
-                </div>
-                <div style="background:white; padding:20px; border-radius:15px; text-align:center;">
-                    <button class="btn-authorize" style="height:100%;"><i class="fa-solid fa-download"></i> Full Report</button>
-                </div>
-            </section>
-        </main>
+            </div>
+        </section>
     </div>
 
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
     <script src="script.js"></script>
+    
+    <script>
+        // Function to Add Train Dynamically
+        function addNewTrain() {
+            const model = document.getElementById('trainModel').value;
+            const cap = document.getElementById('trainCap').value;
+            
+            if(!model || !cap) { alert("Please fill all fields"); return; }
+
+            const table = document.getElementById('trainTable').getElementsByTagName('tbody')[0];
+            const newRow = table.insertRow();
+            const id = "#TR-" + Math.floor(Math.random() * 9000 + 1000);
+
+            newRow.innerHTML = `
+                <td>${id}</td>
+                <td>${model}</td>
+                <td>${cap} Seats</td>
+                <td><span style="color:#10b981;">Active</span></td>
+                <td><button class="btn-action btn-delete" onclick="deleteRow(this)">Delete</button></td>
+            `;
+
+            // Clear inputs and update count
+            document.getElementById('trainModel').value = '';
+            document.getElementById('trainCap').value = '';
+            updateTrainCount();
+        }
+
+        // Function to Delete Train (Use Case: Delete Train)
+        function deleteRow(btn) {
+            if(confirm("Are you sure you want to remove this train?")) {
+                const row = btn.parentNode.parentNode;
+                row.parentNode.removeChild(row);
+                updateTrainCount();
+            }
+        }
+
+        function updateTrainCount() {
+            const count = document.getElementById('trainTable').rows.length - 1;
+            document.getElementById('train-count').innerText = "Total: " + count;
+        }
+    </script>
 </body>
 </html>
