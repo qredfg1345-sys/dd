@@ -2,80 +2,76 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>RailStream | Admin Dashboard</title>
+    <title>RailStream Admin | System Governance</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root { --navy: #0f172a; --blue: #1e40af; --accent: #3b82f6; --bg: #f8fafc; --white: #ffffff; --red: #ef4444; }
-        body { margin: 0; font-family: 'Segoe UI', sans-serif; background: var(--bg); display: flex; height: 100vh; }
-        
-        /* Sidebar */
-        .sidebar { width: 260px; background: var(--navy); color: white; display: flex; flex-direction: column; }
+        * { box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+        body { margin: 0; background: var(--bg); display: flex; height: 100vh; overflow: hidden; }
+        .sidebar { width: 260px; background: var(--navy); color: white; display: flex; flex-direction: column; z-index: 10; }
         .sidebar-header { padding: 30px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.1); }
-        .nav-item { padding: 15px 20px; cursor: pointer; color: #94a3b8; display: flex; align-items: center; gap: 12px; transition: 0.3s; }
-        .nav-item:hover, .nav-item.active { background: var(--blue); color: white; }
-        .btn-logout { background: var(--red); color: white; padding: 12px; margin: auto 20px 20px; border-radius: 8px; text-align: center; text-decoration: none; font-weight: bold; }
-
-        /* Content */
-        .main { flex-grow: 1; overflow-y: auto; padding: 40px; }
-        .glass-card { background: white; padding: 25px; border-radius: 16px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); display: none; }
+        .nav-menu { padding: 20px; flex-grow: 1; }
+        .nav-item { padding: 12px 15px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 12px; margin-bottom: 5px; color: #94a3b8; transition: 0.3s; }
+        .nav-item.active { background: var(--blue); color: white; }
+        .main-wrapper { flex-grow: 1; display: flex; flex-direction: column; overflow-y: auto; }
+        .top-bar { padding: 20px 40px; background: var(--white); display: flex; justify-content: space-between; border-bottom: 1px solid #e2e8f0; }
+        .content-body { padding: 40px; }
+        .glass-card { background: var(--white); border-radius: 16px; padding: 25px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); margin-bottom: 30px; display: none; }
         .glass-card.active { display: block; }
-        
-        /* Table Styles */
-        .data-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        .data-table th, td { padding: 12px; text-align: left; border-bottom: 1px solid #f1f5f9; }
-        .edit-input { padding: 8px; border: 1px solid var(--accent); border-radius: 4px; width: 80%; }
-        
-        /* Reports Grid */
-        .report-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 20px; }
-        .stat-card { background: white; padding: 25px; border-radius: 12px; border-top: 4px solid var(--blue); text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
-        .stat-val { font-size: 28px; font-weight: bold; color: var(--navy); margin-top: 10px; }
-
-        .btn-action { border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-weight: bold; margin-right: 5px; }
-        .btn-save { background: var(--navy); color: white; }
-        .btn-cancel { background: #f1f5f9; color: #64748b; }
-        input, select { padding: 10px; border: 1px solid #e2e8f0; border-radius: 8px; margin-right: 10px; }
+        .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin-bottom: 20px; }
+        input, select { padding: 10px; border: 1px solid #e2e8f0; border-radius: 8px; outline: none; background: #fdfdfd; }
+        .data-table { width: 100%; border-collapse: collapse; }
+        .data-table th, td { padding: 12px; text-align: left; border-bottom: 1px solid #f1f5f9; font-size: 14px; }
+        .btn-action { border: none; background: none; cursor: pointer; font-weight: bold; margin-right: 10px; }
+        .edit-input { padding: 5px; border: 1px solid var(--accent); border-radius: 4px; width: 80%; }
+        .report-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+        .stat-card { background: white; padding: 20px; border-radius: 12px; border-top: 4px solid var(--blue); text-align: center; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        .btn-logout { background: var(--red); color: white; border: none; padding: 12px; margin: auto 20px 20px; border-radius: 8px; cursor: pointer; text-align: center; font-weight: bold; text-decoration: none; }
     </style>
 </head>
 <body>
     <aside class="sidebar">
         <div class="sidebar-header"><h2>RailStream</h2></div>
-        <div class="nav-item active" onclick="showTab('tab-trains')"><i class="fa-solid fa-train"></i> Trains</div>
-        <div class="nav-item" onclick="showTab('tab-schedules')"><i class="fa-solid fa-calendar"></i> Schedules</div>
-        <div class="nav-item" onclick="showTab('tab-reports'); updateReports();"><i class="fa-solid fa-chart-line"></i> Reports</div>
+        <div class="nav-menu">
+            <div class="nav-item active" onclick="showTab('tab-trains')"><i class="fa-solid fa-train"></i> Manage Trains</div>
+            <div class="nav-item" onclick="showTab('tab-routes')"><i class="fa-solid fa-route"></i> Define Routes</div>
+            <div class="nav-item" onclick="showTab('tab-schedules')"><i class="fa-solid fa-calendar"></i> Schedules</div>
+            <div class="nav-item" onclick="showTab('tab-reports'); updateReports();"><i class="fa-solid fa-chart-pie"></i> Reports</div>
+        </div>
         <a href="index.html" class="btn-logout"><i class="fa-solid fa-power-off"></i> Logout</a>
     </aside>
 
-    <main class="main">
-        <section id="tab-trains" class="glass-card active">
-            <h3>Fleet Management</h3>
-            <div style="margin-bottom: 20px;">
-                <input type="text" id="tID" placeholder="Train ID">
-                <input type="text" id="tModel" placeholder="Model">
-                <button onclick="addItem('trains', ['tID', 'tModel'])" class="btn-action btn-save">Add Train</button>
-            </div>
-            <table class="data-table" id="trainTable">
-                <thead><tr><th>ID</th><th>Model</th><th>Actions</th></tr></thead>
-                <tbody></tbody>
-            </table>
-        </section>
+    <main class="main-wrapper">
+        <div class="top-bar"><h3 id="tab-title">Manage Trains</h3><div>Admin Portal</div></div>
+        <div class="content-body">
+            <section id="tab-trains" class="glass-card active">
+                <div class="form-grid">
+                    <input type="text" id="tID" placeholder="Train ID">
+                    <input type="text" id="tModel" placeholder="Model">
+                    <button onclick="addTrain()" style="background:var(--navy); color:white; border-radius:8px; cursor:pointer;">Save Train</button>
+                </div>
+                <table class="data-table" id="trainTable">
+                    <thead><tr><th>ID</th><th>Model</th><th>Actions</th></tr></thead>
+                    <tbody></tbody>
+                </table>
+            </section>
 
-        <section id="tab-schedules" class="glass-card">
-            <h3>Master Schedule</h3>
-            <div style="margin-bottom: 20px;">
-                <select id="sTrain"><option value="">Select Train</option></select>
-                <input type="datetime-local" id="sTime">
-                <button onclick="addSchedule()" class="btn-action btn-save">Create Schedule</button>
-            </div>
-            <table class="data-table" id="scheduleTable">
-                <thead><tr><th>Train</th><th>Time</th><th>Actions</th></tr></thead>
-                <tbody></tbody>
-            </table>
-        </section>
+            <section id="tab-schedules" class="glass-card">
+                <div class="form-grid">
+                    <select id="sTrainSelect"><option value="">Select Train</option></select>
+                    <input type="datetime-local" id="sDateTime">
+                    <button onclick="addSchedule()" style="background:var(--navy); color:white; border-radius:8px; cursor:pointer;">Commit Schedule</button>
+                </div>
+                <table class="data-table" id="scheduleTable">
+                    <thead><tr><th>Train</th><th>Time</th><th>Actions</th></tr></thead>
+                    <tbody></tbody>
+                </table>
+            </section>
 
-        <section id="tab-reports" class="glass-card">
-            <h3>System Reports</h3>
-            <div class="report-grid" id="reportContent"></div>
-        </section>
+            <section id="tab-reports" class="glass-card">
+                <div class="report-grid" id="reportContent"></div>
+            </section>
+        </div>
     </main>
 
     <script>
@@ -84,95 +80,81 @@
             document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
             document.getElementById(id).classList.add('active');
             event.currentTarget.classList.add('active');
-            if(id === 'tab-schedules') syncSelect();
+            if(id === 'tab-schedules') syncDropdowns();
         }
 
-        // Add Data
-        function addItem(key, ids) {
-            let data = JSON.parse(localStorage.getItem(key)) || [];
-            let obj = {};
-            ids.forEach(id => { obj[id] = document.getElementById(id).value; document.getElementById(id).value = ''; });
-            if(!Object.values(obj)[0]) return alert("Fill fields!");
-            data.push(obj);
-            localStorage.setItem(key, JSON.stringify(data));
-            renderAll();
+        // Use Case: Add Train [cite: 3]
+        function addTrain() {
+            let id = document.getElementById('tID').value;
+            let model = document.getElementById('tModel').value;
+            if(!id || !model) return alert("Fill all data");
+            let trains = JSON.parse(localStorage.getItem('trainAssets')) || [];
+            trains.push({ id, model });
+            localStorage.setItem('trainAssets', JSON.stringify(trains));
+            renderTrains();
         }
 
-        // Add Schedule with Conflict Check
-        function addSchedule() {
-            let train = document.getElementById('sTrain').value;
-            let time = document.getElementById('sTime').value;
-            if(!train || !time) return alert("Select Train/Time");
-            
-            let scheds = JSON.parse(localStorage.getItem('schedules')) || [];
-            if(scheds.find(s => s.sTrain === train && s.sTime === time)) return alert("Conflict: Train is busy!");
-            
-            scheds.push({ sTrain: train, sTime: time });
-            localStorage.setItem('schedules', JSON.stringify(scheds));
-            renderAll();
-        }
-
-        // In-place Editing Logic
-        function enableEdit(rowId, key, index) {
+        // Use Case: Update Train (In-place) [cite: 18]
+        function enableEdit(rowId, index) {
             const row = document.getElementById(rowId);
-            const cells = row.querySelectorAll('td');
-            const oldValue = cells[1].innerText;
-            
-            cells[1].innerHTML = `<input type="text" class="edit-input" value="${oldValue}">`;
-            cells[2].innerHTML = `
-                <button class="btn-action btn-save" onclick="saveEdit('${rowId}', '${key}', ${index})">Save</button>
-                <button class="btn-action btn-cancel" onclick="renderAll()">Cancel</button>
+            const modelCell = row.cells[1];
+            const actionCell = row.cells[2];
+            const oldVal = modelCell.innerText;
+
+            modelCell.innerHTML = `<input type="text" class="edit-input" value="${oldVal}">`;
+            actionCell.innerHTML = `
+                <button class="btn-action" style="color:green" onclick="saveEdit(${index}, '${rowId}')">Save</button>
+                <button class="btn-action" style="color:gray" onclick="renderTrains()">Cancel</button>
             `;
         }
 
-        function saveEdit(rowId, key, index) {
-            let data = JSON.parse(localStorage.getItem(key));
-            const row = document.getElementById(rowId);
-            const newValue = row.querySelector('.edit-input').value;
-            const keys = Object.keys(data[index]);
-            data[index][keys[1]] = newValue;
-            localStorage.setItem(key, JSON.stringify(data));
-            renderAll();
+        function saveEdit(index, rowId) {
+            let trains = JSON.parse(localStorage.getItem('trainAssets'));
+            trains[index].model = document.getElementById(rowId).cells[1].querySelector('input').value;
+            localStorage.setItem('trainAssets', JSON.stringify(trains));
+            renderTrains();
         }
 
-        function deleteItem(key, index) {
-            let data = JSON.parse(localStorage.getItem(key));
-            data.splice(index, 1);
-            localStorage.setItem(key, JSON.stringify(data));
-            renderAll();
-        }
-
-        function renderAll() {
-            // Render Trains
-            let trains = JSON.parse(localStorage.getItem('trains')) || [];
+        function renderTrains() {
+            let trains = JSON.parse(localStorage.getItem('trainAssets')) || [];
             document.querySelector('#trainTable tbody').innerHTML = trains.map((t, i) => `
-                <tr id="t-row-${i}"><td>${t.tID}</td><td>${t.tModel}</td>
-                <td><button class="btn-action" onclick="enableEdit('t-row-${i}', 'trains', ${i})">Update</button>
-                <button class="btn-action" style="color:red" onclick="deleteItem('trains', ${i})">Delete</button></td></tr>`).join('');
-
-            // Render Schedules
-            let scheds = JSON.parse(localStorage.getItem('schedules')) || [];
-            document.querySelector('#scheduleTable tbody').innerHTML = scheds.map((s, i) => `
-                <tr id="s-row-${i}"><td>${s.sTrain}</td><td>${s.sTime}</td>
-                <td><button class="btn-action" style="color:red" onclick="deleteItem('schedules', ${i})">Delete</button></td></tr>`).join('');
+                <tr id="tr-row-${i}"><td>${t.id}</td><td>${t.model}</td>
+                <td><button class="btn-action" style="color:var(--accent)" onclick="enableEdit('tr-row-${i}', ${i})">Update</button>
+                <button class="btn-action" style="color:var(--red)" onclick="deleteItem('trainAssets', ${i}, renderTrains)">Delete</button></td></tr>`).join('');
         }
 
-        function syncSelect() {
-            let trains = JSON.parse(localStorage.getItem('trains')) || [];
-            document.getElementById('sTrain').innerHTML = trains.map(t => `<option value="${t.tID}">${t.tID}</option>`).join('');
+        // Use Case: Create Schedule & Conflict Check [cite: 7, 25]
+        function addSchedule() {
+            let train = document.getElementById('sTrainSelect').value;
+            let time = document.getElementById('sDateTime').value;
+            let scheds = JSON.parse(localStorage.getItem('masterSchedules')) || [];
+            if(scheds.find(s => s.train === train && s.time === time)) return alert("Conflict Error!");
+            scheds.push({ train, time });
+            localStorage.setItem('masterSchedules', JSON.stringify(scheds));
+            renderSchedules();
+        }
+
+        function deleteItem(key, i, callback) {
+            let data = JSON.parse(localStorage.getItem(key));
+            data.splice(i, 1);
+            localStorage.setItem(key, JSON.stringify(data));
+            callback();
+        }
+
+        function syncDropdowns() {
+            let trains = JSON.parse(localStorage.getItem('trainAssets')) || [];
+            document.getElementById('sTrainSelect').innerHTML = trains.map(t => `<option value="${t.id}">${t.id}</option>`).join('');
         }
 
         function updateReports() {
-            let t = JSON.parse(localStorage.getItem('trains')) || [];
-            let s = JSON.parse(localStorage.getItem('schedules')) || [];
-            let b = JSON.parse(localStorage.getItem('tickets')) || [];
+            let t = JSON.parse(localStorage.getItem('trainAssets')) || [];
+            let s = JSON.parse(localStorage.getItem('masterSchedules')) || [];
             document.getElementById('reportContent').innerHTML = `
-                <div class="stat-card"><i class="fa-solid fa-train"></i><div class="stat-val">${t.length}</div><div>Total Trains</div></div>
-                <div class="stat-card"><i class="fa-solid fa-calendar-check"></i><div class="stat-val">${s.length}</div><div>Total Trips</div></div>
-                <div class="stat-card"><i class="fa-solid fa-ticket"></i><div class="stat-val">${b.length}</div><div>Tickets Issued</div></div>`;
+                <div class="stat-card"><h3>${t.length}</h3><p>Trains</p></div>
+                <div class="stat-card"><h3>${s.length}</h3><p>Active Trips</p></div>`;
         }
 
-        window.onload = renderAll;
+        window.onload = renderTrains;
     </script>
 </body>
 </html>
