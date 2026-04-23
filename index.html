@@ -48,27 +48,20 @@
 
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
     function handleLogin(event) {
-    // Prevent the default form submission (prevents page reload)
     event.preventDefault();
-    
-    // Retrieve input values from the login form
     const user = document.getElementById('user').value;
     const pass = document.getElementById('pass').value;
     const role = document.getElementById('role').value;
 
-    // Validation for Admin Access
+    // Admin Credentials
     if (user === 'admin' && pass === 'admin' && role === 'admin') {
-        // Redirect to the Admin Dashboard
         window.location.href = "admin_dashboard.html"; 
     } 
-    // Validation for Operational Staff Access
+    // Staff Credentials
     else if (user === 'staff' && pass === 'staff' && role === 'staff') {
-        // Redirect to the Staff Dashboard
         window.location.href = "staff_dashboard.html"; 
     } 
-    // Handle invalid credentials
     else {
-        // Display a security denial alert
         alert("Security Denial: Invalid credentials");
     }
 }
