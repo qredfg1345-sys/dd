@@ -5,66 +5,61 @@
     <title>RailStream Staff | Operations Terminal</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root { --navy: #0f172a; --blue: #1e40af; --bg: #f8fafc; --white: #ffffff; }
+        :root { --navy: #0f172a; --blue: #1e40af; --bg: #f8fafc; --white: #ffffff; --red: #ef4444; }
         * { box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
         body { margin: 0; background: var(--bg); display: flex; height: 100vh; overflow: hidden; }
-        .sidebar { width: 260px; background: var(--navy); color: white; display: flex; flex-direction: column; }
+        .sidebar { width: 260px; background: var(--navy); color: white; display: flex; flex-direction: column; z-index: 10; }
         .nav-menu { padding: 20px; flex-grow: 1; }
-        .nav-item { padding: 12px; cursor: pointer; color: #94a3b8; display: flex; align-items: center; gap: 10px; }
+        .nav-item { padding: 12px; cursor: pointer; color: #94a3b8; display: flex; align-items: center; gap: 10px; margin-bottom: 5px; }
         .nav-item.active { background: var(--blue); color: white; border-radius: 8px; }
         .main-wrapper { flex-grow: 1; overflow-y: auto; padding: 40px; }
         .glass-card { background: var(--white); border-radius: 16px; padding: 25px; display: none; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
         .glass-card.active { display: block; }
-        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px; }
-        input, select { padding: 12px; border: 1px solid #e2e8f0; border-radius: 8px; }
-        .btn-staff { padding: 12px; background: var(--blue); color: white; border: none; border-radius: 8px; cursor: pointer; }
-        .data-table { width: 100%; border-collapse: collapse; }
-        .data-table th, td { padding: 12px; text-align: left; border-bottom: 1px solid #eee; }
-        .badge { background: #dcfce7; color: #166534; padding: 4px 8px; border-radius: 4px; font-size: 11px; }
+        .btn-staff { padding: 12px; background: var(--blue); color: white; border: none; border-radius: 8px; cursor: pointer; width: 100%; font-weight: bold; }
+        .btn-logout { background: var(--red); color: white; border: none; padding: 12px; margin: auto 20px 20px; border-radius: 8px; cursor: pointer; text-align: center; font-weight: bold; text-decoration: none; }
+        .data-table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        .data-table th, td { padding: 12px; text-align: left; border-bottom: 1px solid #f1f5f9; }
+        input, select { width: 100%; padding: 10px; border: 1px solid #e2e8f0; border-radius: 8px; margin-bottom: 10px; }
     </style>
 </head>
 <body>
     <aside class="sidebar">
+        <div class="sidebar-header" style="padding:30px; text-align:center;"><h2>RailStream</h2></div>
         <div class="nav-menu">
-            <div class="nav-item active" onclick="showTab('tab-reg')">Registration</div>
-            <div class="nav-item" onclick="showTab('tab-ticket')">Issue Ticket</div>
-            <div class="nav-item" onclick="showTab('tab-daily')">Daily Schedule</div>
-            <a href="index.html" style="color:red; margin-top:20px; display:block;">Logout</a>
+            <div class="nav-item active" onclick="showTab('tab-pass')"><i class="fa-solid fa-users"></i> Registration</div>
+            <div class="nav-item" onclick="showTab('tab-ticket')"><i class="fa-solid fa-ticket"></i> Issue Ticket</div>
+            <div class="nav-item" onclick="showTab('tab-view')"><i class="fa-solid fa-calendar-day"></i> View Schedule</div>
         </div>
+        <a href="index.html" class="btn-logout"><i class="fa-solid fa-power-off"></i> Logout</a>
     </aside>
 
     <main class="main-wrapper">
-        <section id="tab-reg" class="glass-card active">
+        <section id="tab-pass" class="glass-card active">
             <h3>Passenger Registration</h3>
-            <div class="form-grid">
-                <input type="text" id="pID" placeholder="National ID (Required)">
-                <input type="text" id="pName" placeholder="Full Name">
-                <button class="btn-staff" onclick="registerPassenger()">Save Profile</button>
-            </div>
+            <input type="text" id="pID" placeholder="National ID / Passport">
+            <input type="text" id="pName" placeholder="Full Name">
+            <button class="btn-staff" onclick="registerPassenger()">Validate & Create Profile</button>
             <table class="data-table" id="passengerTable">
-                <thead><tr><th>ID</th><th>Name</th><th>Status</th></tr></thead>
+                <thead><tr><th>National ID</th><th>Full Name</th></tr></thead>
                 <tbody></tbody>
             </table>
         </section>
 
         <section id="tab-ticket" class="glass-card">
-            <h3>Issue Ticket & Seat Allocation</h3>
-            <div class="form-grid">
-                <select id="pSelect"><option>Select Passenger</option></select>
-                <select id="tSelect"><option>Select Trip</option></select>
-                <input type="text" id="seatNo" placeholder="Seat (e.g. 12A)">
-                <button class="btn-staff" onclick="issueTicket()">Confirm Booking</button>
-            </div>
+            <h3>Seat Allocation & Booking</h3>
+            <select id="pSelect"><option value="">Select Registered Passenger</option></select>
+            <select id="sSelect"><option value="">Select Scheduled Trip</option></select>
+            <button class="btn-staff" onclick="issueTicket()">Confirm Allocation</button>
             <table class="data-table" id="ticketTable">
-                <thead><tr><th>Ticket ID</th><th>Passenger</th><th>Seat</th><th>Action</th></tr></thead>
+                <thead><tr><th>Passenger</th><th>Trip</th><th>Actions</th></tr></thead>
                 <tbody></tbody>
             </table>
         </section>
 
-        <section id="tab-daily" class="glass-card">
-            <h3>Operational Schedule (From Admin)</h3>
-            <table class="data-table" id="dailyTable">
-                <thead><tr><th>Train</th><th>Route</th><th>Time</th></tr></thead>
+        <section id="tab-view" class="glass-card">
+            <h3>Synced Daily Schedule</h3>
+            <table class="data-table" id="viewTable">
+                <thead><tr><th>Train Asset</th><th>Departure Time</th></tr></thead>
                 <tbody></tbody>
             </table>
         </section>
@@ -77,57 +72,53 @@
             syncData();
         }
 
-        // Use Case: Validate ID & Create Profile
+        // Use Case: Validate ID & Create Profile [cite: 12, 13]
         function registerPassenger() {
             let id = document.getElementById('pID').value;
-            if(!id) return alert("Validation Error: ID is mandatory!");
-            let ps = JSON.parse(localStorage.getItem('passengers')) || [];
-            ps.push({ id, name: document.getElementById('pName').value });
-            localStorage.setItem('passengers', JSON.stringify(ps));
+            let name = document.getElementById('pName').value;
+            if(!id || id.length < 5) return alert("ID Invalid: Minimum 5 digits required!"); // Validate ID 
+            
+            let passengers = JSON.parse(localStorage.getItem('passengers')) || [];
+            passengers.push({ id, name });
+            localStorage.setItem('passengers', JSON.stringify(passengers));
             renderPassengers();
         }
 
         function renderPassengers() {
             let ps = JSON.parse(localStorage.getItem('passengers')) || [];
-            document.querySelector('#passengerTable tbody').innerHTML = ps.map(p => `<tr><td>${p.id}</td><td>${p.name}</td><td><span class="badge">Verified</span></td></tr>`).join('');
+            document.querySelector('#passengerTable tbody').innerHTML = ps.map(p => `<tr><td>${p.id}</td><td>${p.name}</td></tr>`).join('');
         }
 
-        // Sync Data from Admin
         function syncData() {
-            let schedules = JSON.parse(localStorage.getItem('masterSchedules')) || [];
             let ps = JSON.parse(localStorage.getItem('passengers')) || [];
-            
-            document.getElementById('tSelect').innerHTML = schedules.map(s => `<option value="${s.train}">${s.train} - ${s.route}</option>`).join('');
-            document.getElementById('pSelect').innerHTML = ps.map(p => `<option value="${p.name}">${p.name}</option>`).join('');
-            
-            document.querySelector('#dailyTable tbody').innerHTML = schedules.map(s => `<tr><td>${s.train}</td><td>${s.route}</td><td>${s.time}</td></tr>`).join('');
+            let ss = JSON.parse(localStorage.getItem('schedules')) || [];
+            document.getElementById('pSelect').innerHTML = '<option value="">Select Passenger</option>' + ps.map(p => `<option value="${p.name}">${p.name}</option>`).join('');
+            document.getElementById('sSelect').innerHTML = '<option value="">Select Trip</option>' + ss.map(s => `<option value="${s.sTrain}">${s.sTrain} at ${s.sTime}</option>`).join('');
+            document.querySelector('#viewTable tbody').innerHTML = ss.map(s => `<tr><td>${s.sTrain}</td><td>${s.sTime}</td></tr>`).join('');
         }
 
-        // Use Case: Issue Ticket & Seat Allocation
+        // Use Case: Issue Ticket [cite: 26]
         function issueTicket() {
-            let trip = document.getElementById('tSelect').value;
-            let seat = document.getElementById('seatNo').value;
-            let tickets = JSON.parse(localStorage.getItem('issuedTickets')) || [];
-
-            // Check Availability
-            if(tickets.find(t => t.trip === trip && t.seat === seat)) return alert("Seat already taken!");
-
-            tickets.push({ id: 'TIC' + Date.now(), passenger: document.getElementById('pSelect').value, trip, seat });
-            localStorage.setItem('issuedTickets', JSON.stringify(tickets));
+            let p = document.getElementById('pSelect').value;
+            let s = document.getElementById('sSelect').value;
+            if(!p || !s) return alert("Select Trip and Passenger");
+            
+            let tickets = JSON.parse(localStorage.getItem('tickets')) || [];
+            tickets.push({ p, s });
+            localStorage.setItem('tickets', JSON.stringify(tickets));
             renderTickets();
         }
 
         function renderTickets() {
-            let tickets = JSON.parse(localStorage.getItem('issuedTickets')) || [];
-            document.querySelector('#ticketTable tbody').innerHTML = tickets.map((t, index) => 
-                `<tr><td>${t.id}</td><td>${t.passenger}</td><td>${t.seat}</td><td><button style="color:red" onclick="cancelTicket(${index})">Cancel</button></td></tr>`).join('');
+            let ts = JSON.parse(localStorage.getItem('tickets')) || [];
+            document.querySelector('#ticketTable tbody').innerHTML = ts.map((t, i) => `<tr><td>${t.p}</td><td>${t.s}</td><td><button style="color:red; border:none; background:none; cursor:pointer;" onclick="cancelTicket(${i})">Cancel</button></td></tr>`).join('');
         }
 
-        // Use Case: Cancel Ticket
-        function cancelTicket(index) {
-            let tickets = JSON.parse(localStorage.getItem('issuedTickets'));
-            tickets.splice(index, 1);
-            localStorage.setItem('issuedTickets', JSON.stringify(tickets));
+        // Use Case: Cancel Ticket 
+        function cancelTicket(i) {
+            let ts = JSON.parse(localStorage.getItem('tickets'));
+            ts.splice(i, 1);
+            localStorage.setItem('tickets', JSON.stringify(ts));
             renderTickets();
         }
 
