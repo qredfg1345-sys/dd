@@ -2,54 +2,73 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RailRoute Central | Admin Terminal</title>
+    <title>Admin Terminal | RailRoute Central</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div id="particles-js"></div>
 
-    <div class="admin-container" style="position: relative; z-index: 10; display: flex; flex-direction: column; align-items: center; padding: 20px;">
-        <div class="login-card" style="max-width: 900px; width: 95%;">
-            <div class="brand-header">
-                <div class="brand-logo"><i class="fa-solid fa-user-gear"></i></div>
-                <h1>Admin Control Panel</h1>
-                <p class="system-subtitle">Logged in: Infrastructure Administrator</p>
+    <div class="admin-wrapper">
+        <nav class="sidebar">
+            <h2 style="color: var(--blue-tech);"><i class="fa-solid fa-train-subway"></i> RailRoute</h2>
+            <div style="margin-top: 40px;">
+                <p style="font-size: 12px; color: #64748b;">MANAGEMENT</p>
+                <a href="#" class="nav-item" style="display:block; color:white; padding:10px 0; text-decoration:none;"><i class="fa-solid fa-train"></i> Trains</a>
+                <a href="#" class="nav-item" style="display:block; color:white; padding:10px 0; text-decoration:none;"><i class="fa-solid fa-route"></i> Routes</a>
+                <a href="#" class="nav-item" style="display:block; color:white; padding:10px 0; text-decoration:none;"><i class="fa-solid fa-calendar-check"></i> Schedules</a>
+                <p style="font-size: 12px; color: #64748b; margin-top:30px;">ANALYTICS</p>
+                <a href="#" class="nav-item" style="display:block; color:white; padding:10px 0; text-decoration:none;"><i class="fa-solid fa-file-contract"></i> Generate Reports</a>
             </div>
+            <button onclick="window.location.href='index.html'" style="margin-top:100px; background:none; border:1px solid #f87171; color:#f87171; padding:10px; cursor:pointer; width:100%; border-radius:8px;">Logout</button>
+        </nav>
 
-            <div class="admin-section" style="text-align: left; margin-bottom: 30px; border-bottom: 1px solid #eee; padding-bottom: 20px;">
-                <h3><i class="fa-solid fa-train"></i> Train Management</h3>
-                <div style="display: flex; gap: 10px; margin-top: 10px;">
-                    <button class="btn-authorize" style="padding: 10px;">Add Train</button>
-                    <button class="btn-authorize" style="padding: 10px; background: var(--blue-tech);">Update/Delete</button>
+        <main class="main-content">
+            <header style="display:flex; justify-content:space-between; align-items:center; margin-bottom:30px;">
+                <h1>Infrastructure Governance</h1>
+                <div style="background:white; padding:10px 20px; border-radius:12px; box-shadow:0 4px 6px rgba(0,0,0,0.05);">
+                    <i class="fa-solid fa-user-shield"></i> Chief Administrator
                 </div>
-            </div>
+            </header>
 
-            <div class="admin-section" style="text-align: left; margin-bottom: 30px; border-bottom: 1px solid #eee; padding-bottom: 20px;">
-                <h3><i class="fa-solid fa-route"></i> Route Definition</h3>
-                <div style="display: flex; gap: 10px; margin-top: 10px;">
-                    <button class="btn-authorize" style="padding: 10px;">Define New Route</button>
-                    <button class="btn-authorize" style="padding: 10px; background: var(--blue-tech);">View Routes</button>
+            <section style="background:white; padding:30px; border-radius:20px; box-shadow:0 10px 30px rgba(0,0,0,0.05);">
+                <div style="display:flex; justify-content:space-between; margin-bottom:20px;">
+                    <h3>Train Assets Management</h3>
+                    <button class="btn-authorize" style="width:auto; padding:10px 25px;">+ Add New Train</button>
                 </div>
-            </div>
+                <table style="width:100%; border-collapse:collapse; text-align:left;">
+                    <tr style="background:#f1f5f9;">
+                        <th style="padding:15px;">ID</th>
+                        <th style="padding:15px;">Model</th>
+                        <th style="padding:15px;">Status</th>
+                        <th style="padding:15px;">Actions</th>
+                    </tr>
+                    <tr>
+                        <td style="padding:15px; border-bottom:1px solid #f1f5f9;">TR-2026</td>
+                        <td style="padding:15px; border-bottom:1px solid #f1f5f9;">Bullet Express</td>
+                        <td style="padding:15px; border-bottom:1px solid #f1f5f9;"><span style="color:#10b981;">● Active</span></td>
+                        <td style="padding:15px; border-bottom:1px solid #f1f5f9;">
+                            <button style="color:var(--blue-royal); border:none; background:none; cursor:pointer;">Edit</button>
+                            <button style="color:#ef4444; border:none; background:none; cursor:pointer; margin-left:10px;">Delete</button>
+                        </td>
+                    </tr>
+                </table>
+            </section>
 
-            <div class="admin-section" style="text-align: left; margin-bottom: 30px; border-bottom: 1px solid #eee; padding-bottom: 20px;">
-                <h3><i class="fa-solid fa-calendar-days"></i> Schedule Management</h3>
-                <div style="display: flex; gap: 10px; margin-top: 10px;">
-                    <button class="btn-authorize" style="padding: 10px;">Create Schedule</button>
-                    <button class="btn-authorize" style="padding: 10px; background: var(--blue-tech);">Check Conflicts</button>
+            <section style="margin-top:30px; display:grid; grid-template-columns: repeat(3, 1fr); gap:20px;">
+                <div style="background:white; padding:20px; border-radius:15px; text-align:center;">
+                    <h4>Route Efficiency</h4>
+                    <p style="font-size:24px; font-weight:bold; color:var(--blue-royal);">94%</p>
                 </div>
-            </div>
-
-            <div class="admin-section" style="text-align: left; margin-bottom: 30px;">
-                <h3><i class="fa-solid fa-chart-bar"></i> Operational Reports</h3>
-                <button class="btn-authorize" style="padding: 10px; width: auto;">Generate System Report</button>
-            </div>
-
-            <hr>
-            <button onclick="window.location.href='index.html'" class="btn-authorize" style="background: var(--navy-deep); margin-top: 20px;">Secure Logout</button>
-        </div>
+                <div style="background:white; padding:20px; border-radius:15px; text-align:center;">
+                    <h4>Daily Trips</h4>
+                    <p style="font-size:24px; font-weight:bold; color:var(--blue-royal);">48</p>
+                </div>
+                <div style="background:white; padding:20px; border-radius:15px; text-align:center;">
+                    <button class="btn-authorize" style="height:100%;"><i class="fa-solid fa-download"></i> Full Report</button>
+                </div>
+            </section>
+        </main>
     </div>
 
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
