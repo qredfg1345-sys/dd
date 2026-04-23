@@ -6,7 +6,7 @@
     <title>RailRoute Central | Secure Access</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* --- المتغيرات اللونية --- */
+        /* --- Color Variables based on project requirements --- */
         :root {
             --navy-deep: #0f172a;
             --blue-royal: #1e40af;
@@ -16,7 +16,7 @@
             --slate-500: #64748b;
         }
 
-        /* --- تنسيق الصفحة الأساسي --- */
+        /* --- Basic Page Layout & Centering --- */
         body, html {
             margin: 0;
             padding: 0;
@@ -25,38 +25,38 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: var(--white-pure);
             display: flex;
-            align-items: center; /* توسيط عمودي */
-            justify-content: center; /* توسيط أفقي */
+            align-items: center; /* Vertical Center */
+            justify-content: center; /* Horizontal Center */
             overflow: hidden;
         }
 
-        /* --- حاوية الشبكة العنكبوتية (خلفية كاملة) --- */
+        /* --- Technical Web Background (Full Screen) --- */
         #particles-js {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            z-index: 1; /* خلف الكرت */
+            z-index: 1; /* Behind the card */
             background-color: var(--white-pure);
         }
 
-        /* --- كرت تسجيل الدخول (منظم ومرتب) --- */
+        /* --- Login Card (Organized and Professional) --- */
         .login-card {
             position: relative;
-            z-index: 10; /* فوق الشبكة */
+            z-index: 10; /* Above the particles web */
             background: rgba(255, 255, 255, 0.98);
             padding: 45px;
             border-radius: 24px;
             width: 100%;
-            max-width: 400px; /* عرض مناسب */
+            max-width: 400px;
             text-align: center;
             box-shadow: 0 20px 50px rgba(15, 23, 42, 0.1);
             border: 1px solid rgba(30, 64, 175, 0.1);
             backdrop-filter: blur(10px);
         }
 
-        /* أيقونة اللوجو المحترفة */
+        /* Professional Logo Style */
         .brand-logo {
             width: 75px;
             height: 75px;
@@ -87,7 +87,7 @@
             font-weight: 500;
         }
 
-        /* --- تنسيق الحقول --- */
+        /* --- Form Input Styling --- */
         .input-group {
             text-align: left;
             margin-bottom: 20px;
@@ -113,7 +113,7 @@
             color: var(--navy-deep);
             outline: none;
             transition: all 0.3s ease;
-            box-sizing: border-box; /* لضمان عدم خروج الحقول عن الكرت */
+            box-sizing: border-box; /* Ensures inputs stay within card boundaries */
         }
 
         input:focus, select:focus {
@@ -122,7 +122,7 @@
             box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
         }
 
-        /* --- زر الدخول الملون --- */
+        /* --- Colored Authorize Button --- */
         .btn-authorize {
             width: 100%;
             padding: 16px;
@@ -160,7 +160,7 @@
         <h1>RailRoute Central</h1>
         <p class="subtitle">Infrastructure & Reservation Governance</p>
 
-        <form onsubmit="return false">
+        <form onsubmit="return handleLogin(event)">
             <div class="input-group">
                 <label>Operations Domain</label>
                 <select id="role">
@@ -171,12 +171,12 @@
 
             <div class="input-group">
                 <label>Authentication Identifier</label>
-                <input type="text" placeholder="Enter ID or Username" required>
+                <input type="text" id="user" placeholder="Enter ID or Username" required>
             </div>
 
             <div class="input-group">
                 <label>Secure Key</label>
-                <input type="password" placeholder="••••••••" required>
+                <input type="password" id="pass" placeholder="••••••••" required>
             </div>
 
             <button type="submit" class="btn-authorize">
@@ -187,7 +187,7 @@
 
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
     <script>
-        /* إعدادات الشبكة العنكبوتية التقنية */
+        /* Technical Web Background Configuration */
         particlesJS("particles-js", {
             "particles": {
                 "number": { "value": 100, "density": { "enable": true, "value_area": 800 } },
@@ -214,6 +214,21 @@
             },
             "retina_detect": true
         });
+
+        /* Authentication Logic (UC-1) [cite: 2] */
+        function handleLogin(event) {
+            event.preventDefault();
+            const user = document.getElementById('user').value;
+            const pass = document.getElementById('pass').value;
+            const role = document.getElementById('role').value;
+
+            if ((user === 'admin' && pass === 'admin' && role === 'admin') || 
+                (user === 'staff' && pass === 'staff' && role === 'staff')) {
+                alert("Identity Verified. Linking to Central Governance System...");
+            } else {
+                alert("Security Denial: Invalid credentials or unauthorized domain.");
+            }
+        }
     </script>
 </body>
 </html>
