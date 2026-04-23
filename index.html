@@ -21,7 +21,6 @@
         </div>
         
         <form onsubmit="handleLogin(event)">
-            
             <div class="input-section" style="text-align: left; margin-top: 25px;">
                 <label style="display: block; font-size: 11px; font-weight: 800; color: #0f172a; text-transform: uppercase; margin-bottom: 8px;">Operations Domain</label>
                 <select id="role" style="width: 100%; padding: 14px; border-radius: 12px; border: 1.5px solid #e2e8f0; background: #f8fafc; text-align: left;">
@@ -47,24 +46,35 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
-    function handleLogin(event) {
-    event.preventDefault();
-    const user = document.getElementById('user').value;
-    const pass = document.getElementById('pass').value;
-    const role = document.getElementById('role').value;
-
-    // Admin Credentials
-    if (user === 'admin' && pass === 'admin' && role === 'admin') {
-        window.location.href = "admin_dashboard.html"; 
-    } 
-    // Staff Credentials
-    else if (user === 'staff' && pass === 'staff' && role === 'staff') {
-        window.location.href = "staff_dashboard.html"; 
-    } 
-    else {
-        alert("Security Denial: Invalid credentials");
-    }
-}
     <script src="script.js"></script>
+    
+    <script>
+        // Main function to handle the login process
+        function handleLogin(event) {
+            // Prevent the default form submission (prevents page refresh)
+            event.preventDefault();
+            
+            // Get values from input fields
+            const user = document.getElementById('user').value;
+            const pass = document.getElementById('pass').value;
+            const role = document.getElementById('role').value;
+
+            // Admin Logic: Validate credentials and role for Infrastructure Admin
+            if (user === 'admin' && pass === 'admin' && role === 'admin') {
+                // Redirect to the Admin Dashboard upon successful validation
+                window.location.href = "admin_dashboard.html"; 
+            } 
+            // Staff Logic: Validate credentials and role for Operational Staff
+            else if (user === 'staff' && pass === 'staff' && role === 'staff') {
+                // Redirect to the Staff Dashboard upon successful validation
+                window.location.href = "staff_dashboard.html"; 
+            } 
+            // Alternative Flow: Handle incorrect credentials or mismatched roles
+            else {
+                // Display error message to the user
+                alert("Security Denial: Invalid credentials or role mismatch.");
+            }
+        }
+    </script>
 </body>
 </html>
