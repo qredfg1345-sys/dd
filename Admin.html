@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RailRoute Central | Admin Terminal</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div id="particles-js"></div>
+
+    <div class="admin-container">
+        <aside class="sidebar">
+            <div class="brand-section">
+                <i class="fa-solid fa-train-subway"></i>
+                <span>RailRoute Admin</span>
+            </div>
+            
+            <nav class="menu">
+                <a href="#" class="active"><i class="fa-solid fa-gauge"></i> Dashboard</a>
+                <a href="#"><i class="fa-solid fa-train"></i> Add/Update Train</a>
+                <a href="#"><i class="fa-solid fa-route"></i> Define Route</a>
+                <a href="#"><i class="fa-solid fa-calendar-check"></i> Manage Schedule</a>
+                <a href="#"><i class="fa-solid fa-chart-line"></i> Generate Reports</a>
+                <div class="divider"></div>
+                <a href="login.html" class="logout"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
+            </nav>
+        </aside>
+
+        <main class="content">
+            <header class="top-bar">
+                <h2>Infrastructure Governance Terminal</h2>
+                <div class="admin-profile">
+                    <span>Welcome, Chief Admin</span>
+                    <i class="fa-solid fa-user-shield"></i>
+                </div>
+            </header>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <h3>Active Trains</h3>
+                    <p class="value">24</p>
+                </div>
+                <div class="stat-card">
+                    <h3>Defined Routes</h3>
+                    <p class="value">12</p>
+                </div>
+                <div class="stat-card">
+                    <h3>Today's Schedules</h3>
+                    <p class="value">45</p>
+                </div>
+            </div>
+
+            <section class="action-panel">
+                <h3>Quick System Actions</h3>
+                <div class="btn-group">
+                    <button class="btn-action"><i class="fa-solid fa-plus"></i> New Train Entry</button>
+                    <button class="btn-action"><i class="fa-solid fa-map-location-dot"></i> Establish Route</button>
+                    <button class="btn-action"><i class="fa-solid fa-clock"></i> Assign Schedule</button>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
